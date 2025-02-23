@@ -8,22 +8,6 @@ dotenv.config();
 
 const app = express();
 
-// Add CORS headers middleware before any routes
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://tweet-optimizer.vercel.app');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', true);
-  
-  // Handle OPTIONS method
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
-
-app.use(express.json());
-
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -39,12 +23,14 @@ const xaiClient = axios.create({
 });
 */
 
+// Remove the old CORS configurations and use this single one
 app.use(cors({
-  origin: '*',  // Allow all origins
-  methods: ['GET', 'POST', 'OPTIONS'],  // Allow these methods
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow these headers
+  origin: 'https://tweet-optimizer.vercel.app',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
 app.use(express.json());
 
 // Add this function at the top level of server.js, before the endpoints

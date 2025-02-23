@@ -8,6 +8,22 @@ dotenv.config();
 
 const app = express();
 
+// Remove all previous CORS configurations and use this single one
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://tweet-optimizer.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
+
+app.use(express.json());
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -25,15 +41,6 @@ const xaiClient = axios.create({
 
 // Place this BEFORE any other middleware or routes
 app.options('*', cors()) // Enable pre-flight for all routes
-
-app.use(cors({
-  origin: 'https://tweet-optimizer.vercel.app',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
-  credentials: false
-}));
-
-app.use(express.json());
 
 // Add this function at the top level of server.js, before the endpoints
 const getHookInstruction = (hookType) => {

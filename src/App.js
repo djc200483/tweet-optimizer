@@ -5,6 +5,8 @@ import PowerWords from './components/PowerWords';
 import Home from './components/Home';
 import './App.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
 function App() {
   const [tweet, setTweet] = useState('');
   const [savedTweets, setSavedTweets] = useState([]);
@@ -94,7 +96,7 @@ function App() {
     if (tweet.trim()) {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:3001/rewrite-tweet', {
+        const response = await fetch(`${API_URL}/rewrite-tweet`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -137,7 +139,7 @@ function App() {
     if (reverseText.trim()) {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:3001/analyze-tweet', {
+        const response = await fetch(`${API_URL}/analyze-tweet`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -159,7 +161,7 @@ function App() {
     if (powerText.trim()) {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:3001/analyze-power-words', {
+        const response = await fetch(`${API_URL}/analyze-power-words`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

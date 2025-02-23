@@ -23,12 +23,14 @@ const xaiClient = axios.create({
 });
 */
 
-// Update CORS configuration to include both local and production URLs
+// Place this BEFORE any other middleware or routes
+app.options('*', cors()) // Enable pre-flight for all routes
+
 app.use(cors({
-  origin: ['https://tweet-optimizer.vercel.app', 'http://localhost:3000'],
+  origin: 'https://tweet-optimizer.vercel.app',
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
-  credentials: false  // Changed to false
+  credentials: false
 }));
 
 app.use(express.json());

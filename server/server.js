@@ -204,39 +204,46 @@ app.post('/analyze-power-words', async (req, res) => {
       messages: [
         {
           "role": "system",
-          "content": `You are a power word analysis expert. Analyze the given text and provide:
-          1. Analysis of current power words
-          2. Suggestions for improvement in these categories:
+          "content": `You are a power word analysis expert. For the given text, provide a detailed analysis in this format:
+
+          1. CURRENT ANALYSIS:
+          - List all power words currently used
+          - Evaluate their effectiveness
+          - Identify missed opportunities
+
+          2. CATEGORY-SPECIFIC ANALYSIS:
 
           Emotional Impact:
-          - Words that trigger specific emotions (joy, curiosity, excitement, empathy, fear)
-          - Examples: astonishing, heartwarming, unbelievable, jaw-dropping, life-changing
-          - Provide specific suggestions for the text
+          - Current emotional words used:
+          - Missing emotional triggers:
+          - Specific improvement suggestions:
+          - Example rewrites using emotional power words:
 
           Urgency and Scarcity:
-          - Words that create time pressure or scarcity
-          - Examples: limited-time, last chance, exclusive, hurry, urgent
-          - Suggest modifications using these types of words
+          - Current urgency words used:
+          - Ways to add time pressure:
+          - Specific improvement suggestions:
+          - Example rewrites with urgency:
 
           Action-Oriented:
-          - Words that drive action and motivation
-          - Examples: unlock, transform, achieve, discover, enhance, supercharge
-          - Provide actionable alternatives
+          - Current action words used:
+          - Stronger alternatives:
+          - Specific improvement suggestions:
+          - Example rewrites with action words:
 
           Social Proof and FOMO:
-          - Words that suggest popularity or missing out
-          - Examples: join the movement, trending, elite, hottest trend
-          - Suggest social proof elements
+          - Current social proof elements:
+          - Ways to add FOMO:
+          - Specific improvement suggestions:
+          - Example rewrites with social proof:
 
           Clarity and Focus:
-          - Words that provide clear direction
-          - Examples: clear, straightforward, step-by-step, precise
-          - Suggest clarity improvements
+          - Current clarity words used:
+          - Ways to be more direct:
+          - Specific improvement suggestions:
+          - Example rewrites for clarity:
 
-          For each category:
-          - List relevant power words found or missing
-          - Provide specific example modifications
-          - Suggest improvements`
+          Format each section clearly and provide specific, actionable suggestions.`
         },
         {
           "role": "user",

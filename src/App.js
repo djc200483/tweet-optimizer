@@ -150,7 +150,13 @@ function App() {
         });
 
         const data = await response.json();
-        setAnalysisResults(data.analysis);
+        
+        // Convert the analysis string into the expected format
+        const analysisArray = data.analysis ? [
+          { label: 'Analysis', value: data.analysis }
+        ] : [];
+
+        setAnalysisResults(analysisArray);
       } catch (error) {
         console.error('Error:', error);
       } finally {

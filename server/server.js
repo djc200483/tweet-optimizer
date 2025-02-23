@@ -8,17 +8,13 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://tweet-optimizer.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
+// More permissive CORS configuration
+app.use(cors({
+  origin: ['https://tweet-optimizer.vercel.app', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+  optionsSuccessStatus: 200
+}));
 
 app.use(express.json());
 

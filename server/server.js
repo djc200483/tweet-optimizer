@@ -8,6 +8,22 @@ dotenv.config();
 
 const app = express();
 
+// Add CORS headers middleware before any routes
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://tweet-optimizer.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', true);
+  
+  // Handle OPTIONS method
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+app.use(express.json());
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });

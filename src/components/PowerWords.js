@@ -36,7 +36,11 @@ export default function PowerWords({
 
       {isLoading && (
         <div className="loading-spinner">
-          Analyzing power words...
+          <div className="analysis-steps">
+            <p>📝 Analyzing text structure...</p>
+            <p>🔍 Identifying power words...</p>
+            <p>✨ Generating suggestions...</p>
+          </div>
         </div>
       )}
 
@@ -46,9 +50,33 @@ export default function PowerWords({
             <h3>Power Words Analysis</h3>
             <div className="analysis-content">
               <div className="analysis-item">
-                <span className="analysis-value">{powerResults.analysis}</span>
+                <h4>Current Power Words:</h4>
+                <p className="analysis-value">{powerResults.analysis}</p>
               </div>
             </div>
+          </div>
+
+          <div className="power-words-suggestions">
+            {powerResults.suggestions?.map((category, index) => (
+              <div key={index} className="power-category-card">
+                <h4>{category.category}</h4>
+                <div className="word-chips">
+                  {category.words?.map((word, wordIndex) => (
+                    <span 
+                      key={wordIndex} 
+                      className="word-chip"
+                      onClick={() => navigator.clipboard.writeText(word)}
+                      title="Click to copy"
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </div>
+                <div className="example-usage">
+                  <p><strong>Example:</strong> {category.example}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

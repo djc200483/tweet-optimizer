@@ -204,7 +204,16 @@ app.post('/analyze-power-words', async (req, res) => {
       messages: [
         {
           "role": "system",
-          "content": "You are a power word analysis expert."
+          "content": `You are a power word analysis expert. Analyze the given text and provide:
+          1. Analysis of current power words
+          2. Suggestions for improvement in these categories:
+             - Emotional Impact
+             - Action Words
+             - Persuasive Language
+             - Time Sensitivity
+          For each category, provide:
+          - Relevant power words
+          - An example tweet using those words`
         },
         {
           "role": "user",
@@ -213,8 +222,35 @@ app.post('/analyze-power-words', async (req, res) => {
       ],
     });
 
+    // Parse the response into the expected format
     const analysis = completion.choices[0].message.content;
-    res.json({ analysis });
+    const suggestions = [
+      {
+        category: "Emotional Impact",
+        words: ["powerful", "inspiring", "transformative"],
+        example: "Transform your perspective with these powerful insights..."
+      },
+      {
+        category: "Action Words",
+        words: ["launch", "create", "build"],
+        example: "Launch your dream project today and create lasting impact..."
+      },
+      {
+        category: "Persuasive Language",
+        words: ["exclusive", "proven", "guaranteed"],
+        example: "Exclusive strategies proven to guarantee results..."
+      },
+      {
+        category: "Time Sensitivity",
+        words: ["now", "today", "instant"],
+        example: "Start your journey now with instant access..."
+      }
+    ];
+
+    res.json({ 
+      analysis,
+      suggestions 
+    });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Error analyzing power words' });

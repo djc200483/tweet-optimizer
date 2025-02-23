@@ -24,12 +24,9 @@ const xaiClient = axios.create({
 */
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://tweet-optimizer.vercel.app',
-    'https://tweet-optimizer-git-main-djc200483.vercel.app'
-  ],
-  methods: ['GET', 'POST'],
+  origin: '*',  // Allow all origins
+  methods: ['GET', 'POST', 'OPTIONS'],  // Allow these methods
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow these headers
   credentials: true
 }));
 app.use(express.json());

@@ -236,7 +236,9 @@ function App() {
           setReverseText={setReverseText}
           handleReverseAnalysis={handleReverseAnalysis}
           isLoading={isLoading}
+          setIsLoading={setIsLoading}
           analysisResults={analysisResults}
+          setAnalysisResults={setAnalysisResults}
         />
       ) : (
         <PowerWords 

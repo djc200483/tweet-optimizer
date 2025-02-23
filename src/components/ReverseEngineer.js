@@ -7,7 +7,9 @@ export default function ReverseEngineer({
   setReverseText,
   handleReverseAnalysis,
   isLoading,
-  analysisResults
+  setIsLoading,
+  analysisResults,
+  setAnalysisResults
 }) {
   const [showAdaptation, setShowAdaptation] = useState(false);
   const [adaptedTweet, setAdaptedTweet] = useState('');

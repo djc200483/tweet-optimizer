@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
 export default function ReverseEngineer({
   reverseText,
   setReverseText,
@@ -14,7 +16,7 @@ export default function ReverseEngineer({
   const handleAdaptation = async () => {
     try {
       setIsAdapting(true);
-      const response = await fetch('http://localhost:3001/adapt-tweet', {
+      const response = await fetch(`${API_URL}/adapt-tweet`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,6 +34,32 @@ export default function ReverseEngineer({
       console.error('Error:', error);
     } finally {
       setIsAdapting(false);
+    }
+  };
+
+  const handleAnalyze = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${API_URL}/analyze-tweet`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tweet: reverseText }),
+      });
+
+      const data = await response.json();
+      
+      // Convert the analysis string into the expected format
+      const analysisArray = data.analysis ? [
+        { label: 'Analysis', value: data.analysis }
+      ] : [];
+
+      setAnalysisResults(analysisArray);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

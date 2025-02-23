@@ -100,6 +100,7 @@ function App() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
           },
           body: JSON.stringify({ 
             tweet, 
@@ -143,6 +144,7 @@ function App() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
           },
           body: JSON.stringify({ tweet: reverseText }),
         });
@@ -165,6 +167,7 @@ function App() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
           },
           body: JSON.stringify({ text: powerText }),
         });

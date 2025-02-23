@@ -23,12 +23,12 @@ const xaiClient = axios.create({
 });
 */
 
-// Remove the old CORS configurations and use this single one
+// Update CORS configuration to include both local and production URLs
 app.use(cors({
-  origin: 'https://tweet-optimizer.vercel.app',
+  origin: ['https://tweet-optimizer.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+  credentials: false  // Changed to false
 }));
 
 app.use(express.json());

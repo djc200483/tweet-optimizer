@@ -8,17 +8,15 @@ dotenv.config();
 
 const app = express();
 
-// Remove all previous CORS configurations and use this single one
+// CORS configuration
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://tweet-optimizer.vercel.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
-  // Handle preflight
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
   next();
 });
 

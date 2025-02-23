@@ -70,90 +70,18 @@ app.post('/rewrite-tweet', async (req, res) => {
       messages: [
         {
           "role": "system", 
-          "content": `You are a tweet optimization expert who understands the nuances of different communication styles. Here are the distinct styles and their characteristics:
-
-// Professional & Business
-Professional: Clear, polished, industry-standard language, maintains credibility
-Corporate: Formal, business-oriented, structured, authoritative
-Sales: Action-oriented, value-focused, compelling, drives conversion
-Persuasive: Convincing, strategic, outcome-focused, influences decisions
-
-// Casual & Personal
-Casual: Relaxed, friendly, approachable, everyday language
-Conversational: Natural, dialogue-like, engaging, relatable
-Authentic: Genuine, personal, honest, true to voice
-Heartfelt: Emotional, sincere, compassionate, connects deeply
-
-// Entertainment & Humor
-Humorous: Funny, light-hearted, entertaining, brings joy
-Witty: Clever, sharp, intelligent humor, quick thinking
-Playful: Fun, cheerful, lighthearted, brings delight
-Sarcastic: Ironic, satirical, clever criticism, edgy
-
-// Educational & Informative
-Educational: Teaching-focused, informative, clear explanation
-Informative: Fact-based, detailed, enlightening, shares knowledge
-Analytical: Data-driven, logical, methodical, evidence-based
-Technical: Specialized, precise, detailed, expert-level
-
-// Inspirational & Motivational
-Inspirational: Uplifting, motivating, positive, sparks imagination
-Motivational: Encouraging, action-driving, energetic, builds momentum
-Empowering: Confidence-building, strengthening, enables growth
-Encouraging: Supportive, positive, reassuring, nurtures progress
-
-Important Guidelines:
-1. When given a specific tone, create three DISTINCTLY DIFFERENT variations using ONLY that tone's characteristics.
-2. Do not mix tones or borrow from related tones.
-3. Each variation should:
-   - Use a unique opening/hook approach
-   - Vary in sentence structure and word choice
-   - Maintain the core message but express it differently
-   - Feel fresh and distinct from the other versions
-
-${hook === 'curiosity' ? `For curiosity hooks, use different approaches for each version:
-- Version 1: Use a "What if..." or "Imagine..." opening
-- Version 2: Create mystery with "The secret behind..." or "Here's what most people miss..."
-- Version 3: Challenge assumptions with "Think you know about...? Think again"` : ''}
-
-${hook === 'controversial' ? `For controversial hooks, vary the intensity and approach:
-- Version 1: Start with "Unpopular opinion:" and a bold statement
-- Version 2: Challenge conventional wisdom with "Everyone says... but here's the truth:"
-- Version 3: Use a "Stop believing this myth:" approach` : ''}
-
-${hook === 'number' ? `For number hooks, use different numerical approaches:
-- Version 1: Use a smaller number (2-3) with "crucial" or "essential"
-- Version 2: Use a medium number (4-5) with "surprising" or "unexpected"
-- Version 3: Use a specific number with "secrets" or "strategies"` : ''}
-
-${hook === 'shock' ? `For shock hooks, vary the surprise element:
-- Version 1: Use a surprising statistic or fact
-- Version 2: Present a counter-intuitive truth
-- Version 3: Start with a dramatic revelation` : ''}
-
-${hook === 'relatable' ? `For relatable hooks, use different emotional angles:
-- Version 1: Use "We've all been there..." approach
-- Version 2: Start with "That moment when..."
-- Version 3: Begin with "Let's be honest..." or "Truth time:"` : ''}
-
-Number your responses 1., 2., and 3.
-Avoid hashtags and emojis.
-Ensure each version feels completely different from the others.`
+          "content": `You are a tweet optimization expert who understands the nuances of different communication styles.`
         },
         {
-          "role": "user", 
-          "content": `Create exactly three variations of this message using strictly the ${tone} tone ONLY: ${tweet}`
+          "role": "user",
+          "content": `Rewrite this tweet in a ${tone} tone. ${hookInstruction}\n\nTweet: ${tweet}`
         }
       ],
+      n: 3,
     });
-    
-    // Split the response into an array of tweets
-    const versions = completion.choices[0].message.content
-      .split('\n')
-      .filter(line => line.trim().length > 0 && /^\d\./.test(line))
-      .map(line => line.replace(/^\d\.\s*/, '').trim());
 
-    res.json({ rewrittenTweets: versions });
+    const rewrittenTweets = completion.choices.map(choice => choice.message.content.trim());
+    res.json({ rewrittenTweets });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Error rewriting tweet' });
@@ -211,17 +139,7 @@ app.post('/analyze-tweet', async (req, res) => {
       messages: [
         {
           "role": "system",
-          "content": `You are a tweet analysis expert. Analyze tweets for their viral potential and structure.
-          Break down the following elements in a clear, concise way:
-          
-          1. Hook Type: Identify the opening hook style (question, statement, curiosity, etc.)
-          2. Engagement Triggers: Identify emotional or psychological triggers used
-          3. Structure & Style: Analyze the writing style and format
-          4. Key Success Elements: Identify what makes this tweet potentially engaging
-          5. Target Response: What reaction was the tweet designed to elicit
-          
-          Keep each analysis point brief but insightful. Total response should be under 350 characters per section.
-          Format the response as a JSON array with 'label' and 'value' for each element.`
+          "content": "You are a tweet analysis expert. Analyze the given tweet and provide insights about its structure, tone, and effectiveness."
         },
         {
           "role": "user",
@@ -230,9 +148,7 @@ app.post('/analyze-tweet', async (req, res) => {
       ],
     });
 
-    // Parse the response into structured format
-    const analysis = JSON.parse(completion.choices[0].message.content);
-    
+    const analysis = completion.choices[0].message.content;
     res.json({ analysis });
   } catch (error) {
     console.error('Error:', error);
@@ -287,97 +203,22 @@ app.post('/analyze-power-words', async (req, res) => {
   try {
     const { text } = req.body;
     
-    // First, get a detailed analysis of the tweet
-    const analysisCompletion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          "role": "system",
-          "content": `Analyze this tweet's emotional and structural elements in detail. Focus on:
-1. The core emotion or message being conveyed
-2. The writing style and tone being used
-3. The intended impact on readers
-4. Any unique phrases or word choices
-5. Areas where stronger word choices could enhance impact
-
-Provide a thorough but concise analysis.`
-        },
-        {
-          "role": "user",
-          "content": `Analyze this tweet: ${text}`
-        }
-      ],
-    });
-
-    const analysis = analysisCompletion.choices[0].message.content;
-
-    // Use the analysis to generate power word suggestions in specific categories
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           "role": "system",
-          "content": `You are a power words expert. Based on this analysis of a tweet, suggest powerful words that would enhance its specific message and impact.
-
-Analysis of the tweet:
-${analysis}
-
-You MUST provide suggestions for ALL of these categories, adapting them to fit the tweet's context:
-
-1. Emotional Impact Words:
-- Words that trigger specific emotions (joy, curiosity, excitement, empathy, fear)
-- Examples: astonishing, heartwarming, unbelievable, jaw-dropping, life-changing
-- Adapt emotional words to match or amplify the tweet's current emotional tone
-
-2. Urgency and Scarcity Words:
-- Words that create time pressure or scarcity
-- Examples: limited-time, last chance, exclusive, don't miss out
-- If the tweet isn't time-sensitive, suggest ways to add gentle urgency
-
-3. Action-Oriented Words:
-- Words that drive motivation and empowerment
-- Examples: unlock, transform, achieve, supercharge, revolutionize
-- Even for informational tweets, suggest action words that enhance engagement
-
-4. Social Proof and FOMO Words:
-- Words that suggest widespread engagement or exclusivity
-- Examples: join the movement, everyone's talking about, be part of the elite
-- For personal tweets, adapt these to create community connection
-
-5. Clarity and Focus Words:
-- Words that provide clear direction and understanding
-- Examples: clear, straightforward, step-by-step, precise, definitive
-- For every tweet style, suggest ways to enhance clarity while maintaining tone
-
-For EACH category (all must be included):
-- Provide 3-5 words that could enhance the tweet
-- Show an example of how to integrate these words naturally
-- If a category seems less relevant, be creative in adapting it to fit
-- Maintain the tweet's authentic voice while making it more impactful
-
-Format response as a JSON object with:
-{
-  "tone": "Analysis of current emotional tone",
-  "structure": "Analysis of writing style and structure",
-  "improvements": "Specific opportunities for stronger word choices",
-  "suggestions": [
-    {
-      "category": "Category name (must include all 5 categories)",
-      "words": ["word1", "word2", "word3"],
-      "example": "Example using these words in THIS tweet"
-    }
-  ]
-}`
+          "content": "You are a power word analysis expert."
         },
         {
           "role": "user",
-          "content": `Suggest power words for this tweet: ${text}`
+          "content": `Analyze the power words in this text: ${text}`
         }
       ],
     });
 
-    const powerWords = JSON.parse(completion.choices[0].message.content);
-    res.json(powerWords);
+    const analysis = completion.choices[0].message.content;
+    res.json({ analysis });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Error analyzing power words' });

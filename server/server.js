@@ -207,13 +207,36 @@ app.post('/analyze-power-words', async (req, res) => {
           "content": `You are a power word analysis expert. Analyze the given text and provide:
           1. Analysis of current power words
           2. Suggestions for improvement in these categories:
-             - Emotional Impact
-             - Action Words
-             - Persuasive Language
-             - Time Sensitivity
-          For each category, provide:
-          - Relevant power words
-          - An example tweet using those words`
+
+          Emotional Impact:
+          - Words that trigger specific emotions (joy, curiosity, excitement, empathy, fear)
+          - Examples: astonishing, heartwarming, unbelievable, jaw-dropping, life-changing
+          - Provide specific suggestions for the text
+
+          Urgency and Scarcity:
+          - Words that create time pressure or scarcity
+          - Examples: limited-time, last chance, exclusive, hurry, urgent
+          - Suggest modifications using these types of words
+
+          Action-Oriented:
+          - Words that drive action and motivation
+          - Examples: unlock, transform, achieve, discover, enhance, supercharge
+          - Provide actionable alternatives
+
+          Social Proof and FOMO:
+          - Words that suggest popularity or missing out
+          - Examples: join the movement, trending, elite, hottest trend
+          - Suggest social proof elements
+
+          Clarity and Focus:
+          - Words that provide clear direction
+          - Examples: clear, straightforward, step-by-step, precise
+          - Suggest clarity improvements
+
+          For each category:
+          - List relevant power words found or missing
+          - Provide specific example modifications
+          - Suggest improvements`
         },
         {
           "role": "user",
@@ -222,28 +245,34 @@ app.post('/analyze-power-words', async (req, res) => {
       ],
     });
 
-    // Parse the response into the expected format
     const analysis = completion.choices[0].message.content;
+    
+    // Define comprehensive suggestion categories
     const suggestions = [
       {
         category: "Emotional Impact",
-        words: ["powerful", "inspiring", "transformative"],
-        example: "Transform your perspective with these powerful insights..."
+        words: ["astonishing", "heartwarming", "unbelievable", "jaw-dropping", "life-changing"],
+        example: "Transform ordinary moments into jaw-dropping experiences..."
       },
       {
-        category: "Action Words",
-        words: ["launch", "create", "build"],
-        example: "Launch your dream project today and create lasting impact..."
+        category: "Urgency and Scarcity",
+        words: ["limited-time", "exclusive", "hurry", "last chance", "don't miss out"],
+        example: "Last chance: Claim your exclusive spot before it's gone..."
       },
       {
-        category: "Persuasive Language",
-        words: ["exclusive", "proven", "guaranteed"],
-        example: "Exclusive strategies proven to guarantee results..."
+        category: "Action-Oriented",
+        words: ["unlock", "transform", "achieve", "discover", "supercharge"],
+        example: "Unlock your potential and transform your results..."
       },
       {
-        category: "Time Sensitivity",
-        words: ["now", "today", "instant"],
-        example: "Start your journey now with instant access..."
+        category: "Social Proof & FOMO",
+        words: ["join the movement", "trending", "everyone's talking about", "elite"],
+        example: "Join the elite community everyone's talking about..."
+      },
+      {
+        category: "Clarity and Focus",
+        words: ["clear", "straightforward", "step-by-step", "precise"],
+        example: "Your clear, step-by-step guide to mastery..."
       }
     ];
 

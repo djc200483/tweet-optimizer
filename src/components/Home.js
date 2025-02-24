@@ -8,7 +8,7 @@ export default function Home({ onSelectFeature }) {
           className="feature-card"
           onClick={() => onSelectFeature('optimize')}
         >
-          <h2>Tweet Optimizer</h2>
+          <h2>Post Optimiser</h2>
           <p>Transform your old posts with AI-powered tone and style adjustments.</p>
           <button className="feature-button">Get Started</button>
         </div>
@@ -18,7 +18,7 @@ export default function Home({ onSelectFeature }) {
           onClick={() => onSelectFeature('reverse')}
         >
           <h2>Reverse Engineer</h2>
-          <p>Analyze successful tweets to understand what makes them effective.</p>
+          <p>Analyse successful posts to understand what makes them effective.</p>
           <button className="feature-button">Get Started</button>
         </div>
 

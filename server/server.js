@@ -66,11 +66,18 @@ app.post('/rewrite-tweet', async (req, res) => {
       messages: [
         {
           "role": "system", 
-          "content": `You are a tweet optimization expert who understands the nuances of different communication styles.`
+          "content": `You are a tweet optimization expert who understands the nuances of different communication styles. 
+          
+IMPORTANT FORMATTING RULES:
+- Do NOT include any hashtags (#) in your responses
+- Do NOT include any emojis in your responses
+- Focus purely on the words and message
+- Keep responses concise and Twitter-length
+- Use only text characters, no special symbols`
         },
         {
           "role": "user",
-          "content": `Rewrite this tweet in a ${tone} tone. ${hookInstruction}\n\nTweet: ${tweet}`
+          "content": `Rewrite this tweet in a ${tone} tone. ${hookInstruction}\n\nTweet: ${tweet}\n\nRemember: No hashtags or emojis in the response.`
         }
       ],
       n: 3,

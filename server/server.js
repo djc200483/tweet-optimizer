@@ -179,7 +179,7 @@ Given a tweet and its analysis, create a new version that:
 
 Provide a single, well-crafted adaptation that could stand alone as its own tweet.
 Keep the length similar to the original.
-Do not use hashtags or emojis.`
+Do not use hashtags or emojis in the response.`
         },
         {
           "role": "user",

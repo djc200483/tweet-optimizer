@@ -211,57 +211,70 @@ app.post('/analyze-power-words', async (req, res) => {
       messages: [
         {
           "role": "system",
-          "content": `You are a power word analysis expert. For the given text, provide a detailed analysis in this format:
+          "content": `You are a tweet analysis expert specializing in power words and engagement optimization.
 
-          1. CURRENT ANALYSIS:
-          - List all power words currently used
-          - Evaluate their effectiveness
-          - Identify missed opportunities
+ANALYSIS STRUCTURE:
 
-          2. CATEGORY-SPECIFIC ANALYSIS:
+1. CURRENT TWEET ANALYSIS:
+- Identify current tone and structure
+- Note existing power words and their effectiveness
+- Highlight engagement potential
+- Point out areas needing improvement
 
-          Emotional Impact:
-          - Current emotional words used:
-          - Missing emotional triggers:
-          - Specific improvement suggestions:
-          - Example rewrites using emotional power words:
+2. CATEGORY-SPECIFIC IMPROVEMENTS:
 
-          Urgency and Scarcity:
-          - Current urgency words used:
-          - Ways to add time pressure:
-          - Specific improvement suggestions:
-          - Example rewrites with urgency:
+Emotional Impact:
+- Current emotional words used (if any)
+- Suggested emotional power words for this context
+- Specific example of how to modify the tweet using these words
+- Why these changes would improve emotional impact
 
-          Action-Oriented:
-          - Current action words used:
-          - Stronger alternatives:
-          - Specific improvement suggestions:
-          - Example rewrites with action words:
+Urgency and Scarcity:
+- Current urgency indicators (if any)
+- Suggested urgency/scarcity words for this context
+- Specific example of adding time pressure or exclusivity
+- How these changes would drive immediate action
 
-          Social Proof and FOMO:
-          - Current social proof elements:
-          - Ways to add FOMO:
-          - Specific improvement suggestions:
-          - Example rewrites with social proof:
+Action-Oriented Language:
+- Current action words used (if any)
+- Suggested power verbs for this context
+- Specific example of strengthening call-to-action
+- How these changes would increase motivation
 
-          Clarity and Focus:
-          - Current clarity words used:
-          - Ways to be more direct:
-          - Specific improvement suggestions:
-          - Example rewrites for clarity:
+Social Proof/FOMO:
+- Current social proof elements (if any)
+- Suggested FOMO-triggering words for this context
+- Specific example of adding social proof
+- How these changes would increase perceived value
 
-          Format each section clearly and provide specific, actionable suggestions.`
+Clarity and Focus:
+- Current clarity level
+- Suggested clarity-enhancing words
+- Specific example of making message more direct
+- How these changes would improve understanding
+
+For each category:
+1. Analyze current usage
+2. Suggest specific improvements
+3. Provide a concrete example
+4. Explain the impact
+
+IMPORTANT:
+- Keep suggestions contextual and natural
+- Don't suggest hashtags or emojis
+- Focus on impactful word choices
+- Maintain the tweet's core message`
         },
         {
           "role": "user",
-          "content": `Analyze the power words in this text: ${text}`
+          "content": `Analyze this tweet and provide power word suggestions: ${text}`
         }
       ],
     });
 
     const analysis = completion.choices[0].message.content;
     
-    // Define comprehensive suggestion categories
+    // Keep the suggestions structure for the UI
     const suggestions = [
       {
         category: "Emotional Impact",

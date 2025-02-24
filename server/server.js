@@ -211,100 +211,64 @@ app.post('/analyze-power-words', async (req, res) => {
       messages: [
         {
           "role": "system",
-          "content": `You are a tweet analysis expert specializing in power words and engagement optimization.
+          "content": `You are a tweet optimization expert. Analyze the tweet and provide improvements in this exact JSON format:
 
-ANALYSIS STRUCTURE:
-
-1. CURRENT TWEET ANALYSIS:
-- Identify current tone and structure
-- Note existing power words and their effectiveness
-- Highlight engagement potential
-- Point out areas needing improvement
-
-2. CATEGORY-SPECIFIC IMPROVEMENTS:
-
-Emotional Impact:
-- Current emotional words used (if any)
-- Suggested emotional power words for this context
-- Specific example of how to modify the tweet using these words
-- Why these changes would improve emotional impact
-
-Urgency and Scarcity:
-- Current urgency indicators (if any)
-- Suggested urgency/scarcity words for this context
-- Specific example of adding time pressure or exclusivity
-- How these changes would drive immediate action
-
-Action-Oriented Language:
-- Current action words used (if any)
-- Suggested power verbs for this context
-- Specific example of strengthening call-to-action
-- How these changes would increase motivation
-
-Social Proof/FOMO:
-- Current social proof elements (if any)
-- Suggested FOMO-triggering words for this context
-- Specific example of adding social proof
-- How these changes would increase perceived value
-
-Clarity and Focus:
-- Current clarity level
-- Suggested clarity-enhancing words
-- Specific example of making message more direct
-- How these changes would improve understanding
-
-For each category:
-1. Analyze current usage
-2. Suggest specific improvements
-3. Provide a concrete example
-4. Explain the impact
+{
+  "analysis": "Brief 2-3 sentence analysis of current tweet",
+  "improvements": [
+    {
+      "category": "Emotional Impact",
+      "example": "Complete rewritten tweet using emotional words",
+      "words_used": ["word1", "word2", "word3"]
+    },
+    {
+      "category": "Urgency and Scarcity",
+      "example": "Complete rewritten tweet using urgency words",
+      "words_used": ["word1", "word2", "word3"]
+    },
+    {
+      "category": "Action-Oriented",
+      "example": "Complete rewritten tweet using action words",
+      "words_used": ["word1", "word2", "word3"]
+    },
+    {
+      "category": "Social Proof & FOMO",
+      "example": "Complete rewritten tweet using social proof",
+      "words_used": ["word1", "word2", "word3"]
+    },
+    {
+      "category": "Clarity and Focus",
+      "example": "Complete rewritten tweet focusing on clarity",
+      "words_used": ["word1", "word2", "word3"]
+    }
+  ]
+}
 
 IMPORTANT:
-- Keep suggestions contextual and natural
-- Don't suggest hashtags or emojis
-- Focus on impactful word choices
-- Maintain the tweet's core message`
+- Keep each example concise and Twitter-length
+- No hashtags or emojis
+- Focus on natural integration of power words
+- Maintain the core message`
         },
         {
           "role": "user",
-          "content": `Analyze this tweet and provide power word suggestions: ${text}`
+          "content": `Analyze and improve this tweet: ${text}`
         }
       ],
     });
 
-    const analysis = completion.choices[0].message.content;
-    
-    // Keep the suggestions structure for the UI
-    const suggestions = [
-      {
-        category: "Emotional Impact",
-        words: ["astonishing", "heartwarming", "unbelievable", "jaw-dropping", "life-changing"],
-        example: "Transform ordinary moments into jaw-dropping experiences..."
-      },
-      {
-        category: "Urgency and Scarcity",
-        words: ["limited-time", "exclusive", "hurry", "last chance", "don't miss out"],
-        example: "Last chance: Claim your exclusive spot before it's gone..."
-      },
-      {
-        category: "Action-Oriented",
-        words: ["unlock", "transform", "achieve", "discover", "supercharge"],
-        example: "Unlock your potential and transform your results..."
-      },
-      {
-        category: "Social Proof & FOMO",
-        words: ["join the movement", "trending", "everyone's talking about", "elite"],
-        example: "Join the elite community everyone's talking about..."
-      },
-      {
-        category: "Clarity and Focus",
-        words: ["clear", "straightforward", "step-by-step", "precise"],
-        example: "Your clear, step-by-step guide to mastery..."
-      }
-    ];
+    // Parse the JSON response
+    const result = JSON.parse(completion.choices[0].message.content);
+
+    // Map the improvements to the UI format
+    const suggestions = result.improvements.map(imp => ({
+      category: imp.category,
+      words: imp.words_used,
+      example: imp.example
+    }));
 
     res.json({ 
-      analysis,
+      analysis: result.analysis,
       suggestions 
     });
   } catch (error) {

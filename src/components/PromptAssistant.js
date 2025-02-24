@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function PromptAssistant() {
   const [selectedOptions, setSelectedOptions] = useState({
@@ -11,6 +12,8 @@ export default function PromptAssistant() {
     timePeriod: '',
     extraDetails: ''
   });
+  const [superchargedPrompt, setSuperchargedPrompt] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const categories = {
     subject: {
@@ -93,6 +96,41 @@ export default function PromptAssistant() {
     return parts.join(', ');
   };
 
+  const handleSupercharge = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${API_URL}/rewrite-tweet`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          tweet: generatePrompt(),
+          tone: 'hyper-detailed',
+          hook: 'descriptive',
+          customInstructions: `Transform this image generation prompt into an extensively detailed masterpiece. 
+            While preserving the core elements, significantly expand the description with:
+            - Rich, intricate details about textures, materials, and surfaces (e.g., weathered metal, glossy reflections, rough stone)
+            - Comprehensive lighting information (quality, direction, color, shadows, highlights)
+            - Atmospheric and environmental details (particles, air quality, weather effects)
+            - Specific color palettes and their interactions
+            - Detailed spatial relationships and composition elements
+            - Precise descriptions of any patterns, decorative elements, or unique features
+            - Mood-enhancing environmental details (temperature, time of day, season)
+            Feel free to be creative and expansive while maintaining the original intent and style.
+            The goal is to create a prompt that would give an AI image generator enough detail to create a stunning, precise image.`
+        }),
+      });
+      
+      const data = await response.json();
+      setSuperchargedPrompt(data.rewrittenTweets[0]);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="tab-content">
       <div className="input-container">
@@ -125,12 +163,38 @@ export default function PromptAssistant() {
             <div className="prompt-text">
               {generatePrompt()}
             </div>
-            <button 
-              className="copy-button"
-              onClick={() => navigator.clipboard.writeText(generatePrompt())}
-            >
-              Copy Prompt
-            </button>
+            <div className="button-row">
+              <button 
+                className="copy-button"
+                onClick={() => navigator.clipboard.writeText(generatePrompt())}
+              >
+                Copy Prompt
+              </button>
+              <button 
+                className="supercharge-button"
+                onClick={handleSupercharge}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Supercharging...' : 'Supercharge Prompt'}
+              </button>
+            </div>
+
+            {superchargedPrompt && (
+              <div className="supercharged-result">
+                <h3>Supercharged Prompt:</h3>
+                <div className="prompt-text">
+                  {superchargedPrompt}
+                </div>
+                <div className="button-row">
+                  <button 
+                    className="copy-button"
+                    onClick={() => navigator.clipboard.writeText(superchargedPrompt)}
+                  >
+                    Copy Supercharged Prompt
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -104,7 +104,7 @@ export default function TweetOptimizer({
           </div>
         </div>
         <textarea 
-          placeholder="Enter your tweet here..."
+          placeholder="Enter your post here..."
           value={tweet}
           onChange={(e) => setTweet(e.target.value)}
           rows="4"
@@ -126,19 +126,19 @@ export default function TweetOptimizer({
             onClick={handleSubmit}
             disabled={isLoading}
           >
-            {isLoading ? 'Optimizing...' : 'Optimize Tweet'}
+            {isLoading ? 'Optimising...' : 'Optimise Post'}
           </button>
         </div>
       </div>
       
       {isLoading && (
         <div className="loading-spinner">
-          Generating optimized versions...
+          Generating optimised versions...
         </div>
       )}
       
       <div className="saved-tweets">
-        <h2>Saved Tweets and Optimizations</h2>
+        <h2>Saved Posts and Optimisations</h2>
         {savedTweets.map((savedTweet, index) => (
           <div key={index} className="tweet-group">
             <div className="original-tweet-card">

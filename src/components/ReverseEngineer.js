@@ -69,7 +69,7 @@ export default function ReverseEngineer({
     <div className="tab-content">
       <div className="input-container">
         <textarea 
-          placeholder="Paste a tweet you want to analyze..."
+          placeholder="Paste a post you want to analyse..."
           value={reverseText}
           onChange={(e) => setReverseText(e.target.value)}
           rows="4"
@@ -80,7 +80,7 @@ export default function ReverseEngineer({
             onClick={handleReverseAnalysis}
             disabled={isLoading}
           >
-            {isLoading ? 'Analyzing...' : 'Analyze Tweet'}
+            {isLoading ? 'Analysing...' : 'Analyse Post'}
           </button>
         </div>
       </div>

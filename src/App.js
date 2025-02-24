@@ -199,7 +199,7 @@ function App() {
               className={`tab-button ${activeTab === 'optimize' ? 'active' : ''}`}
               onClick={() => setActiveTab('optimize')}
             >
-              Tweet Optimizer
+              Post Optimiser
             </button>
             <button 
               className={`tab-button ${activeTab === 'reverse' ? 'active' : ''}`}

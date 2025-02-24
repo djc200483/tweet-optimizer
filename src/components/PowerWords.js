@@ -15,10 +15,10 @@ export default function PowerWords({
       <div className="input-container">
         <div className="power-words-intro">
           <h3>Power Words Analysis</h3>
-          <p>Get contextual word suggestions to enhance your tweet's impact.</p>
+          <p>Get contextual word suggestions to enhance your post's impact.</p>
         </div>
         <textarea 
-          placeholder="Paste text to analyze power words..."
+          placeholder="Paste text to analyse power words..."
           value={powerText}
           onChange={(e) => setPowerText(e.target.value)}
           rows="4"
@@ -29,7 +29,7 @@ export default function PowerWords({
             onClick={handlePowerAnalysis}
             disabled={isLoading}
           >
-            {isLoading ? 'Analyzing...' : 'Analyze Power Words'}
+            {isLoading ? 'Analysing...' : 'Analyse Power Words'}
           </button>
         </div>
       </div>

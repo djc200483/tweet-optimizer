@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 export default function PromptAssistant() {
   const [selectedOptions, setSelectedOptions] = useState({
     subject: '',
+    resolution: '',
     style: '',
     emotion: '',
     lighting: '',
@@ -17,6 +18,17 @@ export default function PromptAssistant() {
       options: ['Person/Character', 'Object', 'Scene', 'Landscape', 'Animal', 'Abstract Concept', 
                 'Historical Event', 'Futuristic Theme', 'Sci-Fi Theme', 'Mythological Theme', 
                 'Fantasy Theme', 'Pop Culture Inspired', 'Artistic Interpretation of a Phrase']
+    },
+    resolution: {
+      title: 'Resolution',
+      options: [
+        'Low Resolution (480p)',
+        'Standard HD (720p)',
+        'Full HD (1080p)',
+        '2K Resolution',
+        '4K Ultra HD',
+        '8K Ultra HD'
+      ]
     },
     style: {
       title: 'Style & Medium',
@@ -70,6 +82,7 @@ export default function PromptAssistant() {
     const parts = [];
     
     if (selectedOptions.subject) parts.push(selectedOptions.subject);
+    if (selectedOptions.resolution) parts.push(`in ${selectedOptions.resolution}`);
     if (selectedOptions.style) parts.push(`in ${selectedOptions.style} style`);
     if (selectedOptions.emotion) parts.push(`with a ${selectedOptions.emotion.toLowerCase()} mood`);
     if (selectedOptions.lighting) parts.push(`featuring ${selectedOptions.lighting.toLowerCase()} lighting`);

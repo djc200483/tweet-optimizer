@@ -19,6 +19,9 @@ export default function TweetOptimizer({
   return (
     <div className="tab-content">
       <div className="input-container">
+        <div className="testing-instructions">
+          <p>Testing Instructions - Paste in any of your previous posts, change the tone and if you choose to, you can add a hook</p>
+        </div>
         <div className="tone-selector">
           <h3>Select Tone:</h3>
           <div className="tone-options">

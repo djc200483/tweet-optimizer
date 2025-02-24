@@ -68,6 +68,9 @@ export default function ReverseEngineer({
   return (
     <div className="tab-content">
       <div className="input-container">
+        <div className="testing-instructions">
+          <p>Testing Instructions - Paste in any post to have it analysed for the success criteria</p>
+        </div>
         <textarea 
           placeholder="Paste a post you want to analyse..."
           value={reverseText}

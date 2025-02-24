@@ -13,6 +13,9 @@ export default function PowerWords({
   return (
     <div className="tab-content">
       <div className="input-container">
+        <div className="testing-instructions">
+          <p>Testing Instructions - Paste in any post to have it analysed for impact, current power words, and where they could improve</p>
+        </div>
         <div className="power-words-intro">
           <h3>Power Words Analysis</h3>
           <p>Get contextual word suggestions to enhance your post's impact.</p>

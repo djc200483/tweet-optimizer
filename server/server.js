@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const OpenAI = require('openai');
+const db = require('./db');
 // const axios = require('axios');  // Commented out for now
 
 dotenv.config();
@@ -276,6 +277,9 @@ IMPORTANT:
     res.status(500).json({ error: 'Error analyzing power words' });
   }
 });
+
+// Feature flag for auth
+const ENFORCE_AUTH = false;
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

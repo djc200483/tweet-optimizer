@@ -30,6 +30,15 @@ export default function Home({ onSelectFeature }) {
           <p>Enhance your posts with impactful and engaging word choices.</p>
           <button className="feature-button">Get Started</button>
         </div>
+
+        <div 
+          className="feature-card"
+          onClick={() => onSelectFeature('prompt')}
+        >
+          <h2>Prompt Assistant</h2>
+          <p>Generate structured prompts for AI image generation tools.</p>
+          <button className="feature-button">Get Started</button>
+        </div>
       </div>
 
       <div className="home-description">

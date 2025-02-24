@@ -2,6 +2,7 @@ import { useState } from 'react';
 import TweetOptimizer from './components/TweetOptimizer';
 import ReverseEngineer from './components/ReverseEngineer';
 import PowerWords from './components/PowerWords';
+import PromptAssistant from './components/PromptAssistant';
 import Home from './components/Home';
 import './App.css';
 
@@ -213,6 +214,12 @@ function App() {
             >
               Power Words
             </button>
+            <button 
+              className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
+              onClick={() => setActiveTab('prompt')}
+            >
+              Prompt Assistant
+            </button>
           </>
         )}
       </div>
@@ -246,7 +253,7 @@ function App() {
           analysisResults={analysisResults}
           setAnalysisResults={setAnalysisResults}
         />
-      ) : (
+      ) : activeTab === 'power' ? (
         <PowerWords 
           powerText={powerText}
           setPowerText={setPowerText}
@@ -255,6 +262,8 @@ function App() {
           setPowerResults={setPowerResults}
           handlePowerAnalysis={handlePowerAnalysis}
         />
+      ) : (
+        <PromptAssistant />
       )}
     </div>
   );

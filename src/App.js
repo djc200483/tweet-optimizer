@@ -278,7 +278,10 @@ function AppContent() {
           </>
         );
       default:
-        return <Home onSelectFeature={setCurrentFeature} />;
+        return <Home 
+          onSelectFeature={setCurrentFeature} 
+          isLoggedIn={!!user && !!token} 
+        />;
     }
   };
 

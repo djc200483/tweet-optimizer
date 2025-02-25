@@ -479,6 +479,17 @@ body {
   background: #1991db;
 }
 
+.feature-button:disabled {
+  background: #e1e8ed;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.feature-button:disabled:hover {
+  background: #e1e8ed;
+  transform: none;
+}
+
 .home-description {
   text-align: center;
   margin: 20px auto 40px;

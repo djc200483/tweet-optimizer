@@ -69,21 +69,21 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    console.log('Login attempt:', {
+      receivedEmail: email,
+      configuredEmail: process.env.ADMIN_EMAIL,
+      emailMatch: email === process.env.ADMIN_EMAIL,
+      passwordMatch: password === process.env.ADMIN_PASSWORD
+    });
+    
     // Check if these are admin credentials
     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-      console.log('Admin login attempt:', {
-        attemptEmail: email,
-        envEmail: process.env.ADMIN_EMAIL,
-        passwordMatch: password === process.env.ADMIN_PASSWORD
-      });
-      
+      console.log('Admin login successful');
       const token = jwt.sign(
         { id: 'admin', isAdmin: true },
         process.env.JWT_SECRET,
         { expiresIn: '24h' }
       );
-      
-      console.log('Admin token generated:', token);
       
       return res.json({
         token,
@@ -94,6 +94,8 @@ router.post('/login', async (req, res) => {
         }
       });
     }
+    
+    console.log('Admin login failed, checking regular user...');
     
     // Find user
     const result = await db.query(

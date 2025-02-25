@@ -24,12 +24,12 @@ export default function Login({ onToggleForm }) {
       const result = await login(email, password);
       console.log('Login result:', result);
       if (!result.success) {
-        setError(result.error || 'Login failed');
+        setError(`Login failed: ${result.error || 'Unknown error'}`);
         setTimeout(() => setError(''), 5000);
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('An error occurred during login');
+      setError(`Login error: ${err.message}`);
       setTimeout(() => setError(''), 5000);
     } finally {
       setIsLoading(false);

@@ -45,16 +45,21 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setIsAuthLoading(true);
-      console.log('AuthContext login attempt:', { email });
+      console.log('Login request:', { email });
       const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({ email, password }),
       });
       
+      console.log('Login response status:', response.status);
       const data = await response.json();
-      console.log('AuthContext login response:', data);
-      if (data.token) {
+      console.log('Login response data:', data);
+      
+      if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
         setToken(data.token);
         setUser(data.user);
@@ -63,8 +68,8 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: data.error };
       }
     } catch (error) {
-      console.error('AuthContext login error:', error);
-      return { success: false, error: 'Login failed' };
+      console.error('Login error:', error);
+      return { success: false, error: error.message };
     } finally {
       setIsAuthLoading(false);
     }

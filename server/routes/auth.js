@@ -78,6 +78,7 @@ router.post('/login', async (req, res) => {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
       
+      // For admin login, ignore x_handle requirement
       console.log('Admin login successful');
       const token = jwt.sign(
         { id: 'admin', isAdmin: true },

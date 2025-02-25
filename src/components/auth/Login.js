@@ -14,10 +14,10 @@ export default function Login({ onToggleForm }) {
     email.toLowerCase() === process.env.REACT_APP_ADMIN_EMAIL.toLowerCase();
 
   // Debug log
-  console.log('Environment check:', {
-    adminEmail: process.env.REACT_APP_ADMIN_EMAIL,
-    currentEmail: email,
-    isAdminEmail
+  console.log('Login form state:', {
+    email,
+    isAdminEmail,
+    adminEmail: process.env.REACT_APP_ADMIN_EMAIL
   });
 
   // Clear any auth errors when component mounts or unmounts
@@ -84,7 +84,7 @@ export default function Login({ onToggleForm }) {
               id="x_handle"
               value={x_handle}
               onChange={(e) => setX_handle(e.target.value)}
-              required={!isAdminEmail}
+              required={false}
             />
           </div>
         )}

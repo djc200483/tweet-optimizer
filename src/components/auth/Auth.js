@@ -13,8 +13,6 @@ export default function Auth({ onClose }) {
     return () => setOnClose(null);
   }, [onClose, setOnClose]);
 
-  console.log('Current form:', currentForm);
-
   const handleFormToggle = (form) => {
     console.log('Toggling form to:', form);
     setCurrentForm(form);
@@ -32,7 +30,6 @@ export default function Auth({ onClose }) {
       >
         ← Back to Home
       </button>
-      {console.log('Current form:', currentForm)}
       {currentForm === 'login' && (
         <Login onToggleForm={handleFormToggle} />
       )}

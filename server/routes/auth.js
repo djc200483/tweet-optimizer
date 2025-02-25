@@ -30,7 +30,16 @@ router.post('/register', async (req, res) => {
     
     console.log('Existing user check:', existingUser.rows);
     if (existingUser.rows.length > 0) {
-      return res.status(400).json({ error: 'User already exists' });
+      const existing = existingUser.rows[0];
+      console.log('Existing user found:', {
+        existingEmail: existing.email === email,
+        existingHandle: existing.x_handle === x_handle
+      });
+      return res.status(400).json({ 
+        error: `User already exists with this ${
+          existing.email === email ? 'email' : 'X handle'
+        }`
+      });
     }
     
     // Hash password

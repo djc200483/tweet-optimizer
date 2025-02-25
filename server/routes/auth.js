@@ -51,6 +51,8 @@ router.post('/register', async (req, res) => {
       [email, hashedPassword, x_handle]
     );
     
+    console.log('User created:', result.rows[0]);
+
     // Generate JWT
     const token = jwt.sign(
       { id: result.rows[0].id },

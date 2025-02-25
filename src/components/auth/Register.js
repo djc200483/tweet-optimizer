@@ -58,7 +58,6 @@ export default function Register({ onToggleForm }) {
       console.log('Registration result:', result);
       if (!result.success) {
         setError(result.error || 'Registration failed');
-        setTimeout(() => setError(''), 5000);
       } else {
         console.log('Registration successful');
         onToggleForm('login');
@@ -66,7 +65,6 @@ export default function Register({ onToggleForm }) {
     } catch (err) {
       console.error('Registration error:', err);
       setError('Registration error');
-      setTimeout(() => setError(''), 5000);
     } finally {
       setIsLoading(false);
     }

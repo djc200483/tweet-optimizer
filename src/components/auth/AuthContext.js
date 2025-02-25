@@ -79,23 +79,34 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password, x_handle) => {
     try {
+      console.log('Starting registration for:', { email, x_handle });
       const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, x_handle }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password, x_handle })
       });
-      
+
       const data = await response.json();
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        setToken(data.token);
-        setUser(data.user);
-        return { success: true };
-      } else {
-        return { success: false, error: data.error };
+      console.log('Registration response:', { status: response.status, data });
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed');
       }
+
+      // Store the token and user data
+      localStorage.setItem('token', data.token);
+      setToken(data.token);
+      setUser(data.user);
+      return { success: true };
+
     } catch (error) {
-      return { success: false, error: 'Registration failed' };
+      console.error('Registration error:', error);
+      return {
+        success: false,
+        error: error.message || 'Registration failed'
+      };
     }
   };
 

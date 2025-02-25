@@ -599,3 +599,28 @@ body {
     flex: 0 1 100%;
   }
 }
+
+.supercharge-button {
+  background: #805ad5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.supercharge-button:hover {
+  background: #6b46c1;
+}
+
+.supercharge-button:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.supercharged-result {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8ed;
+}

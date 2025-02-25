@@ -1,11 +1,15 @@
+require('dotenv').config();  // Move this to very top
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const OpenAI = require('openai');
 const db = require('./db');
+const fs = require('fs');
+const path = require('path');
 // const axios = require('axios');  // Commented out for now
 
-dotenv.config();
+// Log database connection info (temporary)
+console.log('Database URL configured:', !!process.env.DATABASE_URL);
+console.log('Database URL domain:', process.env.DATABASE_URL?.split('@')[1]?.split(':')[0] || 'not found');
 
 const app = express();
 
@@ -277,6 +281,39 @@ IMPORTANT:
     res.status(500).json({ error: 'Error analyzing power words' });
   }
 });
+
+// Test database connection
+app.get('/test-db', async (req, res) => {
+  try {
+    const result = await db.query('SELECT NOW()');
+    res.json({ success: true, timestamp: result.rows[0].now });
+  } catch (error) {
+    console.error('Database connection error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      details: {
+        code: error.code,
+        database: process.env.DATABASE_URL ? 'URL configured' : 'URL missing',
+        connectionError: error.toString()
+      }
+    });
+  }
+});
+
+// Initialize database
+const initializeDb = async () => {
+  try {
+    const schema = fs.readFileSync(path.join(__dirname, 'db', 'schema.sql'), 'utf8');
+    await db.query(schema);
+    console.log('Database schema initialized successfully');
+  } catch (error) {
+    console.error('Error initializing database schema:', error);
+  }
+};
+
+// Call initialization when server starts
+initializeDb();
 
 // Feature flag for auth
 const ENFORCE_AUTH = false;

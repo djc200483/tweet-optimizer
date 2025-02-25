@@ -28,7 +28,7 @@ app.use(cors({
     'https://tweet-optimizer-production-8f8e.up.railway.app',
     'https://tweet-optimizer-production.up.railway.app'
   ],
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
   credentials: true,
   optionsSuccessStatus: 200

@@ -258,6 +258,10 @@ function AppContent() {
     checkApi();
   }, []);
 
+  useEffect(() => {
+    console.log('Auth state:', { user, isAdmin });
+  }, [user, isAdmin]);
+
   return (
     <div className="App">
       {apiError && (

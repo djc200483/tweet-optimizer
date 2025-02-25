@@ -81,6 +81,7 @@ router.post('/login', async (req, res) => {
         token,
         user: {
           email: process.env.ADMIN_EMAIL,
+          x_handle: 'admin',
           is_admin: true
         }
       });
@@ -136,6 +137,17 @@ router.post('/verify', async (req, res) => {
     }
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Check if this is an admin token
+    if (decoded.isAdmin) {
+      return res.json({
+        user: {
+          email: process.env.ADMIN_EMAIL,
+          is_admin: true
+        }
+      });
+    }
+    
     const result = await db.query(
       'SELECT id, email, x_handle FROM users WHERE id = $1',
       [decoded.id]

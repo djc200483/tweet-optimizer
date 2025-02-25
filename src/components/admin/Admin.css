@@ -1,0 +1,138 @@
+.admin-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.admin-container h2 {
+  color: #1da1f2;
+  margin-bottom: 30px;
+}
+
+.add-user-form {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #536471;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #e1e8ed;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.admin-button {
+  background: #1da1f2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.admin-button:hover {
+  background: #1991db;
+}
+
+.users-list {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.users-list h3 {
+  color: #1da1f2;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+th {
+  color: #536471;
+  font-weight: 500;
+}
+
+.disabled-user {
+  background: #f8f9fa;
+  color: #536471;
+}
+
+.status-toggle {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.status-toggle.disable {
+  background: #e0245e;
+  color: white;
+}
+
+.status-toggle.enable {
+  background: #17bf63;
+  color: white;
+}
+
+.status-toggle.disable:hover {
+  background: #c01e4e;
+}
+
+.status-toggle.enable:hover {
+  background: #15a555;
+}
+
+.admin-error {
+  color: #e0245e;
+  background: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.admin-success {
+  color: #17bf63;
+  background: #e8f5e9;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.admin-loading {
+  text-align: center;
+  padding: 40px;
+  color: #536471;
+} 

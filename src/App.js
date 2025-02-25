@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { AuthProvider, useAuth } from './components/auth/AuthContext';
+import Auth from './components/auth/Auth';
+import Admin from './components/admin/Admin';
 import TweetOptimizer from './components/TweetOptimizer';
 import ReverseEngineer from './components/ReverseEngineer';
 import PowerWords from './components/PowerWords';
@@ -19,6 +22,9 @@ function App() {
   const [analysisResults, setAnalysisResults] = useState([]);
   const [powerText, setPowerText] = useState('');
   const [powerResults, setPowerResults] = useState([]);
+  const [currentFeature, setCurrentFeature] = useState(null);
+  const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
+  const [showAuth, setShowAuth] = useState(false);
 
   const tones = [
     // Professional & Business
@@ -102,6 +108,7 @@ function App() {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ 
             tweet, 
@@ -189,45 +196,10 @@ function App() {
     }
   };
 
-  return (
-    <div className="App">
-      <h1>EchoSphere</h1>
-      
-      <div className="tab-navigation">
-        {activeTab !== 'home' && (
-          <>
-            <button 
-              className={`tab-button ${activeTab === 'optimize' ? 'active' : ''}`}
-              onClick={() => setActiveTab('optimize')}
-            >
-              Post Optimiser
-            </button>
-            <button 
-              className={`tab-button ${activeTab === 'reverse' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reverse')}
-            >
-              Reverse Engineer
-            </button>
-            <button 
-              className={`tab-button ${activeTab === 'power' ? 'active' : ''}`}
-              onClick={() => setActiveTab('power')}
-            >
-              Power Words
-            </button>
-            <button 
-              className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
-              onClick={() => setActiveTab('prompt')}
-            >
-              Prompt Assistant
-            </button>
-          </>
-        )}
-      </div>
-
-      {activeTab === 'home' ? (
-        <Home onSelectFeature={setActiveTab} />
-      ) : activeTab === 'optimize' ? (
-        <TweetOptimizer 
+  const renderFeature = () => {
+    switch(currentFeature) {
+      case 'optimize':
+        return <TweetOptimizer 
           tweet={tweet}
           setTweet={setTweet}
           selectedTone={selectedTone}
@@ -242,9 +214,9 @@ function App() {
           tones={tones}
           hookOptions={hookOptions}
           toneColors={toneColors}
-        />
-      ) : activeTab === 'reverse' ? (
-        <ReverseEngineer 
+        />;
+      case 'reverse':
+        return <ReverseEngineer 
           reverseText={reverseText}
           setReverseText={setReverseText}
           handleReverseAnalysis={handleReverseAnalysis}
@@ -252,20 +224,107 @@ function App() {
           setIsLoading={setIsLoading}
           analysisResults={analysisResults}
           setAnalysisResults={setAnalysisResults}
-        />
-      ) : activeTab === 'power' ? (
-        <PowerWords 
+        />;
+      case 'power':
+        return <PowerWords 
           powerText={powerText}
           setPowerText={setPowerText}
           isLoading={isLoading}
           powerResults={powerResults}
           setPowerResults={setPowerResults}
           handlePowerAnalysis={handlePowerAnalysis}
-        />
-      ) : (
-        <PromptAssistant />
-      )}
-    </div>
+        />;
+      case 'prompt':
+        return <PromptAssistant />;
+      default:
+        return <Home onSelectFeature={setCurrentFeature} />;
+    }
+  };
+
+  return (
+    <AuthProvider>
+      <div className="App">
+        {authError && (
+          <div className="auth-error-banner">
+            {authError}
+          </div>
+        )}
+        {isAuthLoading ? (
+          <div className="auth-loading">
+            <div className="loading-spinner"></div>
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <>
+            {user?.is_admin ? (
+              <Admin />
+            ) : (
+              <div className="auth-header">
+                {user ? (
+                  <div className="user-info">
+                    <span>@{user.x_handle}</span>
+                    <button 
+                      className="logout-button"
+                      onClick={logout}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    className="auth-toggle-button"
+                    onClick={() => setShowAuth(!showAuth)}
+                  >
+                    Login/Register
+                  </button>
+                )}
+              </div>
+            )}
+            
+            {showAuth ? (
+              <Auth />
+            ) : (
+              <>
+                <h1>EchoSphere</h1>
+                
+                <div className="tab-navigation">
+                  {activeTab !== 'home' && (
+                    <>
+                      <button 
+                        className={`tab-button ${activeTab === 'optimize' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('optimize')}
+                      >
+                        Post Optimiser
+                      </button>
+                      <button 
+                        className={`tab-button ${activeTab === 'reverse' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('reverse')}
+                      >
+                        Reverse Engineer
+                      </button>
+                      <button 
+                        className={`tab-button ${activeTab === 'power' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('power')}
+                      >
+                        Power Words
+                      </button>
+                      <button 
+                        className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('prompt')}
+                      >
+                        Prompt Assistant
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {renderFeature()}
+              </>
+            )}
+          </>
+        )}
+      </div>
+    </AuthProvider>
   );
 }
 

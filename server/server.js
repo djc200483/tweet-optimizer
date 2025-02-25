@@ -5,6 +5,9 @@ const OpenAI = require('openai');
 const db = require('./db');
 const fs = require('fs');
 const path = require('path');
+const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
+const authMiddleware = require('./middleware/auth');
 // const axios = require('axios');  // Commented out for now
 
 // Log database connection info (temporary)
@@ -22,6 +25,11 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Auth routes
+app.use('/auth', authRoutes);
+// Admin routes
+app.use('/admin', adminRoutes);
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -60,7 +68,7 @@ const getHookInstruction = (hookType) => {
 };
 
 // Endpoint for rewriting tweets
-app.post('/rewrite-tweet', async (req, res) => {
+app.post('/rewrite-tweet', authMiddleware, async (req, res) => {
   try {
     const { tweet, tone, hook } = req.body;
     
@@ -138,7 +146,7 @@ Focus only on data from the last 2 hours. Format each list clearly and separatel
 */
 
 // Add new endpoint for tweet analysis
-app.post('/analyze-tweet', async (req, res) => {
+app.post('/analyze-tweet', authMiddleware, async (req, res) => {
   try {
     const { tweet } = req.body;
     
@@ -207,7 +215,7 @@ Create a personalized adaptation:`
 });
 
 // Add new endpoint for power words analysis
-app.post('/analyze-power-words', async (req, res) => {
+app.post('/analyze-power-words', authMiddleware, async (req, res) => {
   try {
     const { text } = req.body;
     

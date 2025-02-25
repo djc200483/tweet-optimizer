@@ -4,9 +4,12 @@ import { useAuth } from './AuthContext';
 export default function Login({ onToggleForm }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [x_handle, setX_handle] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login, clearAuthError } = useAuth();
+
+  const isAdminEmail = email === process.env.REACT_APP_ADMIN_EMAIL;
 
   // Clear any auth errors when component mounts or unmounts
   useEffect(() => {
@@ -21,7 +24,7 @@ export default function Login({ onToggleForm }) {
 
     try {
       console.log('Login attempt:', { email });
-      const result = await login(email, password);
+      const result = await login(email, password, isAdminEmail ? null : x_handle);
       console.log('Login result:', result);
       if (!result.success) {
         setError(`Login failed: ${result.error || 'Unknown error'}`);
@@ -63,6 +66,19 @@ export default function Login({ onToggleForm }) {
             required
           />
         </div>
+
+        {!isAdminEmail && (
+          <div className="form-group">
+            <label htmlFor="x_handle">X Handle</label>
+            <input
+              type="text"
+              id="x_handle"
+              value={x_handle}
+              onChange={(e) => setX_handle(e.target.value)}
+              required={!isAdminEmail}
+            />
+          </div>
+        )}
 
         <button 
           type="submit" 

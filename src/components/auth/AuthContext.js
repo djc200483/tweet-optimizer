@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     verifyToken();
   }, [token]);
 
-  const login = async (email, password) => {
+  const login = async (email, password, x_handle = null) => {
     try {
       setIsAuthLoading(true);
       console.log('Login request:', { email });
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, x_handle }),
       });
       
       console.log('Login response status:', response.status);

@@ -13,7 +13,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 function AppContent() {
   const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
-  const [showAuth, setShowAuth] = useState(false);
+  const [showAuth, setShowAuth] = useState(!token);
   const [apiError, setApiError] = useState(null);
   const [tweet, setTweet] = useState('');
   const [savedTweets, setSavedTweets] = useState([]);
@@ -280,36 +280,37 @@ function AppContent() {
           <p>Loading...</p>
         </div>
       ) : (
-        <>
-          {user && user.is_admin ? (
-            <Admin />
-          ) : (
-            <div className="auth-header">
-              {user ? (
-                <div className="user-info">
-                  <span>@{user.x_handle}</span>
-                  <button 
-                    className="logout-button"
-                    onClick={logout}
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <button 
-                  className="auth-toggle-button"
-                  onClick={() => setShowAuth(!showAuth)}
-                >
-                  Login/Register
-                </button>
-              )}
+        <div className="app-content">
+          {!token || showAuth ? (
+            <Auth onClose={() => setShowAuth(false)} />
+          ) : user?.is_admin ? (
+            <div className="admin-container">
+              <button className="logout-button" onClick={logout}>Logout</button>
+              <Admin />
             </div>
-          )}
-          
-          {showAuth ? (
-            <Auth />
           ) : (
             <>
+              <div className="auth-header">
+                {user ? (
+                  <div className="user-info">
+                    <span>@{user.x_handle}</span>
+                    <button 
+                      className="logout-button"
+                      onClick={logout}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    className="auth-toggle-button"
+                    onClick={() => setShowAuth(!showAuth)}
+                  >
+                    Login/Register
+                  </button>
+                )}
+              </div>
+              
               <h1>EchoSphere</h1>
               
               <div className="tab-navigation">
@@ -346,7 +347,7 @@ function AppContent() {
               {renderFeature()}
             </>
           )}
-        </>
+        </div>
       )}
     </div>
   );

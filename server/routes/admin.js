@@ -83,9 +83,10 @@ router.get('/allowed-users', async (req, res) => {
 });
 
 // Delete user
-router.delete('/delete-user-complete', async (req, res) => {
+router.delete('/delete-user', async (req, res) => {
   try {
     const { x_handle } = req.body;
+    console.log('Deleting user:', x_handle);
     
     // First delete from users table if they exist
     await db.query(
@@ -99,6 +100,7 @@ router.delete('/delete-user-complete', async (req, res) => {
       [x_handle]
     );
     
+    console.log('User deleted successfully:', x_handle);
     res.json({ message: 'User completely removed from system' });
   } catch (error) {
     console.error('Error deleting user:', error);

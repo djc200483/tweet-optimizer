@@ -55,8 +55,14 @@ export default function Admin() {
     setError('');
     setSuccess('');
 
+    if (!newHandle) {
+      setError('X handle is required');
+      return;
+    }
+
     const handle = newHandle.startsWith('@') ? newHandle : `@${newHandle}`;
 
+    console.log('Adding user:', { handle, notes });
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/allow-user`, {
         method: 'POST',
@@ -67,6 +73,7 @@ export default function Admin() {
         body: JSON.stringify({ x_handle: handle, notes })
       });
 
+      console.log('Add user response:', response.status);
       if (response.ok) {
         setSuccess(`Added ${handle} to allowed users`);
         setNewHandle('');
@@ -74,9 +81,11 @@ export default function Admin() {
         fetchAllowedUsers();
       } else {
         const data = await response.json();
+        console.error('Add user error:', data);
         setError(data.error || 'Failed to add user');
       }
     } catch (err) {
+      console.error('Add user error:', err);
       setError('Error adding user');
     }
   };
@@ -111,6 +120,7 @@ export default function Admin() {
       
       {error && <div className="admin-error">{error}</div>}
       {success && <div className="admin-success">{success}</div>}
+      {isLoading && <div className="loading-spinner"></div>}
 
       <form onSubmit={handleAddUser} className="add-user-form">
         <div className="form-group">

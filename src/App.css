@@ -883,3 +883,19 @@ body {
 .back-home-button:hover {
   background-color: #1991db;
 }
+
+.admin-error {
+  color: #e0245e;
+  background: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+.admin-success {
+  color: #2ea44f;
+  background: #e6ffed;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+}

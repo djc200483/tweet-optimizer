@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './components/auth/AuthContext';
 import Auth from './components/auth/Auth';
 import Admin from './components/admin/Admin';
@@ -25,6 +25,7 @@ function App() {
   const [currentFeature, setCurrentFeature] = useState(null);
   const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
+  const [apiError, setApiError] = useState(null);
 
   const tones = [
     // Professional & Business
@@ -241,9 +242,28 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const checkApi = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/test-db`);
+        const data = await response.json();
+        console.log('API Connection:', data);
+      } catch (error) {
+        console.error('API Error:', error);
+        setApiError(error.message);
+      }
+    };
+    checkApi();
+  }, []);
+
   return (
     <AuthProvider>
       <div className="App">
+        {apiError && (
+          <div className="api-error-banner">
+            API Error: {apiError}
+          </div>
+        )}
         {authError && (
           <div className="auth-error-banner">
             {authError}

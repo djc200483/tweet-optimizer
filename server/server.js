@@ -18,7 +18,12 @@ const app = express();
 
 // More permissive CORS configuration
 app.use(cors({
-  origin: ['https://tweet-optimizer.vercel.app', 'http://localhost:3000', 'https://tweet-optimizer-production-8f8e.up.railway.app'],
+  origin: [
+    'https://tweet-optimizer.vercel.app',
+    'http://localhost:3000',
+    'https://tweet-optimizer-production-8f8e.up.railway.app',
+    'https://tweet-optimizer-production.up.railway.app'
+  ],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
   optionsSuccessStatus: 200

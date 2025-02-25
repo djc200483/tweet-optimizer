@@ -7,11 +7,13 @@ export default function Auth() {
   const [currentForm, setCurrentForm] = useState('login');
 
   const handleFormToggle = (form) => {
+    console.log('Toggling form to:', form);
     setCurrentForm(form);
   };
 
   return (
     <>
+      {console.log('Current form:', currentForm)}
       {currentForm === 'login' && (
         <Login onToggleForm={handleFormToggle} />
       )}

@@ -71,11 +71,19 @@ router.post('/login', async (req, res) => {
     
     // Check if these are admin credentials
     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+      console.log('Admin login attempt:', {
+        attemptEmail: email,
+        envEmail: process.env.ADMIN_EMAIL,
+        passwordMatch: password === process.env.ADMIN_PASSWORD
+      });
+      
       const token = jwt.sign(
         { id: 'admin', isAdmin: true },
         process.env.JWT_SECRET,
         { expiresIn: '24h' }
       );
+      
+      console.log('Admin token generated:', token);
       
       return res.json({
         token,
@@ -138,11 +146,18 @@ router.post('/verify', async (req, res) => {
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
+    console.log('Token verification:', {
+      decoded,
+      isAdmin: decoded.isAdmin
+    });
+    
     // Check if this is an admin token
     if (decoded.isAdmin) {
+      console.log('Admin token verified');
       return res.json({
         user: {
           email: process.env.ADMIN_EMAIL,
+          x_handle: 'admin',
           is_admin: true
         }
       });

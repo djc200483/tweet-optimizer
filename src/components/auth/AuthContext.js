@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setIsAuthLoading(true);
+      console.log('AuthContext login attempt:', { email });
       const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,6 +49,7 @@ export const AuthProvider = ({ children }) => {
       });
       
       const data = await response.json();
+      console.log('AuthContext login response:', data);
       if (data.token) {
         localStorage.setItem('token', data.token);
         setToken(data.token);
@@ -57,6 +59,7 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: data.error };
       }
     } catch (error) {
+      console.error('AuthContext login error:', error);
       return { success: false, error: 'Login failed' };
     } finally {
       setIsAuthLoading(false);

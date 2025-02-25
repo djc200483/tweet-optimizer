@@ -6,7 +6,8 @@ export default function Login({ onToggleForm }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login, clearAuthError } = useAuth();
+  const { login, clearAuthError, user } = useAuth();
+  const { onClose } = useAuth();
 
   // Check if this is admin login attempt
   const isAdminEmail = process.env.REACT_APP_ADMIN_EMAIL && 
@@ -39,6 +40,9 @@ export default function Login({ onToggleForm }) {
       if (!result.success) {
         setError(`Login failed: ${result.error || 'Unknown error'}`);
         setTimeout(() => setError(''), 5000);
+      } else {
+        // Close the auth form on successful login
+        onClose && onClose();
       }
     } catch (err) {
       console.error('Login error:', err);

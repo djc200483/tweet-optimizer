@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [authError, setAuthError] = useState(null);
+  const [onClose, setOnClose] = useState(null);
 
   // Verify token on mount
   useEffect(() => {
@@ -119,7 +120,9 @@ export const AuthProvider = ({ children }) => {
         isAuthLoading,
         authError,
         clearAuthError,
-        isAdmin: user?.is_admin
+        isAdmin: user?.is_admin,
+        onClose,
+        setOnClose
       }}
     >
       {children}

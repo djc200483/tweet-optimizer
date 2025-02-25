@@ -26,6 +26,7 @@ app.use(cors({
   ],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+  credentials: true,
   optionsSuccessStatus: 200
 }));
 
@@ -335,6 +336,17 @@ initializeDb();
 
 // Feature flag for auth
 const ENFORCE_AUTH = false;
+
+// Add this before routes
+app.use((req, res, next) => {
+  console.log('Request:', {
+    method: req.method,
+    path: req.path,
+    headers: req.headers,
+    body: req.body
+  });
+  next();
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

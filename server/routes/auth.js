@@ -139,12 +139,15 @@ router.post('/login', async (req, res) => {
 // Verify token endpoint
 router.post('/verify', async (req, res) => {
   try {
+    console.log('Verify request headers:', req.headers);
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {
+      console.log('No token provided');
       return res.status(401).json({ error: 'No token provided' });
     }
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('Decoded token in verify:', decoded);
     
     console.log('Token verification:', {
       decoded,

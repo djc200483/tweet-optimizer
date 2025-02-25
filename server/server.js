@@ -44,7 +44,9 @@ app.get('/', (req, res) => {
 // Auth routes
 app.use('/auth', authRoutes);
 // Admin routes
+console.log('Setting up admin routes...');
 app.use('/admin', adminRoutes);
+console.log('Admin routes configured');
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY

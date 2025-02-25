@@ -17,20 +17,33 @@ export default function Admin() {
 
   const fetchAllowedUsers = async () => {
     try {
+      if (!token) {
+        setError('No authentication token found');
+        return;
+      }
+
+      console.log('Fetching allowed users with token:', token);
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/allowed-users`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
+      
+      if (response.status === 401) {
+        setError('Unauthorized - Please log in again');
+        return;
+      }
+
       const data = await response.json();
       if (response.ok) {
         setAllowedUsers(data);
       } else {
-        setError('Failed to fetch allowed users');
+        setError(`Failed to fetch allowed users: ${data.error || 'Unknown error'}`);
       }
     } catch (err) {
-      setError('Error loading users');
+      console.error('Error fetching allowed users:', err);
+      setError(`Error loading users: ${err.message}`);
     } finally {
       setIsLoading(false);
     }

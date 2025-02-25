@@ -2,9 +2,33 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const adminAuth = require('../middleware/adminAuth');
+const jwt = require('jsonwebtoken');
 
 // Apply admin auth middleware to all routes
 router.use(adminAuth);
+
+const authMiddleware = async (req, res, next) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    console.log('Admin route token:', token);
+    
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('Decoded admin token:', decoded);
+    
+    if (!decoded || !decoded.isAdmin) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    
+    next();
+  } catch (error) {
+    console.error('Admin auth error:', error);
+    res.status(401).json({ error: 'Invalid token' });
+  }
+};
 
 // Add user to allowed list
 router.post('/allow-user', async (req, res) => {

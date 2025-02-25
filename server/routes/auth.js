@@ -6,36 +6,35 @@ const db = require('../db');
 
 // Register endpoint
 router.post('/register', async (req, res) => {
+  console.log('Register request received:', req.body);
   try {
     const { email, password, x_handle } = req.body;
     
     // Check if user is in allowed list
+    console.log('Checking allowed users for:', x_handle);
     const allowedUser = await db.query(
-      'SELECT * FROM allowed_users WHERE x_handle = $1',
+      'SELECT * FROM allowed_users WHERE x_handle = $1 AND is_active = true',
       [x_handle]
     );
     
+    console.log('Allowed user check result:', allowedUser.rows);
     if (allowedUser.rows.length === 0) {
-      return res.status(403).json({ error: 'Registration not allowed for this X handle' });
-    }
-    
-    if (!allowedUser.rows[0].is_active) {
-      return res.status(403).json({ error: 'This X handle has been disabled' });
+      return res.status(403).json({ error: 'User not in allowed list' });
     }
     
     // Check if user already exists
-    const userExists = await db.query(
-      'SELECT * FROM users WHERE email = $1',
-      [email]
+    const existingUser = await db.query(
+      'SELECT * FROM users WHERE email = $1 OR x_handle = $2',
+      [email, x_handle]
     );
     
-    if (userExists.rows.length > 0) {
+    console.log('Existing user check:', existingUser.rows);
+    if (existingUser.rows.length > 0) {
       return res.status(400).json({ error: 'User already exists' });
     }
     
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
     
     // Create user
     const result = await db.query(

@@ -20,6 +20,8 @@ export default function Register({ onToggleForm }) {
     e.preventDefault();
     setError('');
 
+    console.log('Register form submitted:', { email, xHandle });
+
     // Validation
     if (!email.includes('@')) {
       setError('Please enter a valid email address');
@@ -46,13 +48,24 @@ export default function Register({ onToggleForm }) {
     setIsLoading(true);
 
     try {
-      const result = await register(email, password, xHandle);
+      console.log('Attempting registration...');
+      const result = await register(
+        email,
+        password,
+        xHandle.startsWith('@') ? xHandle : `@${xHandle}`
+      );
+
+      console.log('Registration result:', result);
       if (!result.success) {
         setError(result.error || 'Registration failed');
         setTimeout(() => setError(''), 5000);
+      } else {
+        console.log('Registration successful');
+        onToggleForm('login');
       }
     } catch (err) {
-      setError('An error occurred during registration');
+      console.error('Registration error:', err);
+      setError('Registration error');
       setTimeout(() => setError(''), 5000);
     } finally {
       setIsLoading(false);
@@ -72,6 +85,18 @@ export default function Register({ onToggleForm }) {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="xHandle">X Handle (e.g. @username)</label>
+          <input
+            type="text"
+            id="xHandle"
+            value={xHandle}
+            onChange={(e) => setXHandle(e.target.value)}
+            placeholder="@"
             required
           />
         </div>
@@ -99,18 +124,6 @@ export default function Register({ onToggleForm }) {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="xHandle">X Handle (e.g. @username)</label>
-          <input
-            type="text"
-            id="xHandle"
-            value={xHandle}
-            onChange={(e) => setXHandle(e.target.value)}
-            placeholder="@"
-            required
-          />
-        </div>
-
         <button 
           type="submit" 
           className="auth-button"
@@ -122,7 +135,7 @@ export default function Register({ onToggleForm }) {
 
       <p className="auth-switch">
         Already have an account?{' '}
-        <button onClick={onToggleForm} className="auth-switch-button">
+        <button onClick={() => onToggleForm('login')} className="auth-switch-button">
           Login
         </button>
       </p>

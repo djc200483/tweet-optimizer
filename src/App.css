@@ -433,24 +433,23 @@ body {
 
 .feature-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 30px;
-  margin: 40px 0;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
 .feature-card {
   background: white;
-  border: 1px solid #e1e8ed;
   border-radius: 12px;
   padding: 30px;
-  text-align: left;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .feature-card h2 {

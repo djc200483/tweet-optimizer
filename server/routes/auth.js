@@ -23,21 +23,34 @@ router.post('/register', async (req, res) => {
     }
     
     // Check if user already exists
+    console.log('Checking if user exists with email:', email);
     const existingUser = await db.query(
-      'SELECT * FROM users WHERE email = $1 OR x_handle = $2',
+      'SELECT email, x_handle FROM users WHERE email = $1 OR x_handle = $2',
       [email, x_handle]
     );
     
-    console.log('Existing user check:', existingUser.rows);
+    console.log('Existing user check result:', {
+      found: existingUser.rows.length > 0,
+      existingUsers: existingUser.rows,
+      attemptedEmail: email,
+      attemptedHandle: x_handle
+    });
+    
     if (existingUser.rows.length > 0) {
       const existing = existingUser.rows[0];
+      const isDuplicateEmail = existing.email.toLowerCase() === email.toLowerCase();
+      const isDuplicateHandle = existing.x_handle.toLowerCase() === x_handle.toLowerCase();
+      
       console.log('Existing user found:', {
-        existingEmail: existing.email === email,
-        existingHandle: existing.x_handle === x_handle
+        isDuplicateEmail,
+        isDuplicateHandle,
+        existingEmail: existing.email,
+        existingHandle: existing.x_handle
       });
+      
       return res.status(400).json({ 
         error: `User already exists with this ${
-          existing.email === email ? 'email' : 'X handle'
+          isDuplicateEmail ? 'email' : 'X handle'
         }`
       });
     }

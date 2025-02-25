@@ -98,4 +98,18 @@ router.delete('/delete-user', async (req, res) => {
   }
 });
 
+// Add this new endpoint for admin debugging
+router.get('/list-users', async (req, res) => {
+  try {
+    const result = await db.query(
+      'SELECT email, x_handle, is_active FROM users'
+    );
+    console.log('All users:', result.rows);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error listing users:', error);
+    res.status(500).json({ error: 'Error listing users' });
+  }
+});
+
 module.exports = router; 

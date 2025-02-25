@@ -67,10 +67,10 @@ router.post('/register', async (req, res) => {
 // Login endpoint
 router.post('/login', async (req, res) => {
   try {
-    const { email, password, x_handle } = req.body;
+    const { email, password } = req.body;
     
     // Special handling for admin login
-    if (email === process.env.ADMIN_EMAIL) {
+    if (email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase()) {
       console.log('Admin login attempt');
       
       if (password !== process.env.ADMIN_PASSWORD) {
@@ -93,11 +93,6 @@ router.post('/login', async (req, res) => {
           is_admin: true
         }
       });
-    }
-    
-    // Regular user login requires x_handle
-    if (!x_handle) {
-      return res.status(400).json({ error: 'X handle required for regular users' });
     }
     
     // Find user

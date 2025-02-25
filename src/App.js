@@ -281,7 +281,7 @@ function AppContent() {
         </div>
       ) : (
         <>
-          {user?.is_admin ? (
+          {user && user.is_admin ? (
             <Admin />
           ) : (
             <div className="auth-header">

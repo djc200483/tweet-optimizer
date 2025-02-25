@@ -9,7 +9,8 @@ export default function Login({ onToggleForm }) {
   const [isLoading, setIsLoading] = useState(false);
   const { login, clearAuthError } = useAuth();
 
-  const isAdminEmail = email === process.env.REACT_APP_ADMIN_EMAIL;
+  // Check if this is admin login attempt
+  const isAdminEmail = email.toLowerCase() === process.env.REACT_APP_ADMIN_EMAIL.toLowerCase();
 
   // Clear any auth errors when component mounts or unmounts
   useEffect(() => {
@@ -23,8 +24,8 @@ export default function Login({ onToggleForm }) {
     setIsLoading(true);
 
     try {
-      console.log('Login attempt:', { email });
-      const result = await login(email, password, isAdminEmail ? null : x_handle);
+      console.log('Login attempt:', { email, isAdmin: isAdminEmail });
+      const result = await login(email, password);
       console.log('Login result:', result);
       if (!result.success) {
         setError(`Login failed: ${result.error || 'Unknown error'}`);

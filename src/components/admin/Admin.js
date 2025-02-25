@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import './Admin.css';
 
@@ -92,13 +92,13 @@ export default function Admin() {
 
   const handleToggleStatus = async (handle, currentStatus) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/disable-user`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/toggle-user-status`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ x_handle: handle })
+        body: JSON.stringify({ x_handle: handle, status: !currentStatus })
       });
 
       if (response.ok) {
@@ -111,6 +111,42 @@ export default function Admin() {
       setError('Error updating user status');
     }
   };
+
+  const handleDeleteUser = async (handle) => {
+    if (window.confirm(`Are you sure you want to delete ${handle}?`)) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/delete-user`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ x_handle: handle })
+        });
+
+        if (response.ok) {
+          fetchAllowedUsers();
+          setSuccess(`User ${handle} has been deleted`);
+        } else {
+          setError('Failed to delete user');
+        }
+      } catch (err) {
+        setError('Error deleting user');
+      }
+    }
+  };
+
+  const sortedUsers = useMemo(() => {
+    const activeUsers = allowedUsers
+      .filter(user => user.is_active)
+      .sort((a, b) => a.x_handle.localeCompare(b.x_handle));
+    
+    const inactiveUsers = allowedUsers
+      .filter(user => !user.is_active)
+      .sort((a, b) => a.x_handle.localeCompare(b.x_handle));
+    
+    return { activeUsers, inactiveUsers };
+  }, [allowedUsers]);
 
   if (isLoading) return <div className="admin-loading">Loading...</div>;
 
@@ -150,10 +186,10 @@ export default function Admin() {
         </button>
       </form>
 
-      <div className="users-list">
+      <div className="active-users-list">
         <h3>Allowed Users</h3>
-        {allowedUsers.length === 0 ? (
-          <p>No users added yet</p>
+        {sortedUsers.activeUsers.length === 0 ? (
+          <p>No active users</p>
         ) : (
           <table>
             <thead>
@@ -166,18 +202,67 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody>
-              {allowedUsers.map(user => (
-                <tr key={user.id} className={!user.is_active ? 'disabled-user' : ''}>
+              {sortedUsers.activeUsers.map(user => (
+                <tr key={user.id}>
                   <td>{user.x_handle}</td>
                   <td>{user.notes}</td>
                   <td>{new Date(user.added_at).toLocaleDateString()}</td>
-                  <td>{user.is_active ? 'Active' : 'Disabled'}</td>
+                  <td>Active</td>
                   <td>
                     <button
                       onClick={() => handleToggleStatus(user.x_handle, user.is_active)}
-                      className={`status-toggle ${user.is_active ? 'disable' : 'enable'}`}
+                      className="status-toggle disable"
                     >
-                      {user.is_active ? 'Disable' : 'Enable'}
+                      Disable
+                    </button>
+                    <button
+                      onClick={() => handleDeleteUser(user.x_handle)}
+                      className="delete-button"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      <div className="inactive-users-list">
+        <h3>Disabled Users</h3>
+        {sortedUsers.inactiveUsers.length === 0 ? (
+          <p>No disabled users</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>X Handle</th>
+                <th>Notes</th>
+                <th>Added</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedUsers.inactiveUsers.map(user => (
+                <tr key={user.id}>
+                  <td>{user.x_handle}</td>
+                  <td>{user.notes}</td>
+                  <td>{new Date(user.added_at).toLocaleDateString()}</td>
+                  <td>Disabled</td>
+                  <td>
+                    <button
+                      onClick={() => handleToggleStatus(user.x_handle, user.is_active)}
+                      className="status-toggle enable"
+                    >
+                      Enable
+                    </button>
+                    <button
+                      onClick={() => handleDeleteUser(user.x_handle)}
+                      className="delete-button"
+                    >
+                      Delete
                     </button>
                   </td>
                 </tr>

@@ -46,24 +46,24 @@ router.post('/allow-user', async (req, res) => {
 });
 
 // Disable user
-router.post('/disable-user', async (req, res) => {
+router.post('/toggle-user-status', async (req, res) => {
   try {
-    const { x_handle } = req.body;
+    const { x_handle, status } = req.body;
     
     await db.query(
-      'UPDATE allowed_users SET is_active = false WHERE x_handle = $1',
-      [x_handle]
+      'UPDATE allowed_users SET is_active = $2 WHERE x_handle = $1',
+      [x_handle, status]
     );
     
-    // Also disable user account if it exists
+    // Also update user account if it exists
     await db.query(
-      'UPDATE users SET is_active = false WHERE x_handle = $1',
-      [x_handle]
+      'UPDATE users SET is_active = $2 WHERE x_handle = $1',
+      [x_handle, status]
     );
     
-    res.json({ message: 'User disabled' });
+    res.json({ message: `User ${status ? 'enabled' : 'disabled'}` });
   } catch (error) {
-    res.status(500).json({ error: 'Error disabling user' });
+    res.status(500).json({ error: 'Error updating user status' });
   }
 });
 
@@ -79,6 +79,22 @@ router.get('/allowed-users', async (req, res) => {
   } catch (error) {
     console.error('Error fetching allowed users:', error);
     res.status(500).json({ error: 'Error fetching allowed users' });
+  }
+});
+
+// Delete user
+router.delete('/delete-user', async (req, res) => {
+  try {
+    const { x_handle } = req.body;
+    
+    await db.query(
+      'DELETE FROM allowed_users WHERE x_handle = $1',
+      [x_handle]
+    );
+    
+    res.json({ message: 'User deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting user' });
   }
 });
 

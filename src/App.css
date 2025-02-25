@@ -899,3 +899,49 @@ body {
   border-radius: 4px;
   margin: 10px 0;
 }
+
+.active-users-list,
+.inactive-users-list {
+  margin: 20px 0;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.inactive-users-list {
+  background: #f8f9fa;
+}
+
+.status-toggle {
+  margin-right: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.status-toggle.enable {
+  background: #28a745;
+  color: white;
+}
+
+.status-toggle.disable {
+  background: #dc3545;
+  color: white;
+}
+
+.delete-button {
+  padding: 6px 12px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background: #5a6268;
+}

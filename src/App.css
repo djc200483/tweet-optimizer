@@ -653,15 +653,19 @@ body {
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;
-  background: white;
+  background: rgba(30, 32, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .auth-form h2 {
   text-align: center;
-  color: #1da1f2;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 20px;
+  font-size: 1.8rem;
 }
 
 .form-group {
@@ -671,36 +675,47 @@ body {
 .form-group label {
   display: block;
   margin-bottom: 5px;
-  color: #536471;
+  color: #a0a0b0;
 }
 
 .form-group input {
   width: 100%;
   padding: 8px;
-  border: 1px solid #e1e8ed;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   font-size: 16px;
+  background: rgba(25, 27, 35, 0.95);
+  color: #ffffff;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: rgba(0, 194, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.1);
 }
 
 .auth-button {
   width: 100%;
   padding: 10px;
-  background: #1da1f2;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
 }
 
 .auth-button:hover {
-  background: #1991db;
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .auth-button:disabled {
-  background: #9bd1f9;
+  background: rgba(255, 255, 255, 0.1);
   cursor: not-allowed;
+  transform: none;
 }
 
 .auth-error {
@@ -722,20 +737,20 @@ body {
 .auth-switch {
   text-align: center;
   margin-top: 15px;
-  color: #536471;
+  color: #a0a0b0;
 }
 
 .auth-links {
   text-align: center;
   margin: 15px 0;
   padding-top: 10px;
-  border-top: 1px solid #e1e8ed;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .auth-switch-button {
   background: none;
   border: none;
-  color: #1da1f2;
+  color: #00c2ff;
   cursor: pointer;
   padding: 0;
   font: inherit;
@@ -744,7 +759,7 @@ body {
 }
 
 .auth-switch-button:hover {
-  color: #1991db;
+  color: #a855f7;
 }
 
 .auth-toggle-button {
@@ -868,6 +883,7 @@ body {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  color: #ffffff;
 }
 
 .logout-button {
@@ -907,8 +923,8 @@ body {
 }
 
 .admin-error {
-  color: #e0245e;
-  background: #ffebee;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
   padding: 10px;
   border-radius: 4px;
   margin: 10px 0;
@@ -916,7 +932,7 @@ body {
 
 .admin-success {
   color: #2ea44f;
-  background: #e6ffed;
+  background: rgba(46, 164, 79, 0.1);
   padding: 10px;
   border-radius: 4px;
   margin: 10px 0;
@@ -926,13 +942,14 @@ body {
 .inactive-users-list {
   margin: 20px 0;
   padding: 20px;
-  background: white;
+  background: rgba(30, 32, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .inactive-users-list {
-  background: #f8f9fa;
+  background: rgba(25, 27, 35, 0.95);
 }
 
 .status-toggle {
@@ -945,27 +962,31 @@ body {
 }
 
 .status-toggle.enable {
-  background: #28a745;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
   color: white;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
 }
 
 .status-toggle.disable {
-  background: #dc3545;
+  background: linear-gradient(135deg, #e0245e, #a855f7);
   color: white;
+  box-shadow: 0 4px 15px rgba(224, 36, 94, 0.3);
 }
 
 .delete-button {
   padding: 6px 12px;
-  background: #6c757d;
+  background: linear-gradient(135deg, #dc3545, #ff6b6b);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
 }
 
 .delete-button:hover {
-  background: #5a6268;
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .user-header {
@@ -1017,4 +1038,34 @@ body {
   .home-description h2 {
     font-size: 2rem;
   }
+}
+
+/* Admin table styles */
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.admin-table th {
+  color: #a0a0b0;
+  font-size: 0.9rem;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-table td {
+  padding: 12px;
+  color: #ffffff;
+}
+
+.admin-table tr {
+  background: rgba(30, 32, 40, 0.95);
+  transition: all 0.3s ease;
+}
+
+.admin-table tr:hover {
+  background: rgba(35, 37, 45, 0.95);
+  transform: translateY(-2px);
 }

@@ -4,7 +4,6 @@ import { useAuth } from './AuthContext';
 export default function Login({ onToggleForm }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [x_handle, setX_handle] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login, clearAuthError } = useAuth();
@@ -75,19 +74,6 @@ export default function Login({ onToggleForm }) {
             required
           />
         </div>
-
-        {!isAdminEmail && (
-          <div className="form-group">
-            <label htmlFor="x_handle">X Handle</label>
-            <input
-              type="text"
-              id="x_handle"
-              value={x_handle}
-              onChange={(e) => setX_handle(e.target.value)}
-              required={false}
-            />
-          </div>
-        )}
 
         <button 
           type="submit" 

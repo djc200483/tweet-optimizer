@@ -69,9 +69,20 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    console.log('Login request received:', { email });
+    
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+    
     // Special handling for admin login
     if (email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase()) {
       console.log('Admin login attempt');
+      
+      if (!process.env.ADMIN_PASSWORD) {
+        console.error('ADMIN_PASSWORD not set in environment');
+        return res.status(500).json({ error: 'Server configuration error' });
+      }
       
       if (password !== process.env.ADMIN_PASSWORD) {
         console.log('Admin password mismatch');

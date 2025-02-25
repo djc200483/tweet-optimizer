@@ -13,6 +13,10 @@ const authMiddleware = require('./middleware/auth');
 // Log database connection info (temporary)
 console.log('Database URL configured:', !!process.env.DATABASE_URL);
 console.log('Database URL domain:', process.env.DATABASE_URL?.split('@')[1]?.split(':')[0] || 'not found');
+console.log('Admin credentials configured:', {
+  hasEmail: !!process.env.ADMIN_EMAIL,
+  hasPassword: !!process.env.ADMIN_PASSWORD
+});
 
 const app = express();
 

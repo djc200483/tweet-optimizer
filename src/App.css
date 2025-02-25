@@ -827,3 +827,17 @@ body {
     transform: translateY(0);
   }
 }
+
+.api-error-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #e0245e;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  z-index: 2000;
+  font-size: 16px;
+  white-space: pre-wrap;
+}

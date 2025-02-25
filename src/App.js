@@ -245,12 +245,14 @@ function App() {
   useEffect(() => {
     const checkApi = async () => {
       try {
+        console.log('Attempting to connect to:', process.env.REACT_APP_API_URL);
         const response = await fetch(`${process.env.REACT_APP_API_URL}/test-db`);
+        console.log('Response status:', response.status);
         const data = await response.json();
         console.log('API Connection:', data);
       } catch (error) {
         console.error('API Error:', error);
-        setApiError(error.message);
+        setApiError(`Failed to connect to API: ${error.message}`);
       }
     };
     checkApi();

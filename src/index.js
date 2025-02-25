@@ -7,6 +7,11 @@ import reportWebVitals from './reportWebVitals';
 // Add error boundary
 if (process.env.NODE_ENV !== 'production') {
   console.log('API URL:', process.env.REACT_APP_API_URL);
+  console.log('Admin Email:', process.env.REACT_APP_ADMIN_EMAIL);
+  
+  if (!process.env.REACT_APP_ADMIN_EMAIL) {
+    console.warn('Warning: REACT_APP_ADMIN_EMAIL is not set');
+  }
 }
 
 window.onerror = function(message, source, lineno, colno, error) {

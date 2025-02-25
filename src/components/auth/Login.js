@@ -10,7 +10,15 @@ export default function Login({ onToggleForm }) {
   const { login, clearAuthError } = useAuth();
 
   // Check if this is admin login attempt
-  const isAdminEmail = email.toLowerCase() === process.env.REACT_APP_ADMIN_EMAIL.toLowerCase();
+  const isAdminEmail = process.env.REACT_APP_ADMIN_EMAIL && 
+    email.toLowerCase() === process.env.REACT_APP_ADMIN_EMAIL.toLowerCase();
+
+  // Debug log
+  console.log('Environment check:', {
+    adminEmail: process.env.REACT_APP_ADMIN_EMAIL,
+    currentEmail: email,
+    isAdminEmail
+  });
 
   // Clear any auth errors when component mounts or unmounts
   useEffect(() => {

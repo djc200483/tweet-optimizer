@@ -101,14 +101,13 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    console.log('Login request received:', { 
+    console.log('Login attempt for:', { 
       email,
-      hasAdminEmail: !!process.env.ADMIN_EMAIL,
-      adminEmailMatch: email.toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase(),
-      hasAdminPassword: !!process.env.ADMIN_PASSWORD
+      timestamp: new Date().toISOString()
     });
     
     if (!email || !password) {
+      console.log('Missing email or password');
       return res.status(400).json({ error: 'Email and password are required' });
     }
     
@@ -153,7 +152,14 @@ router.post('/login', async (req, res) => {
       [email]
     );
     
+    console.log('User lookup result:', {
+      found: result.rows.length > 0,
+      email,
+      userActive: result.rows[0]?.is_active
+    });
+    
     if (result.rows.length === 0) {
+      console.log('User not found:', email);
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
@@ -163,8 +169,20 @@ router.post('/login', async (req, res) => {
       result.rows[0].password_hash
     );
     
+    console.log('Password verification:', {
+      email,
+      valid: validPassword
+    });
+    
     if (!validPassword) {
+      console.log('Invalid password for:', email);
       return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    // Check if user is active
+    if (!result.rows[0].is_active) {
+      console.log('Inactive user attempted login:', email);
+      return res.status(403).json({ error: 'Account is disabled' });
     }
     
     // Generate JWT

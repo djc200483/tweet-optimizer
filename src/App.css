@@ -772,12 +772,15 @@ body {
   border: none;
   border-radius: 20px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
+  font-family: inherit;
+  font-size: 0.9rem;
 }
 
 .auth-toggle-button:hover {
-  background: #1991db;
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .auth-header {
@@ -785,33 +788,41 @@ body {
   top: 20px;
   right: 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 8px;
+  background: rgba(30, 32, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  min-width: 160px;
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #536471;
-}
-
-.user-info span {
+.user-handle {
+  color: #ffffff;
   font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .logout-button {
-  padding: 8px 15px;
-  background: #e0245e;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #e0245e, #a855f7);
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-family: inherit;
   cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.logout-button:hover {
-  background: #c01e4e;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(224, 36, 94, 0.3);
+  margin-top: 8px;
+  display: block;
+  width: 100%;
 }
 
 .auth-loading {
@@ -884,22 +895,6 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   color: #ffffff;
-}
-
-.logout-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 8px 16px;
-  background-color: #ff4444;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.logout-button:hover {
-  background-color: #cc0000;
 }
 
 .back-home-button {
@@ -987,40 +982,6 @@ body {
 .delete-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
-}
-
-.user-header {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #f8f9fa;
-  padding: 8px 16px;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.user-handle {
-  color: #1da1f2;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.logout-button {
-  background: #e0245e;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 15px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.logout-button:hover {
-  background: #c01e4e;
 }
 
 /* Make it responsive */

@@ -4,7 +4,7 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
   const features = [
     {
       title: 'Post Optimiser',
-      description: 'Transform your posts with AI-powered optimization.',
+      description: 'Transform your posts with AI-powered optimisation.',
       icon: '🎯',
       id: 'optimize'
     },

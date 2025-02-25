@@ -335,24 +335,22 @@ function AppContent() {
             </div>
           ) : (
             <>
-              <div className="auth-header">
-                {user && token && (
-                  <div className="user-header">
-                    <span className="user-handle">{displayHandle}</span>
-                    <button className="logout-button" onClick={logout}>
-                      Logout
-                    </button>
-                  </div>
-                )}
-                {!user && (
-                  <button 
-                    className="auth-toggle-button"
-                    onClick={() => setShowAuth(true)}
-                  >
-                    Login/Register
+              {user && token && (
+                <div className="auth-header">
+                  <span className="user-handle">{displayHandle}</span>
+                  <button className="logout-button" onClick={logout}>
+                    Logout
                   </button>
-                )}
-              </div>
+                </div>
+              )}
+              {!user && (
+                <button 
+                  className="auth-toggle-button"
+                  onClick={() => setShowAuth(true)}
+                >
+                  Login/Register
+                </button>
+              )}
               
               <h1>EchoSphere</h1>
               

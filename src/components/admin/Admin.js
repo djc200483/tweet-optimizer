@@ -158,33 +158,22 @@ export default function Admin() {
       {success && <div className="admin-success">{success}</div>}
       {isLoading && <div className="loading-spinner"></div>}
 
-      <form onSubmit={handleAddUser} className="add-user-form">
-        <div className="form-group">
-          <label htmlFor="handle">X Handle</label>
-          <input
-            type="text"
-            id="handle"
-            value={newHandle}
-            onChange={(e) => setNewHandle(e.target.value)}
-            placeholder="@username"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="notes">Notes</label>
-          <textarea
-            id="notes"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Optional notes about this user"
-          />
-        </div>
-
-        <button type="submit" className="admin-button">
-          Add User
-        </button>
-      </form>
+      <div className="admin-input-form">
+        <label>X Handle</label>
+        <input
+          type="text"
+          value={newHandle}
+          onChange={(e) => setNewHandle(e.target.value)}
+          placeholder="@username"
+        />
+        <label>Notes</label>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Optional notes about this user"
+        />
+        <button onClick={handleAddUser}>Add User</button>
+      </div>
 
       <div className="active-users-list">
         <h3>Allowed Users</h3>

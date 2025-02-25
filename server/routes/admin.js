@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const adminAuth = require('../middleware/adminAuth');
 const jwt = require('jsonwebtoken');
-
-// Apply admin auth middleware to all routes
-router.use(adminAuth);
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -29,6 +25,9 @@ const authMiddleware = async (req, res, next) => {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
+
+// Apply admin auth middleware to all routes
+router.use(authMiddleware);
 
 // Add user to allowed list
 router.post('/allow-user', async (req, res) => {
@@ -71,11 +70,14 @@ router.post('/disable-user', async (req, res) => {
 // Get all allowed users
 router.get('/allowed-users', async (req, res) => {
   try {
+    console.log('Fetching allowed users...');
     const result = await db.query(
       'SELECT * FROM allowed_users ORDER BY added_at DESC'
     );
+    console.log('Found users:', result.rows.length);
     res.json(result.rows);
   } catch (error) {
+    console.error('Error fetching allowed users:', error);
     res.status(500).json({ error: 'Error fetching allowed users' });
   }
 });

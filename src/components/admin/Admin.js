@@ -22,7 +22,7 @@ export default function Admin() {
         return;
       }
 
-      console.log('Fetching allowed users with token:', token);
+      console.log('Admin fetch with token:', token?.substring(0, 20) + '...');
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/allowed-users`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -30,6 +30,7 @@ export default function Admin() {
         }
       });
       
+      console.log('Admin fetch response:', response.status);
       if (response.status === 401) {
         setError('Unauthorized - Please log in again');
         return;

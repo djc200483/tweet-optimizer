@@ -3,7 +3,7 @@ import React from 'react';
 export default function Home({ onSelectFeature, isLoggedIn }) {
   const features = [
     {
-      title: 'Post Optimizer',
+      title: 'Post Optimiser',
       description: 'Transform your posts with AI-powered optimization.',
       icon: '🎯',
       id: 'optimize'
@@ -46,7 +46,7 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
               disabled={!isLoggedIn}
               onClick={() => onSelectFeature(feature.id)}
             >
-              {isLoggedIn ? `Try ${feature.title}` : 'Login to Use'}
+              {isLoggedIn ? `Try ${feature.title.replace('Optimizer', 'Optimiser')}` : 'Login to Use'}
             </button>
           </div>
         ))}

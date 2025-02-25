@@ -13,7 +13,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 function AppContent() {
   const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
-  const [showAuth, setShowAuth] = useState(!token);
+  const [showAuth, setShowAuth] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [tweet, setTweet] = useState('');
   const [savedTweets, setSavedTweets] = useState([]);
@@ -281,7 +281,7 @@ function AppContent() {
         </div>
       ) : (
         <div className="app-content">
-          {!token || showAuth ? (
+          {showAuth ? (
             <Auth onClose={() => setShowAuth(false)} />
           ) : user?.is_admin ? (
             <div className="admin-container">
@@ -304,7 +304,7 @@ function AppContent() {
                 ) : (
                   <button 
                     className="auth-toggle-button"
-                    onClick={() => setShowAuth(!showAuth)}
+                    onClick={() => setShowAuth(true)}
                   >
                     Login/Register
                   </button>

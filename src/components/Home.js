@@ -35,7 +35,7 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
         <p>Your AI-powered platform for crafting engaging and impactful posts.</p>
       </div>
       
-      <div className="features-grid">
+      <div className="feature-cards">
         {features.map(feature => (
           <div key={feature.id} className="feature-card">
             <div className="feature-icon">{feature.icon}</div>

@@ -19,7 +19,8 @@ export default function Admin() {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/allowed-users`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
       const data = await response.json();

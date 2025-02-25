@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
         try {
           console.log('Verifying token:', token);
           const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify`, {
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`

@@ -83,17 +83,25 @@ router.get('/allowed-users', async (req, res) => {
 });
 
 // Delete user
-router.delete('/delete-user', async (req, res) => {
+router.delete('/delete-user-complete', async (req, res) => {
   try {
     const { x_handle } = req.body;
     
+    // First delete from users table if they exist
+    await db.query(
+      'DELETE FROM users WHERE x_handle = $1',
+      [x_handle]
+    );
+    
+    // Then delete from allowed_users
     await db.query(
       'DELETE FROM allowed_users WHERE x_handle = $1',
       [x_handle]
     );
     
-    res.json({ message: 'User deleted' });
+    res.json({ message: 'User completely removed from system' });
   } catch (error) {
+    console.error('Error deleting user:', error);
     res.status(500).json({ error: 'Error deleting user' });
   }
 });

@@ -1069,3 +1069,74 @@ body {
   background: rgba(35, 37, 45, 0.95);
   transform: translateY(-2px);
 }
+
+/* Admin input form */
+.admin-input-form {
+  background: rgba(30, 32, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.admin-input-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  background: rgba(25, 27, 35, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.admin-input-form input:focus {
+  outline: none;
+  border-color: rgba(0, 194, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.1);
+}
+
+.admin-input-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  background: rgba(25, 27, 35, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 16px;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.admin-input-form textarea:focus {
+  outline: none;
+  border-color: rgba(0, 194, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.1);
+}
+
+.admin-input-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #a0a0b0;
+  font-size: 0.9rem;
+}
+
+.admin-input-form button {
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
+  margin-top: 10px;
+}
+
+.admin-input-form button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}

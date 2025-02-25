@@ -863,3 +863,23 @@ body {
 .logout-button:hover {
   background-color: #cc0000;
 }
+
+.back-home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 16px;
+  background-color: #1da1f2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-home-button:hover {
+  background-color: #1991db;
+}

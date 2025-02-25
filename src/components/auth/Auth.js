@@ -26,6 +26,12 @@ export default function Auth({ onClose }) {
 
   return (
     <div className="auth-container">
+      <button 
+        className="back-home-button"
+        onClick={onClose}
+      >
+        ← Back to Home
+      </button>
       {console.log('Current form:', currentForm)}
       {currentForm === 'login' && (
         <Login onToggleForm={handleFormToggle} />

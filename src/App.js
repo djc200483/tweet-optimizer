@@ -200,43 +200,83 @@ function AppContent() {
   const renderFeature = () => {
     switch(currentFeature) {
       case 'optimize':
-        return <TweetOptimizer 
-          tweet={tweet}
-          setTweet={setTweet}
-          selectedTone={selectedTone}
-          setSelectedTone={setSelectedTone}
-          selectedHook={selectedHook}
-          setSelectedHook={setSelectedHook}
-          handleSubmit={handleSubmit}
-          isLoading={isLoading}
-          savedTweets={savedTweets}
-          handleDelete={handleDelete}
-          handleCopy={handleCopy}
-          tones={tones}
-          hookOptions={hookOptions}
-          toneColors={toneColors}
-        />;
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <TweetOptimizer 
+              tweet={tweet}
+              setTweet={setTweet}
+              selectedTone={selectedTone}
+              setSelectedTone={setSelectedTone}
+              selectedHook={selectedHook}
+              setSelectedHook={setSelectedHook}
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+              savedTweets={savedTweets}
+              handleDelete={handleDelete}
+              handleCopy={handleCopy}
+              tones={tones}
+              hookOptions={hookOptions}
+              toneColors={toneColors}
+            />
+          </>
+        );
       case 'reverse':
-        return <ReverseEngineer 
-          reverseText={reverseText}
-          setReverseText={setReverseText}
-          handleReverseAnalysis={handleReverseAnalysis}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-          analysisResults={analysisResults}
-          setAnalysisResults={setAnalysisResults}
-        />;
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <ReverseEngineer 
+              reverseText={reverseText}
+              setReverseText={setReverseText}
+              handleReverseAnalysis={handleReverseAnalysis}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              analysisResults={analysisResults}
+              setAnalysisResults={setAnalysisResults}
+            />
+          </>
+        );
       case 'power':
-        return <PowerWords 
-          powerText={powerText}
-          setPowerText={setPowerText}
-          isLoading={isLoading}
-          powerResults={powerResults}
-          setPowerResults={setPowerResults}
-          handlePowerAnalysis={handlePowerAnalysis}
-        />;
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <PowerWords 
+              powerText={powerText}
+              setPowerText={setPowerText}
+              isLoading={isLoading}
+              powerResults={powerResults}
+              setPowerResults={setPowerResults}
+              handlePowerAnalysis={handlePowerAnalysis}
+            />
+          </>
+        );
       case 'prompt':
-        return <PromptAssistant />;
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <PromptAssistant />
+          </>
+        );
       default:
         return <Home onSelectFeature={setCurrentFeature} />;
     }

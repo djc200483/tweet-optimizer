@@ -7,6 +7,7 @@ export default function Register({ onToggleForm }) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [xHandle, setXHandle] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { register, clearAuthError } = useAuth();
 
@@ -19,6 +20,7 @@ export default function Register({ onToggleForm }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     console.log('Register form submitted:', { email, xHandle });
 
@@ -60,7 +62,11 @@ export default function Register({ onToggleForm }) {
         setError(result.error || 'Registration failed');
       } else {
         console.log('Registration successful');
-        onToggleForm('login');
+        setSuccess('Registration successful! Redirecting to login...');
+        // Wait 2 seconds before redirecting to login
+        setTimeout(() => {
+          onToggleForm('login');
+        }, 2000);
       }
     } catch (err) {
       console.error('Registration error:', err);
@@ -74,6 +80,7 @@ export default function Register({ onToggleForm }) {
     <div className="auth-form">
       <h2>Register</h2>
       {error && <div className="auth-error">{error}</div>}
+      {success && <div className="auth-success">{success}</div>}
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">

@@ -685,8 +685,7 @@ body {
   background: #ffebee;
   padding: 10px;
   border-radius: 4px;
-  margin-bottom: 15px;
-  text-align: center;
+  margin: 10px 0;
 }
 
 .auth-success {
@@ -694,8 +693,7 @@ body {
   background: #e6ffed;
   padding: 10px;
   border-radius: 4px;
-  margin-bottom: 15px;
-  text-align: center;
+  margin: 10px 0;
 }
 
 .auth-switch {

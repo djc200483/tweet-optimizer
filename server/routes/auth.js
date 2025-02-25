@@ -10,6 +10,12 @@ router.post('/register', async (req, res) => {
   try {
     const { email, password, x_handle } = req.body;
     
+    console.log('Registration attempt:', {
+      email,
+      x_handle,
+      timestamp: new Date().toISOString()
+    });
+    
     // Check if user is in allowed list
     console.log('Checking allowed users for:', x_handle);
     const allowedUser = await db.query(
@@ -17,7 +23,10 @@ router.post('/register', async (req, res) => {
       [x_handle]
     );
     
-    console.log('Allowed user check result:', allowedUser.rows);
+    console.log('Allowed user check result:', {
+      found: allowedUser.rows.length > 0,
+      allowedUsers: allowedUser.rows
+    });
     if (allowedUser.rows.length === 0) {
       return res.status(403).json({ error: 'User not in allowed list' });
     }
@@ -25,8 +34,8 @@ router.post('/register', async (req, res) => {
     // Check if user already exists
     console.log('Checking if user exists with email:', email);
     const existingUser = await db.query(
-      'SELECT email, x_handle FROM users WHERE email = $1 OR x_handle = $2',
-      [email, x_handle]
+      'SELECT email, x_handle FROM users WHERE email = $1',
+      [email]
     );
     
     console.log('Existing user check result:', {
@@ -38,20 +47,20 @@ router.post('/register', async (req, res) => {
     
     if (existingUser.rows.length > 0) {
       const existing = existingUser.rows[0];
-      const isDuplicateEmail = existing.email.toLowerCase() === email.toLowerCase();
-      const isDuplicateHandle = existing.x_handle.toLowerCase() === x_handle.toLowerCase();
-      
-      console.log('Existing user found:', {
-        isDuplicateEmail,
-        isDuplicateHandle,
-        existingEmail: existing.email,
-        existingHandle: existing.x_handle
-      });
-      
       return res.status(400).json({ 
-        error: `User already exists with this ${
-          isDuplicateEmail ? 'email' : 'X handle'
-        }`
+        error: 'A user with this email already exists'
+      });
+    }
+    
+    // Separately check if X handle is already registered
+    const existingHandle = await db.query(
+      'SELECT x_handle FROM users WHERE x_handle = $1',
+      [x_handle]
+    );
+    
+    if (existingHandle.rows.length > 0) {
+      return res.status(400).json({
+        error: 'This X handle is already registered'
       });
     }
     
@@ -286,6 +295,27 @@ router.post('/reset-password', async (req, res) => {
     res.json({ message: 'Password updated successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Error resetting password' });
+  }
+});
+
+// Debug endpoint - DO NOT USE IN PRODUCTION
+router.get('/debug-db-state', async (req, res) => {
+  try {
+    const allowedUsers = await db.query('SELECT * FROM allowed_users');
+    const registeredUsers = await db.query('SELECT email, x_handle, is_active FROM users');
+    
+    console.log('Database State:', {
+      allowedUsers: allowedUsers.rows,
+      registeredUsers: registeredUsers.rows
+    });
+    
+    res.json({
+      allowedUsers: allowedUsers.rows,
+      registeredUsers: registeredUsers.rows
+    });
+  } catch (error) {
+    console.error('Debug error:', error);
+    res.status(500).json({ error: 'Error checking database state' });
   }
 });
 

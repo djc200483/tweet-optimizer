@@ -11,7 +11,10 @@ import './App.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-function App() {
+function AppContent() {
+  const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
+  const [showAuth, setShowAuth] = useState(false);
+  const [apiError, setApiError] = useState(null);
   const [tweet, setTweet] = useState('');
   const [savedTweets, setSavedTweets] = useState([]);
   const [selectedTone, setSelectedTone] = useState('professional'); // Default tone
@@ -23,9 +26,6 @@ function App() {
   const [powerText, setPowerText] = useState('');
   const [powerResults, setPowerResults] = useState([]);
   const [currentFeature, setCurrentFeature] = useState(null);
-  const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
-  const [showAuth, setShowAuth] = useState(false);
-  const [apiError, setApiError] = useState(null);
 
   const tones = [
     // Professional & Business
@@ -259,93 +259,99 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider>
-      <div className="App">
-        {apiError && (
-          <div className="api-error-banner">
-            API Error: {apiError}
-          </div>
-        )}
-        {authError && (
-          <div className="auth-error-banner">
-            {authError}
-          </div>
-        )}
-        {isAuthLoading ? (
-          <div className="auth-loading">
-            <div className="loading-spinner"></div>
-            <p>Loading...</p>
-          </div>
-        ) : (
-          <>
-            {user?.is_admin ? (
-              <Admin />
-            ) : (
-              <div className="auth-header">
-                {user ? (
-                  <div className="user-info">
-                    <span>@{user.x_handle}</span>
-                    <button 
-                      className="logout-button"
-                      onClick={logout}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                ) : (
+    <div className="App">
+      {apiError && (
+        <div className="api-error-banner">
+          API Error: {apiError}
+        </div>
+      )}
+      {authError && (
+        <div className="auth-error-banner">
+          {authError}
+        </div>
+      )}
+      {isAuthLoading ? (
+        <div className="auth-loading">
+          <div className="loading-spinner"></div>
+          <p>Loading...</p>
+        </div>
+      ) : (
+        <>
+          {user?.is_admin ? (
+            <Admin />
+          ) : (
+            <div className="auth-header">
+              {user ? (
+                <div className="user-info">
+                  <span>@{user.x_handle}</span>
                   <button 
-                    className="auth-toggle-button"
-                    onClick={() => setShowAuth(!showAuth)}
+                    className="logout-button"
+                    onClick={logout}
                   >
-                    Login/Register
+                    Logout
                   </button>
+                </div>
+              ) : (
+                <button 
+                  className="auth-toggle-button"
+                  onClick={() => setShowAuth(!showAuth)}
+                >
+                  Login/Register
+                </button>
+              )}
+            </div>
+          )}
+          
+          {showAuth ? (
+            <Auth />
+          ) : (
+            <>
+              <h1>EchoSphere</h1>
+              
+              <div className="tab-navigation">
+                {activeTab !== 'home' && (
+                  <>
+                    <button 
+                      className={`tab-button ${activeTab === 'optimize' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('optimize')}
+                    >
+                      Post Optimiser
+                    </button>
+                    <button 
+                      className={`tab-button ${activeTab === 'reverse' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('reverse')}
+                    >
+                      Reverse Engineer
+                    </button>
+                    <button 
+                      className={`tab-button ${activeTab === 'power' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('power')}
+                    >
+                      Power Words
+                    </button>
+                    <button 
+                      className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('prompt')}
+                    >
+                      Prompt Assistant
+                    </button>
+                  </>
                 )}
               </div>
-            )}
-            
-            {showAuth ? (
-              <Auth />
-            ) : (
-              <>
-                <h1>EchoSphere</h1>
-                
-                <div className="tab-navigation">
-                  {activeTab !== 'home' && (
-                    <>
-                      <button 
-                        className={`tab-button ${activeTab === 'optimize' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('optimize')}
-                      >
-                        Post Optimiser
-                      </button>
-                      <button 
-                        className={`tab-button ${activeTab === 'reverse' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('reverse')}
-                      >
-                        Reverse Engineer
-                      </button>
-                      <button 
-                        className={`tab-button ${activeTab === 'power' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('power')}
-                      >
-                        Power Words
-                      </button>
-                      <button 
-                        className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('prompt')}
-                      >
-                        Prompt Assistant
-                      </button>
-                    </>
-                  )}
-                </div>
 
-                {renderFeature()}
-              </>
-            )}
-          </>
-        )}
-      </div>
+              {renderFeature()}
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
     </AuthProvider>
   );
 }

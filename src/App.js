@@ -341,6 +341,14 @@ function AppContent() {
                     </button>
                   </div>
                 )}
+                {!user && (
+                  <button 
+                    className="auth-toggle-button"
+                    onClick={() => setShowAuth(true)}
+                  >
+                    Login/Register
+                  </button>
+                )}
               </div>
               
               <h1>EchoSphere</h1>

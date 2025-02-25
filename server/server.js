@@ -352,6 +352,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// Log configuration info
+console.log('Server configuration:', {
+  databaseConfigured: !!process.env.DATABASE_URL,
+  adminConfigured: {
+    hasEmail: !!process.env.ADMIN_EMAIL,
+    hasPassword: !!process.env.ADMIN_PASSWORD,
+    hasJwtSecret: !!process.env.JWT_SECRET
+  },
+  adminEmail: process.env.ADMIN_EMAIL,  // Log actual email for verification
+  port: process.env.PORT || 3001
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

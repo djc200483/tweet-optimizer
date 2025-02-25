@@ -302,6 +302,8 @@ function AppContent() {
     console.log('Auth state:', { user, isAdmin });
   }, [user, isAdmin]);
 
+  const displayHandle = user?.x_handle?.replace(/^@@/, '@').replace(/^@/, '');
+
   return (
     <div className="App">
       {apiError && (
@@ -331,23 +333,13 @@ function AppContent() {
           ) : (
             <>
               <div className="auth-header">
-                {user ? (
-                  <div className="user-info">
-                    <span>@{user.x_handle}</span>
-                    <button 
-                      className="logout-button"
-                      onClick={logout}
-                    >
+                {user && token && (
+                  <div className="user-header">
+                    <span className="user-handle">{displayHandle}</span>
+                    <button className="logout-button" onClick={logout}>
                       Logout
                     </button>
                   </div>
-                ) : (
-                  <button 
-                    className="auth-toggle-button"
-                    onClick={() => setShowAuth(true)}
-                  >
-                    Login/Register
-                  </button>
                 )}
               </div>
               

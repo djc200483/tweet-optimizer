@@ -1101,3 +1101,122 @@ body {
   opacity: 0.9;
   transform: translateY(-2px);
 }
+
+/* Post Optimizer Styles */
+.optimizer-container {
+  background-color: #1a1b1f;
+  border-radius: 20px;
+  padding: 25px;
+  margin: 20px auto;
+  max-width: 800px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.optimizer-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 15px;
+  background-color: #23242b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  resize: vertical;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.optimizer-textarea:focus {
+  outline: none;
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+}
+
+.controls-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tone-select, .hook-select {
+  background: #23242b;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px 15px;
+  font-size: 0.9rem;
+  min-width: 150px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tone-select:focus, .hook-select:focus {
+  outline: none;
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+}
+
+.optimize-button {
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
+}
+
+.optimize-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
+}
+
+.results-container {
+  margin-top: 25px;
+}
+
+.result-card {
+  background: #23242b;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(31, 38, 135, 0.2);
+}
+
+.result-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.action-button {
+  background: linear-gradient(135deg, #4a5568, #2d3748);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.tone-label {
+  color: #a0a0b0;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}

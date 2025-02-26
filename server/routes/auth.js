@@ -16,17 +16,22 @@ router.post('/register', async (req, res) => {
       timestamp: new Date().toISOString()
     });
     
+    // Normalize the X handle format
+    const normalizedHandle = x_handle.startsWith('@') ? x_handle : `@${x_handle}`;
+    
     // Check if user is in allowed list
-    console.log('Checking allowed users for:', x_handle);
+    console.log('Checking allowed users for:', normalizedHandle);
     const allowedUser = await db.query(
-      'SELECT * FROM allowed_users WHERE x_handle = $1 AND is_active = true',
-      [x_handle]
+      'SELECT * FROM allowed_users WHERE LOWER(x_handle) = LOWER($1) AND is_active = true',
+      [normalizedHandle]
     );
     
-    console.log('Allowed user check result:', {
+    console.log('Allowed user query result:', {
       found: allowedUser.rows.length > 0,
-      allowedUsers: allowedUser.rows
+      handle: normalizedHandle,
+      queryResult: allowedUser.rows
     });
+    
     if (allowedUser.rows.length === 0) {
       return res.status(403).json({ error: 'User not in allowed list' });
     }
@@ -42,7 +47,7 @@ router.post('/register', async (req, res) => {
       found: existingUser.rows.length > 0,
       existingUsers: existingUser.rows,
       attemptedEmail: email,
-      attemptedHandle: x_handle
+      attemptedHandle: normalizedHandle
     });
     
     if (existingUser.rows.length > 0) {
@@ -55,7 +60,7 @@ router.post('/register', async (req, res) => {
     // Separately check if X handle is already registered
     const existingHandle = await db.query(
       'SELECT x_handle FROM users WHERE x_handle = $1',
-      [x_handle]
+      [normalizedHandle]
     );
     
     if (existingHandle.rows.length > 0) {
@@ -70,7 +75,7 @@ router.post('/register', async (req, res) => {
     // Create user
     const result = await db.query(
       'INSERT INTO users (email, password_hash, x_handle) VALUES ($1, $2, $3) RETURNING id, email, x_handle',
-      [email, hashedPassword, x_handle]
+      [email, hashedPassword, normalizedHandle]
     );
     
     console.log('User created:', result.rows[0]);

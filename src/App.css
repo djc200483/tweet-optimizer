@@ -380,11 +380,25 @@ body {
 }
 
 .power-category-card {
-  background: white;
-  border: 1px solid #e1e8ed;
-  border-radius: 8px;
+  background: #23242b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
   padding: 20px;
   margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.power-category-card h4 {
+  color: #a0a0b0;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.power-category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(31, 38, 135, 0.2);
 }
 
 .word-chips {
@@ -559,56 +573,43 @@ body {
 }
 
 .prompt-categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin: 20px auto;
-  padding: 0 20px;
-  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin: 20px 0;
 }
 
 .category-section {
-  background: white;
+  background: #23242b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
   padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #e1e8ed;
-  width: calc(50% - 8px);  /* Exact half width minus gap */
-  min-width: 280px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin: 0;
-  box-sizing: border-box;
 }
 
 .category-section h3 {
-  color: #1da1f2;
+  color: #a0a0b0;
+  font-size: 0.9rem;
   margin-bottom: 15px;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
 }
 
 .category-section select {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #e1e8ed;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #14171a;
-  background-color: #f8f9fa;
+  background: #23242b;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px 15px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.category-section select:hover {
-  border-color: #1da1f2;
+  transition: all 0.3s ease;
 }
 
 .category-section select:focus {
-  border-color: #1da1f2;
-  box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.1);
   outline: none;
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
 }
 
 .prompt-result {

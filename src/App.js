@@ -288,14 +288,35 @@ function AppContent() {
   useEffect(() => {
     const checkApi = async () => {
       try {
+        // Log device/browser info
+        console.log('Client Info:', {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform,
+          vendor: navigator.vendor,
+          language: navigator.language,
+          connection: navigator.connection?.effectiveType || 'unknown'
+        });
+
         console.log('Attempting to connect to:', process.env.REACT_APP_API_URL);
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/test-db`);
-        console.log('Response status:', response.status);
+        console.log('Browser location:', window.location.href);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/test-db`, {
+          // Add explicit headers for iOS
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          // Add credentials mode for iOS Safari
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
-        console.log('API Connection:', data);
+        console.log('API Connection successful:', data);
       } catch (error) {
         console.error('API Error:', error);
-        setApiError(`Failed to connect to API: ${error.message}`);
+        setApiError(`Failed to connect to API: ${error.message}. Please try again or contact support.`);
       }
     };
     checkApi();

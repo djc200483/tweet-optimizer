@@ -23,16 +23,24 @@ const app = express();
 // More permissive CORS configuration
 app.use(cors({
   origin: [
+    process.env.FRONTEND_URL,
     'https://tweet-optimizer.vercel.app',
-    'http://localhost:3000',
-    'https://tweet-optimizer-production-8f8e.up.railway.app',
-    'https://tweet-optimizer-production.up.railway.app'
+    'https://echosphere.com',
+    'http://localhost:3000'
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
   credentials: true,
-  optionsSuccessStatus: 200
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Content-Length', 'Content-Type'],
+  maxAge: 600, // Increase preflight cache time for iOS
 }));
+
+// Add specific headers for iOS/Safari
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  next();
+});
 
 app.use(express.json());
 
@@ -369,4 +377,22 @@ console.log('Server configuration:', {
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server Error:', {
+    message: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method,
+    ip: req.ip,
+    headers: req.headers
+  });
+
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: err.message,
+    path: req.path
+  });
 });

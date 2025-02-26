@@ -22,6 +22,42 @@ export default function Auth({ onClose }) {
     if (onClose) onClose();
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API_URL}/auth/${isLogin ? 'login' : 'register'}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, x_handle }),
+      });
+
+      // Add timeout for slow connections
+      const timeoutId = setTimeout(() => {
+        setError('Request timed out. Please check your connection and try again.');
+      }, 15000);
+
+      const data = await response.json();
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        setError(data.error || 'Authentication failed. Please try again.');
+        return;
+      }
+      // Rest of the code...
+    } catch (error) {
+      console.error('Auth error:', error);
+      // More descriptive error for iOS users
+      setError(
+        'Connection failed. Please check your internet connection and try again. ' +
+        'If the problem persists, try refreshing the page.'
+      );
+    }
+  };
+
   return (
     <div className="auth-container">
       <button 

@@ -4,9 +4,15 @@ import Register from './Register';
 import ForgotPassword from './ForgotPassword';
 import { useAuth } from './AuthContext';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
 export default function Auth({ onClose }) {
   const [currentForm, setCurrentForm] = useState('login');
   const { setOnClose } = useAuth();
+  const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [x_handle, setXHandle] = useState('');
   
   useEffect(() => {
     setOnClose(() => onClose);
@@ -25,7 +31,7 @@ export default function Auth({ onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_URL}/auth/${isLogin ? 'login' : 'register'}`, {
+      const response = await fetch(`${API_URL}/auth/${currentForm === 'login' ? 'login' : 'register'}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +53,7 @@ export default function Auth({ onClose }) {
         setError(data.error || 'Authentication failed. Please try again.');
         return;
       }
-      // Rest of the code...
+      handleSuccess();
     } catch (error) {
       console.error('Auth error:', error);
       // More descriptive error for iOS users
@@ -66,11 +72,28 @@ export default function Auth({ onClose }) {
       >
         ← Back to Home
       </button>
+      {error && <div className="auth-error">{error}</div>}
       {currentForm === 'login' && (
-        <Login onToggleForm={handleFormToggle} />
+        <Login 
+          onToggleForm={handleFormToggle}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          onSubmit={handleSubmit}
+        />
       )}
       {currentForm === 'register' && (
-        <Register onToggleForm={handleFormToggle} />
+        <Register 
+          onToggleForm={handleFormToggle}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          x_handle={x_handle}
+          setXHandle={setXHandle}
+          onSubmit={handleSubmit}
+        />
       )}
       {currentForm === 'forgot' && (
         <ForgotPassword onToggleForm={handleFormToggle} />

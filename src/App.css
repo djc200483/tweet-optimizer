@@ -17,11 +17,24 @@ body {
 
 .input-container textarea {
   width: 100%;
+  min-height: 120px;
+  max-height: 200px;
   padding: 15px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
+  background-color: #23242b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.95rem;
   resize: vertical;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input-container textarea:focus {
+  outline: none;
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
 }
 
 .submit-button {
@@ -266,52 +279,59 @@ body {
 }
 
 .analysis-container {
+  background-color: #1a1b1f;
+  border-radius: 20px;
+  padding: 25px;
   margin: 20px auto;
-  max-width: 800px;
+  max-width: 1200px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 95%;
 }
 
 .analysis-card {
-  background: white;
-  border: 1px solid #e1e8ed;
-  border-radius: 8px;
+  background: #23242b;
+  border-radius: 15px;
   padding: 20px;
-  margin-top: 20px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
 }
 
 .analysis-content {
-  text-align: left;
+  color: #fff;
 }
 
 .analysis-item {
   margin: 12px 0;
   padding: 8px 0;
-  border-bottom: 1px solid #e1e8ed;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .analysis-label {
-  font-weight: 600;
-  color: #1da1f2;
-  margin-right: 8px;
+  color: #a0a0b0;
+  font-size: 0.9rem;
 }
 
 .analysis-value {
-  color: #14171a;
+  color: #fff;
 }
 
 .adapt-button {
-  margin-top: 20px;
-  padding: 12px 24px;
-  background-color: #28a745;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
   color: white;
   border: none;
-  border-radius: 20px;
-  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
 }
 
 .adapt-button:hover {
-  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
 }
 
 .adaptation-card {
@@ -319,12 +339,11 @@ body {
 }
 
 .adapted-tweet {
-  text-align: left;
+  background: #23242b;
   padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  margin: 15px 0;
-  font-size: 16px;
+  border-radius: 12px;
+  color: #fff;
+  margin: 10px 0;
   line-height: 1.5;
 }
 

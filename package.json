@@ -1,6 +1,7 @@
 {
   "name": "tweet-optimizer",
   "version": "0.1.0",
+  "description": "EchoSphere Tweet Optimizer",
   "private": true,
   "engines": {
     "node": ">=18.0.0",

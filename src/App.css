@@ -593,27 +593,20 @@ body {
 }
 
 .prompt-result {
-  margin-top: 30px;
+  background: #23242b;
+  border-radius: 15px;
   padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e1e8ed;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .prompt-text {
-  margin: 15px 0;
+  background: #23242b;
   padding: 15px;
-  background: white;
-  border: 1px solid #e1e8ed;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 12px;
+  color: #fff;
+  margin: 10px 0;
   line-height: 1.5;
-  white-space: pre-wrap;
-  min-height: 100px;
-  position: relative;
 }
 
 /* Add responsive design */
@@ -624,17 +617,20 @@ body {
 }
 
 .supercharge-button {
-  background: #805ad5;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 12px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
 }
 
 .supercharge-button:hover {
-  background: #6b46c1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
 }
 
 .supercharge-button:disabled {
@@ -643,9 +639,9 @@ body {
 }
 
 .supercharged-result {
-  margin-top: 30px;
+  margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #e1e8ed;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Auth Forms */

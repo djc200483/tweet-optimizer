@@ -55,7 +55,7 @@ app.use(express.json());
 
 // Health check endpoint
 app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: 'API is running' });
+  res.json({ status: 'ok', message: 'API is running', version: '1.0.0' });
 });
 
 // Auth routes

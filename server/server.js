@@ -10,6 +10,10 @@ const adminRoutes = require('./routes/admin');
 const authMiddleware = require('./middleware/auth');
 // const axios = require('axios');  // Commented out for now
 
+// Server startup timestamp
+const startupTime = new Date().toISOString();
+console.log('Server initializing at:', startupTime);
+
 // Log database connection info (temporary)
 console.log('Database URL configured:', !!process.env.DATABASE_URL);
 console.log('Database URL domain:', process.env.DATABASE_URL?.split('@')[1]?.split(':')[0] || 'not found');

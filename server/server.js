@@ -25,20 +25,25 @@ app.use(cors({
   origin: [
     process.env.FRONTEND_URL,
     'https://tweet-optimizer.vercel.app',
-    'https://echosphere.com',
+    'https://tweet-optimizer-production-8f8e.up.railway.app',
     'http://localhost:3000'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   exposedHeaders: ['Content-Length', 'Content-Type'],
-  maxAge: 600, // Increase preflight cache time for iOS
+  maxAge: 600
 }));
 
-// Add specific headers for iOS/Safari
+// Update the headers middleware to be more permissive
 app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
   next();
 });
 

@@ -5,10 +5,15 @@ const OpenAI = require('openai');
 const db = require('./db');
 const fs = require('fs');
 const path = require('path');
+const { Resend } = require('resend');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const authMiddleware = require('./middleware/auth');
 // const axios = require('axios');  // Commented out for now
+
+// Initialize Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
+console.log('Resend configured:', !!process.env.RESEND_API_KEY);
 
 // Server startup timestamp
 const startupTime = new Date().toISOString();

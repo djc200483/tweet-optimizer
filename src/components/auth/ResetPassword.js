@@ -14,15 +14,28 @@ export default function ResetPassword() {
   // Get token from URL parameters
   const token = new URLSearchParams(location.search).get('token');
 
+  console.log('ResetPassword component mounted:', {
+    hasToken: !!token,
+    tokenLength: token?.length,
+    pathname: location.pathname,
+    search: location.search
+  });
+
   useEffect(() => {
     // Verify token when component mounts
     const verifyToken = async () => {
       if (!token) {
+        console.log('No reset token provided');
         setError('No reset token provided');
         return;
       }
 
       try {
+        console.log('Verifying token:', {
+          apiUrl: process.env.REACT_APP_API_URL,
+          token: token.substring(0, 20) + '...' // Log first 20 chars for safety
+        });
+
         const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-reset-token`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -30,12 +43,19 @@ export default function ResetPassword() {
         });
 
         const data = await response.json();
+        console.log('Token verification response:', {
+          status: response.status,
+          ok: response.ok,
+          data
+        });
+
         if (response.ok && data.valid) {
           setIsTokenValid(true);
         } else {
           setError('Invalid or expired reset token');
         }
       } catch (err) {
+        console.error('Token verification error:', err);
         setError('Error verifying reset token');
       }
     };

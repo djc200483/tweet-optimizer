@@ -329,7 +329,7 @@ router.post('/forgot-password', async (req, res) => {
     console.log('Reset token stored in database');
     
     // Clean up the frontend URL to prevent double https://
-    const frontendUrl = process.env.FRONTEND_URL.replace(/^https?:\/\//, '');
+    const frontendUrl = process.env.FRONTEND_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
     const resetLink = `https://${frontendUrl}/reset-password?token=${resetToken}`;
     
     // In staging, we need to send to the developer's email

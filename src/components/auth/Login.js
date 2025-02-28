@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { Link } from 'react-router-dom';
 
 export default function Login({ onToggleForm }) {
   const [email, setEmail] = useState('');
@@ -79,6 +80,10 @@ export default function Login({ onToggleForm }) {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+        </div>
+
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgot Password?</Link>
         </div>
 
         <button 

@@ -334,19 +334,26 @@ router.post('/forgot-password', async (req, res) => {
       type: typeof process.env.FRONTEND_URL
     });
 
-    // Ensure proper URL construction
-    let frontendUrl = process.env.FRONTEND_URL || 'tweet-optimizer.vercel.app';
+    // Set default URL for staging
+    const defaultUrl = 'tweet-optimizer.vercel.app';
     
-    // Remove any protocol and trailing slashes
+    // Get and clean the frontend URL
+    let frontendUrl = (process.env.FRONTEND_URL || defaultUrl).trim();
+    
+    // Super aggressive cleaning to prevent any double protocols
     frontendUrl = frontendUrl
-      .replace(/^(https?:)?\/\//i, '')  // Remove protocol and double slashes
-      .replace(/\/+$/, '');             // Remove trailing slashes
+      .replace(/^.*?:\/\//, '')     // Remove any protocol including ://
+      .replace(/^\/+/, '')          // Remove leading slashes
+      .replace(/\/+$/, '')          // Remove trailing slashes
+      .replace(/^https?\./, '')     // Remove any leftover 'http.' or 'https.'
+      .replace(/^\/+/, '');         // One final clean of leading slashes
     
-    // Construct the full URL with single https protocol
+    // Construct the final URL with single https protocol
     const resetLink = `https://${frontendUrl}/reset-password?token=${resetToken}`;
     
     console.log('Reset link construction:', {
       originalUrl: process.env.FRONTEND_URL,
+      defaultUrl,
       cleanedUrl: frontendUrl,
       finalResetLink: resetLink
     });

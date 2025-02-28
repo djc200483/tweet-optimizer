@@ -22,6 +22,7 @@ export default function Auth({ onClose }) {
   const handleFormToggle = (form) => {
     console.log('Toggling form to:', form);
     setCurrentForm(form);
+    setError(''); // Clear any existing errors when switching forms
   };
 
   const handleSuccess = () => {
@@ -96,7 +97,16 @@ export default function Auth({ onClose }) {
         />
       )}
       {currentForm === 'forgot' && (
-        <ForgotPassword onToggleForm={handleFormToggle} />
+        <div className="auth-form">
+          <h2>Forgot Password</h2>
+          <ForgotPassword onToggleForm={() => handleFormToggle('login')} />
+          <p className="auth-switch">
+            Remember your password?{' '}
+            <button onClick={() => handleFormToggle('login')} className="auth-switch-button">
+              Back to Login
+            </button>
+          </p>
+        </div>
       )}
     </div>
   );

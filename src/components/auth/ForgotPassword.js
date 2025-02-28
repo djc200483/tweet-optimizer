@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function ForgotPassword() {
+export default function ForgotPassword({ onToggleForm }) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -21,20 +21,20 @@ export default function ForgotPassword() {
 
       const data = await response.json();
       if (response.ok) {
-        setSuccess('Password reset instructions have been sent to your email');
+        setSuccess(data.message || 'If an account exists with this email, a password reset link will be sent.');
       } else {
-        setError(data.error || 'Failed to send reset email');
+        setError(data.error || 'Failed to process request');
       }
     } catch (err) {
-      setError('An error occurred while sending reset email');
+      console.error('Password reset request error:', err);
+      setError('An error occurred while processing your request');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="auth-form">
-      <h2>Forgot Password</h2>
+    <div className="auth-form-content">
       {error && <div className="auth-error">{error}</div>}
       {success && <div className="auth-success">{success}</div>}
       
@@ -47,6 +47,7 @@ export default function ForgotPassword() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -55,7 +56,7 @@ export default function ForgotPassword() {
           className="auth-button"
           disabled={isLoading}
         >
-          {isLoading ? 'Sending...' : 'Send Reset Instructions'}
+          {isLoading ? 'Processing...' : 'Send Reset Instructions'}
         </button>
       </form>
     </div>

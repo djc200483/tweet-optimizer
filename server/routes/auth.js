@@ -406,11 +406,19 @@ router.get('/debug-table-structure', async (req, res) => {
     const tableInfo = await db.query(`
       SELECT column_name, data_type, character_maximum_length
       FROM information_schema.columns
-      WHERE table_name = 'users';
+      WHERE table_name = 'users'
+      ORDER BY column_name;
     `);
     
-    console.log('Users table structure:', tableInfo.rows);
-    res.json({ tableStructure: tableInfo.rows });
+    // Format the output more clearly
+    const formattedStructure = tableInfo.rows.map(col => ({
+      name: col.column_name,
+      type: col.data_type,
+      maxLength: col.character_maximum_length
+    }));
+    
+    console.log('Users table structure:', JSON.stringify(formattedStructure, null, 2));
+    res.json({ columns: formattedStructure });
   } catch (error) {
     console.error('Error checking table structure:', error);
     res.status(500).json({ error: 'Error checking table structure' });

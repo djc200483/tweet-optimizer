@@ -331,10 +331,13 @@ router.post('/forgot-password', async (req, res) => {
     // Send email with reset link
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
     
-    console.log('Attempting to send email via Resend:', {
+    console.log('Email configuration:', {
+      from: 'EchoSphere <noreply@echosphere.com>',
       to: email,
+      frontendUrl: process.env.FRONTEND_URL,
       resetLink,
-      resendConfigured: !!process.env.RESEND_API_KEY
+      resendApiKeyConfigured: !!process.env.RESEND_API_KEY,
+      resendApiKeyLength: process.env.RESEND_API_KEY?.length
     });
     
     try {
@@ -350,15 +353,29 @@ router.post('/forgot-password', async (req, res) => {
           <p>If you didn't request this, please ignore this email.</p>
         `
       });
-      console.log('Email sent successfully:', emailResult);
+      console.log('Email send attempt complete:', {
+        success: !!emailResult?.id,
+        emailId: emailResult?.id,
+        error: emailResult?.error
+      });
     } catch (emailError) {
-      console.error('Error sending email:', emailError);
+      console.error('Error sending email:', {
+        error: emailError.message,
+        code: emailError.code,
+        name: emailError.name,
+        stack: emailError.stack
+      });
       throw emailError;
     }
     
     res.json({ message: 'If an account exists with this email, a password reset link will be sent.' });
   } catch (error) {
-    console.error('Password reset request error:', error);
+    console.error('Password reset request error:', {
+      message: error.message,
+      code: error.code,
+      name: error.name,
+      stack: error.stack
+    });
     res.status(500).json({ error: 'Error processing password reset request' });
   }
 });

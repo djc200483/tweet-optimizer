@@ -264,7 +264,9 @@ router.all('/verify', async (req, res) => {
 router.get('/debug-db-state', async (req, res) => {
   try {
     const allowedUsers = await db.query('SELECT * FROM allowed_users');
-    const registeredUsers = await db.query('SELECT email, x_handle, is_active FROM users');
+    const registeredUsers = await db.query(
+      'SELECT email, x_handle, is_active, reset_token, reset_token_expires FROM users'
+    );
     
     console.log('Database State:', {
       allowedUsers: allowedUsers.rows,
@@ -395,6 +397,23 @@ router.post('/reset-password', async (req, res) => {
   } catch (error) {
     console.error('Password reset error:', error);
     res.status(400).json({ error: 'Error resetting password' });
+  }
+});
+
+// Temporary debug endpoint to check table structure
+router.get('/debug-table-structure', async (req, res) => {
+  try {
+    const tableInfo = await db.query(`
+      SELECT column_name, data_type, character_maximum_length
+      FROM information_schema.columns
+      WHERE table_name = 'users';
+    `);
+    
+    console.log('Users table structure:', tableInfo.rows);
+    res.json({ tableStructure: tableInfo.rows });
+  } catch (error) {
+    console.error('Error checking table structure:', error);
+    res.status(500).json({ error: 'Error checking table structure' });
   }
 });
 

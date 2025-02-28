@@ -328,8 +328,9 @@ router.post('/forgot-password', async (req, res) => {
     
     console.log('Reset token stored in database');
     
-    // Send email with reset link
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    // Clean up the frontend URL to prevent double https://
+    const frontendUrl = process.env.FRONTEND_URL.replace(/^https?:\/\//, '');
+    const resetLink = `https://${frontendUrl}/reset-password?token=${resetToken}`;
     
     // In staging, we need to send to the developer's email
     const isStaging = process.env.NODE_ENV !== 'production';
@@ -341,6 +342,7 @@ router.post('/forgot-password', async (req, res) => {
       actualUserEmail: email,
       environment: process.env.NODE_ENV,
       frontendUrl: process.env.FRONTEND_URL,
+      cleanedUrl: frontendUrl,
       resetLink,
       resendApiKeyConfigured: !!process.env.RESEND_API_KEY,
       resendApiKeyLength: process.env.RESEND_API_KEY?.length

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/auth/AuthContext';
 import Auth from './components/auth/Auth';
 import ResetPassword from './components/auth/ResetPassword';
+import ForgotPassword from './components/auth/ForgotPassword';
 import Admin from './components/admin/Admin';
 import TweetOptimizer from './components/TweetOptimizer';
 import ReverseEngineer from './components/ReverseEngineer';
@@ -422,6 +423,7 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/*" element={<AppContent />} />
         </Routes>

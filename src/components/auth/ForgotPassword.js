@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useAuth } from './AuthContext';
 
-export default function ForgotPassword({ onToggleForm }) {
+export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { clearAuthError } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,15 +21,12 @@ export default function ForgotPassword({ onToggleForm }) {
 
       const data = await response.json();
       if (response.ok) {
-        setSuccess('If an account exists with this email, you will receive reset instructions.');
-        setTimeout(() => onToggleForm(), 3000); // Return to login after 3 seconds
+        setSuccess('Password reset instructions have been sent to your email');
       } else {
-        setError(data.error || 'Failed to process request');
-        setTimeout(() => setError(''), 5000);
+        setError(data.error || 'Failed to send reset email');
       }
     } catch (err) {
-      setError('An error occurred');
-      setTimeout(() => setError(''), 5000);
+      setError('An error occurred while sending reset email');
     } finally {
       setIsLoading(false);
     }
@@ -39,7 +34,7 @@ export default function ForgotPassword({ onToggleForm }) {
 
   return (
     <div className="auth-form">
-      <h2>Reset Password</h2>
+      <h2>Forgot Password</h2>
       {error && <div className="auth-error">{error}</div>}
       {success && <div className="auth-success">{success}</div>}
       
@@ -60,16 +55,9 @@ export default function ForgotPassword({ onToggleForm }) {
           className="auth-button"
           disabled={isLoading}
         >
-          {isLoading ? 'Processing...' : 'Reset Password'}
+          {isLoading ? 'Sending...' : 'Send Reset Instructions'}
         </button>
       </form>
-
-      <p className="auth-switch">
-        Remember your password?{' '}
-        <button onClick={onToggleForm} className="auth-switch-button">
-          Back to Login
-        </button>
-      </p>
     </div>
   );
 } 

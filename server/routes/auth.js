@@ -263,19 +263,25 @@ router.all('/verify', async (req, res) => {
 // Debug endpoint - DO NOT USE IN PRODUCTION
 router.get('/debug-db-state', async (req, res) => {
   try {
-    const allowedUsers = await db.query('SELECT * FROM allowed_users');
-    const registeredUsers = await db.query(
-      'SELECT email, x_handle, is_active, reset_token, reset_token_expires FROM users'
-    );
+    const registeredUsers = await db.query(`
+      SELECT 
+        email,
+        x_handle,
+        is_active,
+        reset_token IS NOT NULL as has_reset_token,
+        reset_token_expires,
+        NOW() as current_time
+      FROM users
+      ORDER BY email
+    `);
     
-    console.log('Database State:', {
-      allowedUsers: allowedUsers.rows,
-      registeredUsers: registeredUsers.rows
+    console.log('Users table state:', {
+      userCount: registeredUsers.rows.length,
+      users: registeredUsers.rows
     });
     
     res.json({
-      allowedUsers: allowedUsers.rows,
-      registeredUsers: registeredUsers.rows
+      users: registeredUsers.rows
     });
   } catch (error) {
     console.error('Debug error:', error);

@@ -332,7 +332,7 @@ router.post('/forgot-password', async (req, res) => {
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
     
     console.log('Email configuration:', {
-      from: 'EchoSphere <noreply@echosphere.com>',
+      from: 'EchoSphere <onboarding@resend.dev>',
       to: email,
       frontendUrl: process.env.FRONTEND_URL,
       resetLink,
@@ -342,7 +342,7 @@ router.post('/forgot-password', async (req, res) => {
     
     try {
       const emailResult = await resend.emails.send({
-        from: 'EchoSphere <noreply@echosphere.com>',
+        from: 'EchoSphere <onboarding@resend.dev>',
         to: email,
         subject: 'Reset Your EchoSphere Password',
         html: `

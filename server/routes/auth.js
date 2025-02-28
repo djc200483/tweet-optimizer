@@ -287,12 +287,18 @@ router.get('/debug-db-state', async (req, res) => {
 router.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
+    console.log('Password reset requested for:', email);
     
     // Find user
     const result = await db.query(
       'SELECT id, email, x_handle FROM users WHERE email = $1',
       [email]
     );
+    
+    console.log('User lookup result:', {
+      found: result.rows.length > 0,
+      user: result.rows[0]
+    });
     
     if (result.rows.length === 0) {
       // Don't reveal if email exists or not
@@ -306,27 +312,43 @@ router.post('/forgot-password', async (req, res) => {
       { expiresIn: '1h' }
     );
     
+    console.log('Reset token generated');
+    
     // Store reset token and expiry in database
     await db.query(
       'UPDATE users SET reset_token = $1, reset_token_expires = NOW() + INTERVAL \'1 hour\' WHERE id = $2',
       [resetToken, result.rows[0].id]
     );
     
+    console.log('Reset token stored in database');
+    
     // Send email with reset link
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
     
-    await resend.emails.send({
-      from: 'EchoSphere <noreply@echosphere.com>',
+    console.log('Attempting to send email via Resend:', {
       to: email,
-      subject: 'Reset Your EchoSphere Password',
-      html: `
-        <h1>Password Reset Request</h1>
-        <p>You requested to reset your password. Click the link below to proceed:</p>
-        <a href="${resetLink}">Reset Password</a>
-        <p>This link will expire in 1 hour.</p>
-        <p>If you didn't request this, please ignore this email.</p>
-      `
+      resetLink,
+      resendConfigured: !!process.env.RESEND_API_KEY
     });
+    
+    try {
+      const emailResult = await resend.emails.send({
+        from: 'EchoSphere <noreply@echosphere.com>',
+        to: email,
+        subject: 'Reset Your EchoSphere Password',
+        html: `
+          <h1>Password Reset Request</h1>
+          <p>You requested to reset your password. Click the link below to proceed:</p>
+          <a href="${resetLink}">Reset Password</a>
+          <p>This link will expire in 1 hour.</p>
+          <p>If you didn't request this, please ignore this email.</p>
+        `
+      });
+      console.log('Email sent successfully:', emailResult);
+    } catch (emailError) {
+      console.error('Error sending email:', emailError);
+      throw emailError;
+    }
     
     res.json({ message: 'If an account exists with this email, a password reset link will be sent.' });
   } catch (error) {

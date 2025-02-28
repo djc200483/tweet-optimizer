@@ -425,4 +425,20 @@ router.get('/debug-table-structure', async (req, res) => {
   }
 });
 
+// One-time migration endpoint to fix reset_token_expires column type
+router.post('/fix-column-type', async (req, res) => {
+  try {
+    await db.query(`
+      ALTER TABLE users 
+      ALTER COLUMN reset_token_expires TYPE TIMESTAMP WITHOUT TIME ZONE;
+    `);
+    
+    console.log('Column type updated successfully');
+    res.json({ message: 'Column type updated successfully' });
+  } catch (error) {
+    console.error('Error updating column type:', error);
+    res.status(500).json({ error: 'Error updating column type' });
+  }
+});
+
 module.exports = router; 

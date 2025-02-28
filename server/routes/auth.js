@@ -336,17 +336,19 @@ router.post('/forgot-password', async (req, res) => {
 
     // Ensure proper URL construction
     let frontendUrl = process.env.FRONTEND_URL || 'tweet-optimizer.vercel.app';
-    // Remove any existing protocol
-    frontendUrl = frontendUrl.replace(/^https?:\/\//, '');
-    // Ensure no trailing slash
-    frontendUrl = frontendUrl.replace(/\/$/, '');
-    // Construct the full URL
+    
+    // Remove any protocol and trailing slashes
+    frontendUrl = frontendUrl
+      .replace(/^(https?:)?\/\//i, '')  // Remove protocol and double slashes
+      .replace(/\/+$/, '');             // Remove trailing slashes
+    
+    // Construct the full URL with single https protocol
     const resetLink = `https://${frontendUrl}/reset-password?token=${resetToken}`;
     
-    console.log('Reset link debug:', {
-      frontendUrl,
-      resetLink,
-      originalEnvUrl: process.env.FRONTEND_URL
+    console.log('Reset link construction:', {
+      originalUrl: process.env.FRONTEND_URL,
+      cleanedUrl: frontendUrl,
+      finalResetLink: resetLink
     });
     
     // In staging, we need to send to the developer's email

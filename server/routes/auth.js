@@ -328,18 +328,25 @@ router.post('/forgot-password', async (req, res) => {
     
     console.log('Reset token stored in database');
     
+    // Debug log the frontend URL
+    console.log('Frontend URL debug:', {
+      raw: process.env.FRONTEND_URL,
+      type: typeof process.env.FRONTEND_URL
+    });
+
     // Ensure proper URL construction
-    let frontendUrl = process.env.FRONTEND_URL;
-    if (!frontendUrl.startsWith('http')) {
-      frontendUrl = 'https://' + frontendUrl;
-    }
-    const resetUrl = new URL('/reset-password', frontendUrl);
-    resetUrl.searchParams.set('token', resetToken);
-    const resetLink = resetUrl.toString();
+    let frontendUrl = process.env.FRONTEND_URL || 'tweet-optimizer.vercel.app';
+    // Remove any existing protocol
+    frontendUrl = frontendUrl.replace(/^https?:\/\//, '');
+    // Ensure no trailing slash
+    frontendUrl = frontendUrl.replace(/\/$/, '');
+    // Construct the full URL
+    const resetLink = `https://${frontendUrl}/reset-password?token=${resetToken}`;
     
-    console.log('Reset link generated:', {
-      originalUrl: process.env.FRONTEND_URL,
-      finalUrl: resetLink
+    console.log('Reset link debug:', {
+      frontendUrl,
+      resetLink,
+      originalEnvUrl: process.env.FRONTEND_URL
     });
     
     // In staging, we need to send to the developer's email

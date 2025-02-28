@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/auth/AuthContext';
 import Auth from './components/auth/Auth';
+import ResetPassword from './components/auth/ResetPassword';
 import Admin from './components/admin/Admin';
 import TweetOptimizer from './components/TweetOptimizer';
 import ReverseEngineer from './components/ReverseEngineer';
@@ -417,9 +419,14 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/*" element={<AppContent />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 }
 

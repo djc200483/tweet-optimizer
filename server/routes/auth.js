@@ -331,9 +331,15 @@ router.post('/forgot-password', async (req, res) => {
     // Send email with reset link
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
     
+    // In staging, we need to send to the developer's email
+    const isStaging = process.env.NODE_ENV !== 'production';
+    const toEmail = isStaging ? 'djc200483@gmail.com' : email;
+    
     console.log('Email configuration:', {
       from: 'EchoSphere <onboarding@resend.dev>',
-      to: email,
+      to: toEmail,
+      actualUserEmail: email,
+      environment: process.env.NODE_ENV,
       frontendUrl: process.env.FRONTEND_URL,
       resetLink,
       resendApiKeyConfigured: !!process.env.RESEND_API_KEY,
@@ -343,14 +349,16 @@ router.post('/forgot-password', async (req, res) => {
     try {
       const emailResult = await resend.emails.send({
         from: 'EchoSphere <onboarding@resend.dev>',
-        to: email,
-        subject: 'Reset Your EchoSphere Password',
+        to: toEmail,
+        subject: `Reset Password for ${email} - EchoSphere`,
         html: `
           <h1>Password Reset Request</h1>
-          <p>You requested to reset your password. Click the link below to proceed:</p>
+          <p>A password reset was requested for the account: ${email}</p>
+          <p>Click the link below to proceed:</p>
           <a href="${resetLink}">Reset Password</a>
           <p>This link will expire in 1 hour.</p>
           <p>If you didn't request this, please ignore this email.</p>
+          ${isStaging ? '<p><strong>Note: This is a staging environment test email.</strong></p>' : ''}
         `
       });
       console.log('Email send attempt complete:', {

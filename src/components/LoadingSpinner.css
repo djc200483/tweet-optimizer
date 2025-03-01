@@ -5,12 +5,31 @@
 }
 
 .loading-spinner {
-  width: 20px;
-  height: 20px;
   border: 2px solid #f3f3f3;
   border-top: 2px solid #1da1f2;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+/* Default size */
+.loading-spinner-default {
+  width: 20px;
+  height: 20px;
+}
+
+/* Small inline size */
+.loading-spinner-inline {
+  width: 14px;
+  height: 14px;
+  border-width: 1.5px;
+  margin: 0 4px;
+}
+
+/* Large size for full-screen loading */
+.loading-spinner-large {
+  width: 40px;
+  height: 40px;
+  border-width: 3px;
 }
 
 @keyframes spin {

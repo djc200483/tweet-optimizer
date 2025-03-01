@@ -156,7 +156,7 @@ export default function TweetOptimizer({
         onClick={handleSubmit}
         disabled={!tweet.trim() || isLoading}
       >
-        {isLoading ? <LoadingSpinner /> : 'Optimize Post'}
+        {isLoading ? <LoadingSpinner size="inline" /> : 'Optimize Post'}
       </button>
 
       <div className="results-container">

@@ -178,7 +178,7 @@ export default function PromptAssistant() {
                 onClick={handleSupercharge}
                 disabled={isLoading}
               >
-                {isLoading ? <LoadingSpinner /> : 'Supercharge Prompt'}
+                {isLoading ? <LoadingSpinner size="inline" /> : 'Supercharge Prompt'}
               </button>
             </div>
 

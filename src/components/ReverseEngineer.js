@@ -84,14 +84,14 @@ export default function ReverseEngineer({
             onClick={handleReverseAnalysis}
             disabled={isLoading}
           >
-            {isLoading ? <LoadingSpinner /> : 'Analyse Post'}
+            {isLoading ? <LoadingSpinner size="inline" /> : 'Analyse Post'}
           </button>
         </div>
       </div>
 
       {isLoading && (
         <div className="loading-message">
-          <LoadingSpinner />
+          <LoadingSpinner size="large" />
           <p>Analyzing tweet structure...</p>
         </div>
       )}
@@ -113,7 +113,7 @@ export default function ReverseEngineer({
               onClick={handleAdaptation}
               disabled={isAdapting}
             >
-              {isAdapting ? <LoadingSpinner /> : 'Generate Personalized Version'}
+              {isAdapting ? <LoadingSpinner size="inline" /> : 'Generate Personalized Version'}
             </button>
           </div>
 

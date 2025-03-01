@@ -34,7 +34,7 @@ export default function PowerWords({
             onClick={handlePowerAnalysis}
             disabled={isLoading}
           >
-            {isLoading ? <LoadingSpinner /> : 'Analyse Power Words'}
+            {isLoading ? <LoadingSpinner size="inline" /> : 'Analyse Power Words'}
           </button>
         </div>
       </div>

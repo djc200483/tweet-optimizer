@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import LoadingSpinner from '../LoadingSpinner';
 
 export default function Register({ onToggleForm }) {
   const [email, setEmail] = useState('');
@@ -91,6 +92,7 @@ export default function Register({ onToggleForm }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -103,6 +105,7 @@ export default function Register({ onToggleForm }) {
             onChange={(e) => setXHandle(e.target.value)}
             placeholder="@"
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -115,6 +118,7 @@ export default function Register({ onToggleForm }) {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
+            disabled={isLoading}
           />
         </div>
 
@@ -126,6 +130,7 @@ export default function Register({ onToggleForm }) {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -134,13 +139,17 @@ export default function Register({ onToggleForm }) {
           className="auth-button"
           disabled={isLoading}
         >
-          {isLoading ? 'Creating Account...' : 'Register'}
+          {isLoading ? <LoadingSpinner /> : 'Register'}
         </button>
       </form>
 
       <p className="auth-switch">
         Already have an account?{' '}
-        <button onClick={() => onToggleForm('login')} className="auth-switch-button">
+        <button 
+          onClick={() => onToggleForm('login')} 
+          className="auth-switch-button"
+          disabled={isLoading}
+        >
           Login
         </button>
       </p>

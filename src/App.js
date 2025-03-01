@@ -10,7 +10,7 @@ import ReverseEngineer from './components/ReverseEngineer';
 import PowerWords from './components/PowerWords';
 import PromptAssistant from './components/PromptAssistant';
 import Home from './components/Home';
-import LoadingDemo from './components/LoadingDemo';
+import LoadingSpinner from './components/LoadingSpinner';
 import './App.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -203,8 +203,6 @@ function AppContent() {
 
   const renderFeature = () => {
     switch(currentFeature) {
-      case 'loading-demo':
-        return <LoadingDemo />;
       case 'optimize':
         return (
           <>
@@ -348,7 +346,7 @@ function AppContent() {
       )}
       {isAuthLoading ? (
         <div className="auth-loading">
-          <div className="loading-spinner"></div>
+          <LoadingSpinner />
           <p>Loading...</p>
         </div>
       ) : (

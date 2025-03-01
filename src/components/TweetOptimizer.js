@@ -1,4 +1,5 @@
 import React from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function TweetOptimizer({ 
   tweet, 
@@ -155,7 +156,7 @@ export default function TweetOptimizer({
         onClick={handleSubmit}
         disabled={!tweet.trim() || isLoading}
       >
-        {isLoading ? 'Optimizing...' : 'Optimize Post'}
+        {isLoading ? <LoadingSpinner /> : 'Optimize Post'}
       </button>
 
       <div className="results-container">

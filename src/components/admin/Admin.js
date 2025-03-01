@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../auth/AuthContext';
+import LoadingSpinner from '../LoadingSpinner';
 import './Admin.css';
 
 export default function Admin() {
@@ -148,7 +149,11 @@ export default function Admin() {
     return { activeUsers, inactiveUsers };
   }, [allowedUsers]);
 
-  if (isLoading) return <div className="admin-loading">Loading...</div>;
+  if (isLoading) return (
+    <div className="admin-loading">
+      <LoadingSpinner />
+    </div>
+  );
 
   return (
     <div className="admin-container">
@@ -156,7 +161,7 @@ export default function Admin() {
       
       {error && <div className="admin-error">{error}</div>}
       {success && <div className="admin-success">{success}</div>}
-      {isLoading && <div className="loading-spinner"></div>}
+      {isLoading && <LoadingSpinner />}
 
       <div className="admin-input-form">
         <label>X Handle</label>

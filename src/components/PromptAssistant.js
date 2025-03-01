@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function PromptAssistant() {
@@ -145,6 +146,7 @@ export default function PromptAssistant() {
               <select
                 value={selectedOptions[key]}
                 onChange={(e) => handleOptionChange(key, e.target.value)}
+                disabled={isLoading}
               >
                 <option value="">Select {category.title}</option>
                 {category.options.map(option => (
@@ -167,6 +169,7 @@ export default function PromptAssistant() {
               <button 
                 className="copy-button"
                 onClick={() => navigator.clipboard.writeText(generatePrompt())}
+                disabled={isLoading}
               >
                 Copy Prompt
               </button>
@@ -175,7 +178,7 @@ export default function PromptAssistant() {
                 onClick={handleSupercharge}
                 disabled={isLoading}
               >
-                {isLoading ? 'Supercharging...' : 'Supercharge Prompt'}
+                {isLoading ? <LoadingSpinner /> : 'Supercharge Prompt'}
               </button>
             </div>
 
@@ -189,6 +192,7 @@ export default function PromptAssistant() {
                   <button 
                     className="copy-button"
                     onClick={() => navigator.clipboard.writeText(superchargedPrompt)}
+                    disabled={isLoading}
                   >
                     Copy Supercharged Prompt
                   </button>

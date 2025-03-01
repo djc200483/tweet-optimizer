@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -83,14 +84,15 @@ export default function ReverseEngineer({
             onClick={handleReverseAnalysis}
             disabled={isLoading}
           >
-            {isLoading ? 'Analysing...' : 'Analyse Post'}
+            {isLoading ? <LoadingSpinner /> : 'Analyse Post'}
           </button>
         </div>
       </div>
 
       {isLoading && (
-        <div className="loading-spinner">
-          Analyzing tweet structure...
+        <div className="loading-message">
+          <LoadingSpinner />
+          <p>Analyzing tweet structure...</p>
         </div>
       )}
 
@@ -111,7 +113,7 @@ export default function ReverseEngineer({
               onClick={handleAdaptation}
               disabled={isAdapting}
             >
-              {isAdapting ? 'Generating...' : 'Generate Personalized Version'}
+              {isAdapting ? <LoadingSpinner /> : 'Generate Personalized Version'}
             </button>
           </div>
 

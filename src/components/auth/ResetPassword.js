@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import LoadingSpinner from '../LoadingSpinner';
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
@@ -114,7 +115,8 @@ export default function ResetPassword() {
   if (!isTokenValid) {
     return (
       <div className="auth-form">
-        <div className="auth-error">{error || 'Verifying reset token...'}</div>
+        <div className="auth-error">{error}</div>
+        {!error && <LoadingSpinner />}
       </div>
     );
   }
@@ -135,6 +137,7 @@ export default function ResetPassword() {
             onChange={(e) => setNewPassword(e.target.value)}
             required
             minLength={8}
+            disabled={isLoading}
           />
         </div>
 
@@ -147,6 +150,7 @@ export default function ResetPassword() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             minLength={8}
+            disabled={isLoading}
           />
         </div>
 
@@ -155,7 +159,7 @@ export default function ResetPassword() {
           className="auth-button"
           disabled={isLoading}
         >
-          {isLoading ? 'Resetting Password...' : 'Reset Password'}
+          {isLoading ? <LoadingSpinner /> : 'Reset Password'}
         </button>
       </form>
     </div>

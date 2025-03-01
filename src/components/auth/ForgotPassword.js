@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LoadingSpinner from '../LoadingSpinner';
 
 export default function ForgotPassword({ onToggleForm }) {
   const [email, setEmail] = useState('');
@@ -56,9 +57,20 @@ export default function ForgotPassword({ onToggleForm }) {
           className="auth-button"
           disabled={isLoading}
         >
-          {isLoading ? 'Processing...' : 'Send Reset Instructions'}
+          {isLoading ? <LoadingSpinner /> : 'Send Reset Instructions'}
         </button>
       </form>
+
+      <p className="auth-switch">
+        Remember your password?{' '}
+        <button 
+          onClick={() => onToggleForm('login')}
+          className="auth-switch-button"
+          disabled={isLoading}
+        >
+          Back to Login
+        </button>
+      </p>
     </div>
   );
 } 

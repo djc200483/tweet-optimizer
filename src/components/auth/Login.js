@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { Link } from 'react-router-dom';
+import LoadingSpinner from '../LoadingSpinner';
 
 export default function Login({ onToggleForm }) {
   const [email, setEmail] = useState('');
@@ -68,6 +69,7 @@ export default function Login({ onToggleForm }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -79,6 +81,7 @@ export default function Login({ onToggleForm }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -87,7 +90,7 @@ export default function Login({ onToggleForm }) {
           className="auth-button"
           disabled={isLoading}
         >
-          {isLoading ? 'Logging in...' : 'Login'}
+          {isLoading ? <LoadingSpinner /> : 'Login'}
         </button>
       </form>
 
@@ -95,6 +98,7 @@ export default function Login({ onToggleForm }) {
         <button 
           onClick={() => onToggleForm('forgot')} 
           className="auth-switch-button"
+          disabled={isLoading}
         >
           Forgot Password?
         </button>
@@ -105,6 +109,7 @@ export default function Login({ onToggleForm }) {
         <button 
           onClick={() => onToggleForm('register')}
           className="auth-switch-button"
+          disabled={isLoading}
         >
           Register
         </button>

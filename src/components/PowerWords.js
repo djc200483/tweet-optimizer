@@ -1,4 +1,5 @@
 import React from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -25,6 +26,7 @@ export default function PowerWords({
           value={powerText}
           onChange={(e) => setPowerText(e.target.value)}
           rows="4"
+          disabled={isLoading}
         />
         <div className="button-row">
           <button 
@@ -32,20 +34,10 @@ export default function PowerWords({
             onClick={handlePowerAnalysis}
             disabled={isLoading}
           >
-            {isLoading ? 'Analysing...' : 'Analyse Power Words'}
+            {isLoading ? <LoadingSpinner /> : 'Analyse Power Words'}
           </button>
         </div>
       </div>
-
-      {isLoading && (
-        <div className="loading-spinner">
-          <div className="analysis-steps">
-            <p>📝 Analyzing text structure...</p>
-            <p>🔍 Identifying power words...</p>
-            <p>✨ Generating suggestions...</p>
-          </div>
-        </div>
-      )}
 
       {powerResults && powerResults.analysis && (
         <div className="analysis-container">

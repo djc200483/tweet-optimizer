@@ -97,7 +97,10 @@ export default function Auth({ onClose }) {
         />
       )}
       {currentForm === 'forgot' && (
-        <ForgotPassword onToggleForm={handleFormToggle} />
+        <div className="auth-form">
+          <h2>Forgot Password</h2>
+          <ForgotPassword onToggleForm={() => handleFormToggle('login')} />
+        </div>
       )}
     </div>
   );

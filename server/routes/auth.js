@@ -360,8 +360,8 @@ router.post('/forgot-password', async (req, res) => {
     
     try {
       const emailResult = await resend.emails.send({
-        from: 'EchoSphere <onboarding@resend.dev>',
-        to: email,  // Send directly to user's email
+        from: 'EchoSphere <contact@echo-sphere.app>',
+        to: email,
         subject: `Reset Password for ${email} - EchoSphere`,
         html: `
           <h1>Password Reset Request</h1>

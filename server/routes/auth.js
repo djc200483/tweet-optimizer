@@ -360,8 +360,8 @@ router.post('/forgot-password', async (req, res) => {
     
     try {
       const emailResult = await resend.emails.send({
-        from: 'EchoSphere <contact@echo-sphere.app>',
-        to: email,
+        from: process.env.EMAIL_FROM || 'EchoSphere <contact@echo-sphere.app>',
+        to: process.env.FORCE_EMAIL_TO || email,
         subject: `Reset Password for ${email} - EchoSphere`,
         html: `
           <h1>Password Reset Request</h1>
@@ -370,12 +370,16 @@ router.post('/forgot-password', async (req, res) => {
           <a href="${resetLink}">Reset Password</a>
           <p>This link will expire in 1 hour.</p>
           <p>If you didn't request this, please ignore this email.</p>
+          ${process.env.FORCE_EMAIL_TO ? `<p><strong>Note:</strong> This is a staging environment. Original recipient: ${email}</p>` : ''}
         `
       });
       console.log('Email send attempt complete:', {
         success: !!emailResult?.id,
         emailId: emailResult?.id,
-        error: emailResult?.error
+        error: emailResult?.error,
+        originalRecipient: email,
+        actualRecipient: process.env.FORCE_EMAIL_TO || email,
+        fromAddress: process.env.EMAIL_FROM || 'EchoSphere <contact@echo-sphere.app>'
       });
     } catch (emailError) {
       console.error('Error sending email:', {

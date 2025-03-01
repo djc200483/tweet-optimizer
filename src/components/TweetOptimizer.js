@@ -180,12 +180,6 @@ export default function TweetOptimizer({
                     >
                       Copy
                     </button>
-                    <button
-                      className="action-button delete"
-                      onClick={() => handleDelete(index, vIndex)}
-                    >
-                      Delete
-                    </button>
                   </div>
                 </div>
               ))}

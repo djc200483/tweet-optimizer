@@ -145,10 +145,6 @@ function AppContent() {
     navigator.clipboard.writeText(text);
   };
 
-  const handleDelete = (indexToDelete) => {
-    setSavedTweets(savedTweets.filter((_, index) => index !== indexToDelete));
-  };
-
   const handleReverseAnalysis = async () => {
     if (reverseText.trim()) {
       try {
@@ -222,7 +218,6 @@ function AppContent() {
               handleSubmit={handleSubmit}
               isLoading={isLoading}
               savedTweets={savedTweets}
-              handleDelete={handleDelete}
               handleCopy={handleCopy}
               tones={tones}
               hookOptions={hookOptions}

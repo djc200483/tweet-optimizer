@@ -1252,7 +1252,6 @@ body {
 .result-actions {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
 }
 
 .action-button {
@@ -1325,6 +1324,14 @@ body {
   padding: 15px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.tweet-content {
+  flex: 1;
 }
 
 .action-button.delete {

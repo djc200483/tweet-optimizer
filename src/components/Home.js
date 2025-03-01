@@ -25,6 +25,12 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       description: 'Generate structured prompts for AI image generation tools.',
       icon: '🤖',
       id: 'prompt'
+    },
+    {
+      title: 'Loading Demo',
+      description: 'View the new standardized loading animations.',
+      icon: '⚡',
+      id: 'loading-demo'
     }
   ];
 
@@ -43,10 +49,12 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
             <p>{feature.description}</p>
             <button
               className="feature-button"
-              disabled={!isLoggedIn}
+              disabled={feature.id !== 'loading-demo' && !isLoggedIn}
               onClick={() => onSelectFeature(feature.id)}
             >
-              {isLoggedIn ? `Try ${feature.title.replace('Optimizer', 'Optimiser')}` : 'Login to Use'}
+              {isLoggedIn || feature.id === 'loading-demo' ? 
+                `Try ${feature.title.replace('Optimizer', 'Optimiser')}` : 
+                'Login to Use'}
             </button>
           </div>
         ))}

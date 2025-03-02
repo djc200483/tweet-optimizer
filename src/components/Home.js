@@ -34,6 +34,11 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     }
   ];
 
+  const handleFeatureClick = (featureId) => {
+    console.log('Feature clicked:', featureId);
+    onSelectFeature(featureId);
+  };
+
   return (
     <div className="home-container">
       <div className="home-description">
@@ -50,9 +55,9 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
             <button
               className="feature-button"
               disabled={!isLoggedIn}
-              onClick={() => onSelectFeature(feature.id)}
+              onClick={() => handleFeatureClick(feature.id)}
             >
-              {isLoggedIn ? `Try ${feature.title.replace('Optimizer', 'Optimiser')}` : 'Login to Use'}
+              {isLoggedIn ? `Try ${feature.title}` : 'Login to Use'}
             </button>
           </div>
         ))}

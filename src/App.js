@@ -9,6 +9,7 @@ import TweetOptimizer from './components/TweetOptimizer';
 import ReverseEngineer from './components/ReverseEngineer';
 import PowerWords from './components/PowerWords';
 import PromptAssistant from './components/PromptAssistant';
+import ImageToPrompt from './components/ImageToPrompt';
 import Home from './components/Home';
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css';
@@ -197,7 +198,12 @@ function AppContent() {
     }
   };
 
+  useEffect(() => {
+    console.log('Current feature changed to:', currentFeature);
+  }, [currentFeature]);
+
   const renderFeature = () => {
+    console.log('Rendering feature:', currentFeature);
     switch(currentFeature) {
       case 'optimize':
         return (
@@ -223,6 +229,18 @@ function AppContent() {
               hookOptions={hookOptions}
               toneColors={toneColors}
             />
+          </>
+        );
+      case 'imageToPrompt':
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <ImageToPrompt />
           </>
         );
       case 'reverse':

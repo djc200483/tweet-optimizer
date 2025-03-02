@@ -480,6 +480,12 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 25px;
+  margin-bottom: 25px;
+}
+
+.feature-cards > :nth-last-child(1):nth-child(4n + 1) {
+  grid-column: 1 / 2;
+  margin-top: 25px;
 }
 
 .feature-card {

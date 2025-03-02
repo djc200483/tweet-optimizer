@@ -25,6 +25,12 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       description: 'Generate structured prompts for AI image generation tools.',
       icon: '🤖',
       id: 'prompt'
+    },
+    {
+      title: 'Image to Prompt',
+      description: 'Convert images into detailed AI-ready prompts.',
+      icon: '🎨',
+      id: 'imageToPrompt'
     }
   ];
 

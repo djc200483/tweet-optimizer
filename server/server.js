@@ -29,6 +29,10 @@ console.log('Admin credentials configured:', {
 
 const app = express();
 
+// Update body-parser limits to handle larger payloads
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
 // More permissive CORS configuration
 app.use(cors({
   origin: [
@@ -55,8 +59,6 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', 'true');
   next();
 });
-
-app.use(express.json());
 
 // Health check endpoint
 app.get('/', (req, res) => {

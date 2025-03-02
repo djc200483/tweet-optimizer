@@ -420,35 +420,56 @@ app.post('/analyze-image', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'No image provided' });
     }
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4-turbo",
-      messages: [
-        {
-          role: "user",
-          content: [
-            { 
-              type: "text", 
-              text: "Generate a detailed prompt that describes this image. Include details about composition, style, lighting, mood, colors, and technical aspects. Format it in a way that would be useful for AI image generation." 
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: `data:image/jpeg;base64,${imageBase64}`
-              }
-            }
-          ],
-        }
-      ],
-      max_tokens: 500
-    });
+    console.log('Attempting to analyze image with OpenAI...');
+    console.log('OpenAI API Key configured:', !!process.env.OPENAI_API_KEY);
 
-    const generatedPrompt = response.choices[0].message.content;
-    res.json({ prompt: generatedPrompt });
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4-turbo",
+        messages: [
+          {
+            role: "user",
+            content: [
+              { 
+                type: "text", 
+                text: "Generate a detailed prompt that describes this image. Include details about composition, style, lighting, mood, colors, and technical aspects. Format it in a way that would be useful for AI image generation." 
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:image/jpeg;base64,${imageBase64}`
+                }
+              }
+            ],
+          }
+        ],
+        max_tokens: 500
+      });
+
+      const generatedPrompt = response.choices[0].message.content;
+      res.json({ prompt: generatedPrompt });
+    } catch (openaiError) {
+      console.error('OpenAI API Error:', {
+        message: openaiError.message,
+        type: openaiError.type,
+        code: openaiError.code,
+        param: openaiError.param,
+        stack: openaiError.stack
+      });
+      throw openaiError;
+    }
   } catch (error) {
-    console.error('Error analyzing image:', error);
+    console.error('Error analyzing image:', {
+      message: error.message,
+      stack: error.stack,
+      type: error.type,
+      code: error.code
+    });
     res.status(500).json({ 
       error: 'Failed to analyze image',
-      details: error.message 
+      details: error.message,
+      type: error.type,
+      code: error.code
     });
   }
 });

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
+import { useAuth } from './auth/AuthContext';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function ImageToPrompt() {
+  const { token } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [generatedPrompt, setGeneratedPrompt] = useState('');
@@ -62,6 +64,7 @@ export default function ImageToPrompt() {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ 
           imageBase64: base64Image

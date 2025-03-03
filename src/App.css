@@ -307,6 +307,9 @@ body {
   margin: 12px 0;
   padding: 8px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .analysis-label {
@@ -316,6 +319,8 @@ body {
 
 .analysis-value {
   color: #fff;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 .adapt-button {

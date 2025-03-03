@@ -69,8 +69,8 @@ export default function ReverseEngineer({
   return (
     <div className="tab-content">
       <div className="input-container">
-        <div className="testing-instructions">
-          <p>Testing Instructions - Paste in any post to have it analysed for the success criteria</p>
+        <div className="feature-description">
+          <p>Analyse any successful post to understand its key elements. Our AI will break down the structure, tone, and engagement factors, helping you create similarly effective content.</p>
         </div>
         <textarea 
           placeholder="Paste a post you want to analyse..."
@@ -92,14 +92,13 @@ export default function ReverseEngineer({
       {isLoading && (
         <div className="loading-message">
           <LoadingSpinner size="large" />
-          <p>Analyzing tweet structure...</p>
         </div>
       )}
 
       {analysisResults && analysisResults.length > 0 && (
         <div className="analysis-container">
           <div className="analysis-card">
-            <h3>Tweet Analysis</h3>
+            <h3>Post Analysis</h3>
             <div className="analysis-content">
               {analysisResults.map((item, index) => (
                 <div key={index} className="analysis-item">
@@ -113,13 +112,13 @@ export default function ReverseEngineer({
               onClick={handleAdaptation}
               disabled={isAdapting}
             >
-              {isAdapting ? <LoadingSpinner size="inline" /> : 'Generate Personalized Version'}
+              {isAdapting ? <LoadingSpinner size="inline" /> : 'Generate Personalised Version'}
             </button>
           </div>
 
           {showAdaptation && adaptedTweet && (
             <div className="analysis-card adaptation-card">
-              <h3>Personalized Adaptation</h3>
+              <h3>Personalised Adaptation</h3>
               <div className="adapted-tweet">
                 {adaptedTweet}
               </div>

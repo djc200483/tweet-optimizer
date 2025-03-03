@@ -123,10 +123,19 @@ export default function PromptAssistant() {
         }),
       });
       
+      if (!response.ok) {
+        throw new Error('Failed to supercharge prompt');
+      }
+      
       const data = await response.json();
+      if (!data.rewrittenTweets || !data.rewrittenTweets.length) {
+        throw new Error('Invalid response format');
+      }
+      
       setSuperchargedPrompt(data.rewrittenTweets[0]);
     } catch (error) {
       console.error('Error:', error);
+      setSuperchargedPrompt(''); // Clear any previous result
     } finally {
       setIsLoading(false);
     }
@@ -135,8 +144,8 @@ export default function PromptAssistant() {
   return (
     <div className="tab-content">
       <div className="input-container">
-        <div className="testing-instructions">
-          <p>Testing Instructions - Select options from each category to generate an image prompt</p>
+        <div className="feature-description">
+          <p>Create stunning AI image generation prompts with our intelligent assistant. Select from curated options across multiple categories to build detailed, professional-grade prompts that will help you achieve the exact visual results you're looking for.</p>
         </div>
         
         <div className="prompt-categories">

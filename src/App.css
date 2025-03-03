@@ -310,20 +310,19 @@ body {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 12px;
+  gap: 8px;
 }
 
 .analysis-label {
   color: #a0a0b0;
   font-size: 0.9rem;
-  min-width: 120px;
+  flex-shrink: 0;
 }
 
 .analysis-value {
   color: #fff;
   font-size: 0.95rem;
   line-height: 1.4;
-  flex: 1;
 }
 
 .adapt-button {
@@ -414,7 +413,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 12px 0;
+  margin: 0;
 }
 
 .word-chip {
@@ -435,9 +434,13 @@ body {
 }
 
 .example-usage {
-  margin-top: 12px;
+  margin-top: 8px;
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.example-usage .analysis-label {
+  margin-right: 8px;
 }
 
 .power-words-suggestions {

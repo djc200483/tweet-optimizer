@@ -1157,6 +1157,21 @@ body {
   width: 95%;
 }
 
+.feature-description {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: rgba(168, 85, 247, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.feature-description p {
+  color: #ffffff;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
 .optimizer-textarea {
   width: 100%;
   min-height: 120px;

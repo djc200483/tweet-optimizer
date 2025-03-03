@@ -52,6 +52,9 @@ export default function TweetOptimizer({
 
   return (
     <div className="optimizer-container">
+      <div className="feature-description">
+        <p>Transform your social media posts with AI-powered optimization. Select your desired tone and hook type, and we'll help you craft engaging content that resonates with your audience.</p>
+      </div>
       <textarea
         className="optimizer-textarea"
         value={tweet}
@@ -90,7 +93,7 @@ export default function TweetOptimizer({
         onClick={handleSubmit}
         disabled={!tweet.trim() || isLoading || selectedTones.length === 0}
       >
-        {isLoading ? <LoadingSpinner size="inline" /> : 'Optimize Post'}
+        {isLoading ? <LoadingSpinner size="inline" /> : 'Optimise Post'}
       </button>
 
       <div className="results-container">
@@ -113,12 +116,6 @@ export default function TweetOptimizer({
                       onClick={() => handleCopy(version)}
                     >
                       Copy
-                    </button>
-                    <button
-                      className="action-button delete"
-                      onClick={() => handleDelete(index)}
-                    >
-                      Delete
                     </button>
                   </div>
                 </div>

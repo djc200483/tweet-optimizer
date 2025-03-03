@@ -111,18 +111,27 @@ const getHookInstruction = (hookType) => {
 // Endpoint for rewriting tweets
 app.post('/rewrite-tweet', authMiddleware, async (req, res) => {
   try {
-    const { tweet, tones, hook } = req.body;
+    const { tweet, tones, tone, hook, customInstructions } = req.body;
     
-    const hookInstruction = getHookInstruction(hook);
+    const hookInstruction = customInstructions || getHookInstruction(hook);
     
-    // Create a tone instruction based on the number of tones
+    // Handle both array tones and single tone formats
     let toneInstruction;
-    if (tones.length === 0) {
-      toneInstruction = "Rewrite this tweet in a neutral, balanced tone.";
-    } else if (tones.length === 1) {
-      toneInstruction = `Rewrite this tweet in a ${tones[0]} tone.`;
+    if (tone) {
+      // Handle single tone format (used by PromptAssistant)
+      toneInstruction = `Rewrite this content in a ${tone} tone.`;
+    } else if (!tones) {
+      toneInstruction = "Rewrite this content in a neutral, balanced tone.";
+    } else if (Array.isArray(tones)) {
+      if (tones.length === 0) {
+        toneInstruction = "Rewrite this content in a neutral, balanced tone.";
+      } else if (tones.length === 1) {
+        toneInstruction = `Rewrite this content in a ${tones[0]} tone.`;
+      } else {
+        toneInstruction = `Rewrite this content by blending ${tones[0]} and ${tones[1]} tones. Create a unique voice that combines the best aspects of both tones.`;
+      }
     } else {
-      toneInstruction = `Rewrite this tweet by blending ${tones[0]} and ${tones[1]} tones. Create a unique voice that combines the best aspects of both tones. For example, if professional and casual are selected, the result should be approachable yet polished.`;
+      toneInstruction = "Rewrite this content in a neutral, balanced tone.";
     }
     
     const completion = await openai.chat.completions.create({
@@ -130,34 +139,28 @@ app.post('/rewrite-tweet', authMiddleware, async (req, res) => {
       messages: [
         {
           "role": "system", 
-          "content": `You are a tweet optimization expert who understands the nuances of different communication styles and can expertly blend multiple tones when needed.
-          
-IMPORTANT FORMATTING RULES:
-- Do NOT include any hashtags (#) in your responses
-- Do NOT include any emojis in your responses
-- Focus purely on the words and message
-- Keep responses concise and Twitter-length
-- Use only text characters, no special symbols
+          "content": `You are a prompt enhancement expert. Your task is to expand and enrich image generation prompts with vivid details and technical specifications.
 
-When blending tones:
-- Create a natural, cohesive voice that combines the selected tones
-- Ensure the result doesn't feel forced or artificial
-- Maintain consistency throughout the tweet
-- Keep the message clear and impactful`
+IMPORTANT RULES:
+- Maintain the core elements of the original prompt
+- Add rich, specific details about materials, textures, and lighting
+- Include technical aspects like camera angles and post-processing
+- Keep the enhanced prompt clear and well-structured`
         },
         {
           "role": "user",
-          "content": `${toneInstruction} ${hookInstruction}\n\nTweet: ${tweet}\n\nRemember: No hashtags or emojis in the response.`
+          "content": `${toneInstruction}\n\n${hookInstruction}\n\nPrompt: ${tweet}`
         }
       ],
-      n: 3,
+      temperature: 0.7,
     });
 
-    const rewrittenTweets = completion.choices.map(choice => choice.message.content.trim());
-    res.json({ rewrittenTweets });
+    // Ensure we always return an array of rewrittenTweets
+    const enhancedPrompt = completion.choices[0].message.content.trim();
+    res.json({ rewrittenTweets: [enhancedPrompt] });
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: 'Error rewriting tweet' });
+    res.status(500).json({ error: 'Error rewriting content' });
   }
 });
 

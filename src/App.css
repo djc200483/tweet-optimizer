@@ -304,12 +304,12 @@ body {
 }
 
 .analysis-item {
-  margin: 12px 0;
+  margin: 8px 0;
   padding: 8px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
 }
 
@@ -317,12 +317,18 @@ body {
   color: #a0a0b0;
   font-size: 0.9rem;
   flex-shrink: 0;
+  display: inline-block;
+  margin-right: 8px;
 }
 
 .analysis-value {
   color: #fff;
   font-size: 0.95rem;
   line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .adapt-button {
@@ -417,7 +423,7 @@ body {
 }
 
 .word-chip {
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: rgba(168, 85, 247, 0.1);
   color: #ffffff;
   border: 1px solid rgba(168, 85, 247, 0.2);
@@ -425,6 +431,7 @@ body {
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: inline-block;
 }
 
 .word-chip:hover {
@@ -434,13 +441,14 @@ body {
 }
 
 .example-usage {
-  margin-top: 8px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .example-usage .analysis-label {
-  margin-right: 8px;
+  margin-right: 4px;
 }
 
 .power-words-suggestions {

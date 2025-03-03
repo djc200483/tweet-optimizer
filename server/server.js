@@ -134,7 +134,7 @@ IMPORTANT RULES:
           },
           {
             "role": "user",
-            "content": `${toneInstruction}\n\n${hookInstruction}\n\nContent: ${tweet}`
+            "content": `${customInstructions}\n\nContent: ${tweet}`
           }
         ],
         temperature: 0.7,

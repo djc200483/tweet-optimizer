@@ -122,14 +122,13 @@ app.post('/rewrite-tweet', authMiddleware, async (req, res) => {
         messages: [
           {
             "role": "system", 
-            "content": `You are a social media optimization expert. Your task is to rewrite posts to make them more engaging while maintaining their core message.
+            "content": `You are a prompt enhancement expert. Your task is to enhance prompts to make them more detailed and effective.
 
 IMPORTANT RULES:
-- Keep the same approximate length as the original
-- Maintain the core message and intent
-- Use natural, conversational language
-- Create 3 distinct variations
-- Format the response as 3 separate versions, each on its own line
+- Keep the core subject and style of the original
+- Add specific details and technical aspects
+- Use natural, descriptive language
+- Format as a single, cohesive prompt
 - Do not use hashtags or emojis unless they were in the original`
           },
           {

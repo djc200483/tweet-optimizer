@@ -166,8 +166,7 @@ IMPORTANT RULES:
 - Keep the same approximate length as the original
 - Maintain the core message and intent
 - Use natural, conversational language
-- Create 3 distinct variations
-- Format the response as 3 separate versions, each on its own line
+- Format as a single, cohesive post
 - Do not use hashtags or emojis unless they were in the original`
         },
         {

@@ -135,29 +135,35 @@ app.post('/rewrite-tweet', authMiddleware, async (req, res) => {
     }
     
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5",  // Use gpt-3.5 for both Post Optimizer and Prompt Assistant
       messages: [
         {
           "role": "system", 
-          "content": `You are a prompt enhancement expert. Your task is to expand and enrich image generation prompts with vivid details and technical specifications.
+          "content": `You are a social media optimization expert. Your task is to rewrite posts to make them more engaging while maintaining their core message.
 
 IMPORTANT RULES:
-- Maintain the core elements of the original prompt
-- Add rich, specific details about materials, textures, and lighting
-- Include technical aspects like camera angles and post-processing
-- Keep the enhanced prompt clear and well-structured`
+- Keep the same approximate length as the original
+- Maintain the core message and intent
+- Use natural, conversational language
+- Create 3 distinct variations
+- Format the response as 3 separate versions, each on its own line
+- Do not use hashtags or emojis unless they were in the original`
         },
         {
           "role": "user",
-          "content": `${toneInstruction}\n\n${hookInstruction}\n\nPrompt: ${tweet}`
+          "content": `${toneInstruction}\n\n${hookInstruction}\n\nContent: ${tweet}`
         }
       ],
       temperature: 0.7,
+      n: tone ? 1 : 3  // Generate 3 variations for Post Optimizer, 1 for PromptAssistant
     });
 
-    // Ensure we always return an array of rewrittenTweets
-    const enhancedPrompt = completion.choices[0].message.content.trim();
-    res.json({ rewrittenTweets: [enhancedPrompt] });
+    // Get all variations and ensure they're properly formatted
+    const rewrittenTweets = completion.choices.map(choice => 
+      choice.message.content.trim()
+    );
+    
+    res.json({ rewrittenTweets });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Error rewriting content' });

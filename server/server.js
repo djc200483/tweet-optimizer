@@ -122,22 +122,23 @@ app.post('/rewrite-tweet', authMiddleware, async (req, res) => {
         messages: [
           {
             "role": "system", 
-            "content": `You are a prompt enhancement expert. Your task is to enhance AI generation prompts to make them more detailed and effective.
+            "content": `You are a social media optimization expert. Your task is to rewrite posts to make them more engaging while maintaining their core message.
 
 IMPORTANT RULES:
-- Maintain the core subject and style of the original prompt
-- Add more specific details and technical aspects
-- Keep the language clear and well-structured
-- Focus on visual and stylistic elements
-- Do not change the fundamental intent of the prompt`
+- Keep the same approximate length as the original
+- Maintain the core message and intent
+- Use natural, conversational language
+- Create 3 distinct variations
+- Format the response as 3 separate versions, each on its own line
+- Do not use hashtags or emojis unless they were in the original`
           },
           {
             "role": "user",
-            "content": `Enhance this prompt: ${tweet}`
+            "content": `${toneInstruction}\n\n${hookInstruction}\n\nContent: ${tweet}`
           }
         ],
         temperature: 0.7,
-        n: 1  // Single enhanced version for Prompt Assistant
+        n: 1  // Single variation for Prompt Assistant
       });
 
       const rewrittenTweets = [completion.choices[0].message.content.trim()];

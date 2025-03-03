@@ -93,6 +93,10 @@ export default function ImageToPrompt() {
 
   return (
     <div className="optimizer-container">
+      <div className="feature-description">
+        <p>Transform your images into detailed AI generation prompts. Our advanced analysis extracts key visual elements, style, and composition to create comprehensive prompts that capture your image's essence and help you recreate or enhance similar visuals.</p>
+      </div>
+
       <div className="upload-section">
         <input
           type="file"

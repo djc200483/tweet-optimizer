@@ -115,27 +115,48 @@ app.post('/rewrite-tweet', authMiddleware, async (req, res) => {
     
     const hookInstruction = customInstructions || getHookInstruction(hook);
     
-    // Handle both array tones and single tone formats
-    let toneInstruction;
+    // Handle Prompt Assistant's supercharge feature
     if (tone) {
-      // Handle single tone format (used by PromptAssistant)
-      toneInstruction = `Rewrite this content in a ${tone} tone.`;
-    } else if (!tones) {
-      toneInstruction = "Rewrite this content in a neutral, balanced tone.";
-    } else if (Array.isArray(tones)) {
-      if (tones.length === 0) {
-        toneInstruction = "Rewrite this content in a neutral, balanced tone.";
-      } else if (tones.length === 1) {
-        toneInstruction = `Rewrite this content in a ${tones[0]} tone.`;
-      } else {
-        toneInstruction = `Rewrite this content by blending ${tones[0]} and ${tones[1]} tones. Create a unique voice that combines the best aspects of both tones.`;
-      }
-    } else {
-      toneInstruction = "Rewrite this content in a neutral, balanced tone.";
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            "role": "system", 
+            "content": `You are a prompt enhancement expert. Your task is to enhance AI generation prompts to make them more detailed and effective.
+
+IMPORTANT RULES:
+- Maintain the core subject and style of the original prompt
+- Add more specific details and technical aspects
+- Keep the language clear and well-structured
+- Focus on visual and stylistic elements
+- Do not change the fundamental intent of the prompt`
+          },
+          {
+            "role": "user",
+            "content": `Enhance this prompt: ${tweet}`
+          }
+        ],
+        temperature: 0.7,
+        n: 1  // Single enhanced version for Prompt Assistant
+      });
+
+      const rewrittenTweets = [completion.choices[0].message.content.trim()];
+      return res.json({ rewrittenTweets });
     }
     
+    // Handle Post Optimizer feature
+    // Validate tones array
+    if (!Array.isArray(tones) || tones.length < 1 || tones.length > 2) {
+      return res.status(400).json({ error: 'Please select 1 or 2 tones' });
+    }
+    
+    // Create tone instruction
+    const toneInstruction = tones.length === 1
+      ? `Rewrite this content in a ${tones[0]} tone.`
+      : `Rewrite this content by blending ${tones[0]} and ${tones[1]} tones. Create a unique voice that combines the best aspects of both tones.`;
+    
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5",  // Use gpt-3.5 for both Post Optimizer and Prompt Assistant
+      model: "gpt-3.5-turbo",
       messages: [
         {
           "role": "system", 
@@ -155,7 +176,7 @@ IMPORTANT RULES:
         }
       ],
       temperature: 0.7,
-      n: tone ? 1 : 3  // Generate 3 variations for Post Optimizer, 1 for PromptAssistant
+      n: 3  // Three variations for Post Optimizer
     });
 
     // Get all variations and ensure they're properly formatted

@@ -53,7 +53,7 @@ export default function TweetOptimizer({
   return (
     <div className="optimizer-container">
       <div className="feature-description">
-        <p>Transform your social media posts with AI-powered optimization. Select your desired tone and hook type, and we'll help you craft engaging content that resonates with your audience.</p>
+        <p>Transform your social media posts with AI-powered optimisation. Select your desired tone and hook type, and we'll help you craft engaging content that resonates with your audience.</p>
       </div>
       <textarea
         className="optimizer-textarea"

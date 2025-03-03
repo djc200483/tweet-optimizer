@@ -111,27 +111,43 @@ const getHookInstruction = (hookType) => {
 // Endpoint for rewriting tweets
 app.post('/rewrite-tweet', authMiddleware, async (req, res) => {
   try {
-    const { tweet, tone, hook } = req.body;
+    const { tweet, tones, hook } = req.body;
     
     const hookInstruction = getHookInstruction(hook);
+    
+    // Create a tone instruction based on the number of tones
+    let toneInstruction;
+    if (tones.length === 0) {
+      toneInstruction = "Rewrite this tweet in a neutral, balanced tone.";
+    } else if (tones.length === 1) {
+      toneInstruction = `Rewrite this tweet in a ${tones[0]} tone.`;
+    } else {
+      toneInstruction = `Rewrite this tweet by blending ${tones[0]} and ${tones[1]} tones. Create a unique voice that combines the best aspects of both tones. For example, if professional and casual are selected, the result should be approachable yet polished.`;
+    }
     
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           "role": "system", 
-          "content": `You are a tweet optimization expert who understands the nuances of different communication styles. 
+          "content": `You are a tweet optimization expert who understands the nuances of different communication styles and can expertly blend multiple tones when needed.
           
 IMPORTANT FORMATTING RULES:
 - Do NOT include any hashtags (#) in your responses
 - Do NOT include any emojis in your responses
 - Focus purely on the words and message
 - Keep responses concise and Twitter-length
-- Use only text characters, no special symbols`
+- Use only text characters, no special symbols
+
+When blending tones:
+- Create a natural, cohesive voice that combines the selected tones
+- Ensure the result doesn't feel forced or artificial
+- Maintain consistency throughout the tweet
+- Keep the message clear and impactful`
         },
         {
           "role": "user",
-          "content": `Rewrite this tweet in a ${tone} tone. ${hookInstruction}\n\nTweet: ${tweet}\n\nRemember: No hashtags or emojis in the response.`
+          "content": `${toneInstruction} ${hookInstruction}\n\nTweet: ${tweet}\n\nRemember: No hashtags or emojis in the response.`
         }
       ],
       n: 3,

@@ -22,7 +22,7 @@ function AppContent() {
   const [apiError, setApiError] = useState(null);
   const [tweet, setTweet] = useState('');
   const [savedTweets, setSavedTweets] = useState([]);
-  const [selectedTone, setSelectedTone] = useState('professional'); // Default tone
+  const [selectedTones, setSelectedTones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedHook, setSelectedHook] = useState('');
   const [activeTab, setActiveTab] = useState('home');
@@ -118,7 +118,7 @@ function AppContent() {
           },
           body: JSON.stringify({ 
             tweet, 
-            tone: selectedTone,
+            tones: selectedTones,
             hook: selectedHook 
           }),
         });
@@ -129,7 +129,7 @@ function AppContent() {
           {
             original: tweet,
             optimized: data.rewrittenTweets || [],
-            tone: selectedTone,
+            tones: selectedTones,
             hook: selectedHook
           },
           ...savedTweets
@@ -217,8 +217,8 @@ function AppContent() {
             <TweetOptimizer 
               tweet={tweet}
               setTweet={setTweet}
-              selectedTone={selectedTone}
-              setSelectedTone={setSelectedTone}
+              selectedTones={selectedTones}
+              setSelectedTones={setSelectedTones}
               selectedHook={selectedHook}
               setSelectedHook={setSelectedHook}
               handleSubmit={handleSubmit}

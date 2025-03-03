@@ -4,8 +4,8 @@ import LoadingSpinner from './LoadingSpinner';
 export default function TweetOptimizer({ 
   tweet, 
   setTweet, 
-  selectedTone, 
-  setSelectedTone,
+  selectedTones, 
+  setSelectedTones,
   selectedHook,
   setSelectedHook,
   handleSubmit,
@@ -17,6 +17,39 @@ export default function TweetOptimizer({
   hookOptions,
   toneColors 
 }) {
+  const handleToneSelect = (toneId) => {
+    if (selectedTones.includes(toneId)) {
+      // If tone is already selected, remove it
+      setSelectedTones(selectedTones.filter(id => id !== toneId));
+    } else if (selectedTones.length < 2) {
+      // If less than 2 tones are selected, add the new tone
+      setSelectedTones([...selectedTones, toneId]);
+    }
+    // If 2 tones are already selected, do nothing
+  };
+
+  const renderToneGroup = (startIdx, endIdx, title) => (
+    <div className="tone-group">
+      <div className="tone-group-title">{title}</div>
+      <div className="tone-buttons">
+        {tones.slice(startIdx, endIdx).map(tone => (
+          <button
+            key={tone.id}
+            className={`tone-select ${selectedTones.includes(tone.id) ? 'selected' : ''}`}
+            onClick={() => handleToneSelect(tone.id)}
+            style={{
+              background: selectedTones.includes(tone.id) ? 
+                `linear-gradient(135deg, ${toneColors[tone.id]}, #a855f7)` : 
+                '#23242b'
+            }}
+          >
+            {tone.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="optimizer-container">
       <textarea
@@ -27,112 +60,13 @@ export default function TweetOptimizer({
       />
       
       <div className="controls-container">
-        <h3>Select Tone:</h3>
+        <h3>Select Tone (Max 2):</h3>
         <div className="tone-categories">
-          {/* Professional & Business */}
-          <div className="tone-group">
-            <div className="tone-group-title">Professional & Business</div>
-            <div className="tone-buttons">
-              {tones.slice(0, 4).map(tone => (
-                <button
-                  key={tone.id}
-                  className={`tone-select ${selectedTone === tone.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedTone(tone.id)}
-                  style={{
-                    background: selectedTone === tone.id ? 
-                      `linear-gradient(135deg, ${toneColors[tone.id]}, #a855f7)` : 
-                      '#23242b'
-                  }}
-                >
-                  {tone.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Casual & Personal */}
-          <div className="tone-group">
-            <div className="tone-group-title">Casual & Personal</div>
-            <div className="tone-buttons">
-              {tones.slice(4, 8).map(tone => (
-                <button
-                  key={tone.id}
-                  className={`tone-select ${selectedTone === tone.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedTone(tone.id)}
-                  style={{
-                    background: selectedTone === tone.id ? 
-                      `linear-gradient(135deg, ${toneColors[tone.id]}, #a855f7)` : 
-                      '#23242b'
-                  }}
-                >
-                  {tone.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Entertainment & Humor */}
-          <div className="tone-group">
-            <div className="tone-group-title">Entertainment & Humor</div>
-            <div className="tone-buttons">
-              {tones.slice(8, 12).map(tone => (
-                <button
-                  key={tone.id}
-                  className={`tone-select ${selectedTone === tone.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedTone(tone.id)}
-                  style={{
-                    background: selectedTone === tone.id ? 
-                      `linear-gradient(135deg, ${toneColors[tone.id]}, #a855f7)` : 
-                      '#23242b'
-                  }}
-                >
-                  {tone.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Educational & Informative */}
-          <div className="tone-group">
-            <div className="tone-group-title">Educational & Informative</div>
-            <div className="tone-buttons">
-              {tones.slice(12, 16).map(tone => (
-                <button
-                  key={tone.id}
-                  className={`tone-select ${selectedTone === tone.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedTone(tone.id)}
-                  style={{
-                    background: selectedTone === tone.id ? 
-                      `linear-gradient(135deg, ${toneColors[tone.id]}, #a855f7)` : 
-                      '#23242b'
-                  }}
-                >
-                  {tone.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Inspirational & Motivational */}
-          <div className="tone-group">
-            <div className="tone-group-title">Inspirational & Motivational</div>
-            <div className="tone-buttons">
-              {tones.slice(16, 20).map(tone => (
-                <button
-                  key={tone.id}
-                  className={`tone-select ${selectedTone === tone.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedTone(tone.id)}
-                  style={{
-                    background: selectedTone === tone.id ? 
-                      `linear-gradient(135deg, ${toneColors[tone.id]}, #a855f7)` : 
-                      '#23242b'
-                  }}
-                >
-                  {tone.label}
-                </button>
-              ))}
-            </div>
-          </div>
+          {renderToneGroup(0, 4, "Professional & Business")}
+          {renderToneGroup(4, 8, "Casual & Personal")}
+          {renderToneGroup(8, 12, "Entertainment & Humor")}
+          {renderToneGroup(12, 16, "Educational & Informative")}
+          {renderToneGroup(16, 20, "Inspirational & Motivational")}
         </div>
         
         <div className="hook-container">
@@ -154,7 +88,7 @@ export default function TweetOptimizer({
       <button
         className="optimize-button"
         onClick={handleSubmit}
-        disabled={!tweet.trim() || isLoading}
+        disabled={!tweet.trim() || isLoading || selectedTones.length === 0}
       >
         {isLoading ? <LoadingSpinner size="inline" /> : 'Optimize Post'}
       </button>
@@ -179,6 +113,12 @@ export default function TweetOptimizer({
                       onClick={() => handleCopy(version)}
                     >
                       Copy
+                    </button>
+                    <button
+                      className="action-button delete"
+                      onClick={() => handleDelete(index)}
+                    >
+                      Delete
                     </button>
                   </div>
                 </div>

@@ -448,12 +448,14 @@ body {
 }
 
 .example-usage .analysis-label {
-  margin-bottom: 4px;
-  width: auto;
+  color: #a0a0b0;
+  font-size: 0.9rem;
+  margin-right: 8px;
+  white-space: nowrap;
 }
 
 .example-usage .analysis-value {
-  width: auto;
+  flex: 1;
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: pre-wrap;
@@ -1407,6 +1409,58 @@ body {
 @media (max-width: 768px) {
   .tone-categories {
     grid-template-columns: 1fr;
+  }
+
+  .example-usage {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 15px 0;
+  }
+
+  .example-usage .analysis-label {
+    width: 100%;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #a0a0b0;
+    white-space: normal;
+  }
+
+  .example-usage .analysis-value {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .power-category-card {
+    padding: 15px;
+    margin: 15px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .word-chips {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .word-chip {
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    flex-grow: 0;
   }
 }
 

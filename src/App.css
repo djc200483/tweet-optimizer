@@ -1513,6 +1513,8 @@ body {
     max-width: none;
     border-radius: 0;
     margin-bottom: 20px;
+    padding: 12px;
+    box-sizing: border-box;
   }
 
   .auth-toggle-button {
@@ -1532,6 +1534,16 @@ body {
 
   .tone-category {
     padding: 12px;
+  }
+
+  .logout-button {
+    width: calc(100% - 24px);
+    margin: 8px auto;
+    box-sizing: border-box;
+  }
+
+  .home-container {
+    padding: 0 12px;
   }
 }
 

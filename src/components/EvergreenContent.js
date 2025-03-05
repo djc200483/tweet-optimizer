@@ -5,15 +5,50 @@ import { nicheCategories, postFormats } from '../data/evergreen-data';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function EvergreenContent() {
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedSubcategory, setSelectedSubcategory] = useState('');
-  const [selectedFormat, setSelectedFormat] = useState('');
-  const [selectedLength, setSelectedLength] = useState('');
+  const [selectedOptions, setSelectedOptions] = useState({
+    category: '',
+    subcategory: '',
+    format: '',
+    length: ''
+  });
   const [generatedContent, setGeneratedContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const categories = {
+    category: {
+      title: 'Main Category',
+      options: Object.keys(nicheCategories)
+    },
+    subcategory: {
+      title: 'Subcategory',
+      options: selectedOptions.category ? nicheCategories[selectedOptions.category] : []
+    },
+    format: {
+      title: 'Post Format',
+      options: postFormats
+    },
+    length: {
+      title: 'Content Length',
+      options: ['Short', 'Medium', 'Long']
+    }
+  };
+
+  const handleOptionChange = (category, value) => {
+    setSelectedOptions(prev => {
+      const newOptions = {
+        ...prev,
+        [category]: value
+      };
+      // Reset subcategory when category changes
+      if (category === 'category') {
+        newOptions.subcategory = '';
+      }
+      return newOptions;
+    });
+  };
+
   const handleGenerate = async () => {
-    if (!selectedSubcategory || !selectedFormat || !selectedLength) {
+    if (!selectedOptions.subcategory || !selectedOptions.format || !selectedOptions.length) {
       return;
     }
 
@@ -25,9 +60,9 @@ export default function EvergreenContent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          niche: selectedSubcategory,
-          format: selectedFormat,
-          length: selectedLength
+          niche: selectedOptions.subcategory,
+          format: selectedOptions.format,
+          length: selectedOptions.length.toLowerCase()
         }),
       });
 
@@ -44,103 +79,62 @@ export default function EvergreenContent() {
     }
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(generatedContent);
-  };
-
   return (
     <div className="tab-content">
       <div className="input-container">
         <div className="feature-description">
           <p>Generate engaging evergreen content tailored to your niche. Select your category, format type, and content length to create valuable posts that resonate with your audience.</p>
         </div>
-
-        <div className="selection-controls">
-          <div className="control-group">
-            <label htmlFor="category">Select Category:</label>
-            <select 
-              id="category" 
-              value={selectedCategory} 
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setSelectedSubcategory('');
-              }}
-              className="form-select"
-            >
-              <option value="">Choose a category...</option>
-              {Object.keys(nicheCategories).map(category => (
-                <option key={category} value={category}>{category}</option>
-              ))}
-            </select>
-          </div>
-
-          {selectedCategory && (
-            <div className="control-group">
-              <label htmlFor="subcategory">Select Subcategory:</label>
-              <select 
-                id="subcategory" 
-                value={selectedSubcategory} 
-                onChange={(e) => setSelectedSubcategory(e.target.value)}
-                className="form-select"
+        
+        <div className="prompt-categories">
+          {Object.entries(categories).map(([key, category]) => (
+            <div key={key} className="category-section">
+              <h3>{category.title}</h3>
+              <select
+                value={selectedOptions[key]}
+                onChange={(e) => handleOptionChange(key, e.target.value)}
+                disabled={isLoading || (key === 'subcategory' && !selectedOptions.category)}
               >
-                <option value="">Choose a subcategory...</option>
-                {nicheCategories[selectedCategory].map(subcategory => (
-                  <option key={subcategory} value={subcategory}>{subcategory}</option>
+                <option value="">Select {category.title}</option>
+                {category.options.map(option => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
                 ))}
               </select>
             </div>
-          )}
-
-          <div className="control-group">
-            <label htmlFor="format">Select Format:</label>
-            <select 
-              id="format" 
-              value={selectedFormat} 
-              onChange={(e) => setSelectedFormat(e.target.value)}
-              className="form-select"
-            >
-              <option value="">Choose a format...</option>
-              {postFormats.map(format => (
-                <option key={format} value={format}>{format}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="control-group">
-            <label htmlFor="length">Select Length:</label>
-            <select 
-              id="length" 
-              value={selectedLength} 
-              onChange={(e) => setSelectedLength(e.target.value)}
-              className="form-select"
-            >
-              <option value="">Choose length...</option>
-              <option value="short">Short</option>
-              <option value="medium">Medium</option>
-              <option value="long">Long</option>
-            </select>
-          </div>
-
-          <button 
-            className="generate-button"
-            onClick={handleGenerate}
-            disabled={!selectedSubcategory || !selectedFormat || !selectedLength || isLoading}
-          >
-            {isLoading ? <LoadingSpinner /> : 'Generate Content'}
-          </button>
+          ))}
         </div>
 
-        {generatedContent && (
-          <div className="generated-content">
-            <div className="content-header">
-              <h3>Generated Content</h3>
-              <button className="copy-button" onClick={handleCopy}>
-                Copy to Clipboard
+        {Object.values(selectedOptions).some(value => value) && (
+          <div className="prompt-result">
+            <div className="button-row">
+              <button 
+                className="generate-button"
+                onClick={handleGenerate}
+                disabled={!selectedOptions.subcategory || !selectedOptions.format || !selectedOptions.length || isLoading}
+              >
+                {isLoading ? <LoadingSpinner size="inline" /> : 'Generate Content'}
               </button>
             </div>
-            <div className="content-body">
-              {generatedContent}
-            </div>
+
+            {generatedContent && (
+              <div className="generated-content">
+                <h3>Generated Content:</h3>
+                <div className="content-body">
+                  {generatedContent}
+                </div>
+                <div className="button-row">
+                  <button 
+                    className="copy-button"
+                    onClick={() => navigator.clipboard.writeText(generatedContent)}
+                    disabled={isLoading}
+                  >
+                    Copy Content
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -760,23 +760,25 @@ body {
     width: 100%;
     padding: 15px;
     margin: 10px 0;
+    position: relative;
   }
 
   .example-usage {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 12px 0;
-    gap: 12px;
+    margin: 0;
+    padding-top: 30px;
   }
 
   .example-usage .analysis-label {
-    width: 100%;
-    display: block;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: auto;
     font-size: 0.9rem;
     color: #a0a0b0;
     padding: 4px 0;
-    order: -1;
   }
 
   .word-chips {
@@ -785,7 +787,6 @@ body {
     flex-direction: column;
     gap: 8px;
     margin: 8px 0;
-    order: 0;
   }
 
   .word-chip {
@@ -801,7 +802,7 @@ body {
     padding: 12px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    order: 1;
+    margin-top: 8px;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
@@ -1540,23 +1541,25 @@ body {
     width: 100%;
     padding: 15px;
     margin: 10px 0;
+    position: relative;
   }
 
   .example-usage {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 12px 0;
-    gap: 12px;
+    margin: 0;
+    padding-top: 30px;
   }
 
   .example-usage .analysis-label {
-    width: 100%;
-    display: block;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: auto;
     font-size: 0.9rem;
     color: #a0a0b0;
     padding: 4px 0;
-    order: -1;
   }
 
   .word-chips {
@@ -1565,7 +1568,6 @@ body {
     flex-direction: column;
     gap: 8px;
     margin: 8px 0;
-    order: 0;
   }
 
   .word-chip {
@@ -1581,7 +1583,7 @@ body {
     padding: 12px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    order: 1;
+    margin-top: 8px;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;

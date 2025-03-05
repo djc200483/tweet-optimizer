@@ -1783,6 +1783,81 @@ body {
     padding: 12px;
     box-sizing: border-box;
   }
+
+  /* Admin table mobile adjustments */
+  .admin-table {
+    border-spacing: 0;
+  }
+
+  .admin-table thead {
+    display: none; /* Hide table headers on mobile */
+  }
+
+  .admin-table tr {
+    display: block;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .admin-table td {
+    display: block;
+    text-align: left;
+    padding: 12px 15px;
+    position: relative;
+    padding-left: 50%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .admin-table td:last-child {
+    border-bottom: none;
+  }
+
+  .admin-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: 45%;
+    padding-right: 10px;
+    color: #a0a0b0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: left;
+  }
+
+  .admin-input-form {
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .admin-input-form input,
+  .admin-input-form textarea {
+    font-size: 16px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .admin-container {
+    padding: 10px;
+  }
+
+  .status-toggle,
+  .delete-button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
+  .admin-table td:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
 }
 
 @media screen and (max-width: 640px) {

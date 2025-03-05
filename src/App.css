@@ -1498,6 +1498,10 @@ body {
   .feature-cards {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .tone-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -1519,6 +1523,15 @@ body {
     max-width: 200px;
     margin: 20px auto 20px;
     display: block;
+  }
+
+  .tone-options {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .tone-category {
+    padding: 12px;
   }
 }
 

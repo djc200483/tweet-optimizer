@@ -738,16 +738,6 @@ body {
     order: -1;
   }
 
-  .example-usage .word-chips {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 8px 0;
-    order: 0;
-  }
-
   .example-usage .analysis-value {
     width: 100%;
     box-sizing: border-box;
@@ -760,8 +750,28 @@ body {
     overflow-wrap: break-word;
     white-space: pre-wrap;
     max-width: 100%;
-    overflow: hidden;
-    order: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .word-chips {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+    padding: 0;
+  }
+
+  .word-chip {
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    max-width: calc(100% - 16px);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 
   .power-category-card {
@@ -772,11 +782,11 @@ body {
     overflow: hidden;
   }
 
-  .word-chip {
-    margin: 0;
-    font-size: 0.9rem;
-    padding: 8px 12px;
-    box-sizing: border-box;
+  .power-category-card h4 {
+    font-size: 0.95rem;
+    padding-bottom: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
@@ -1487,17 +1497,6 @@ body {
     padding: 4px 0;
     margin: 0;
     white-space: normal;
-    order: -1;
-  }
-
-  .example-usage .word-chips {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 8px 0;
-    order: 0;
   }
 
   .example-usage .analysis-value {
@@ -1512,8 +1511,28 @@ body {
     overflow-wrap: break-word;
     white-space: pre-wrap;
     max-width: 100%;
-    overflow: hidden;
-    order: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .word-chips {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+    padding: 0;
+  }
+
+  .word-chip {
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    max-width: calc(100% - 16px);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 
   .power-category-card {
@@ -1524,11 +1543,11 @@ body {
     overflow: hidden;
   }
 
-  .word-chip {
-    margin: 0;
-    font-size: 0.9rem;
-    padding: 8px 12px;
-    box-sizing: border-box;
+  .power-category-card h4 {
+    font-size: 0.95rem;
+    padding-bottom: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 

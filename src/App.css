@@ -723,18 +723,29 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 8px 0;
-    gap: 4px;
+    margin: 12px 0;
+    gap: 8px;
   }
 
   .example-usage .analysis-label {
     width: 100%;
-    margin: 0;
-    padding: 4px 0;
+    display: block;
     font-size: 0.9rem;
     color: #a0a0b0;
+    padding: 4px 0;
+    margin: 0;
     white-space: normal;
     order: -1;
+  }
+
+  .word-chips {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+    order: 0;
   }
 
   .example-usage .analysis-value {
@@ -750,16 +761,7 @@ body {
     white-space: pre-wrap;
     max-width: 100%;
     overflow: hidden;
-    margin-top: 4px;
-  }
-
-  .word-chips {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 8px 0;
+    order: 1;
   }
 
   .power-category-card {
@@ -768,6 +770,13 @@ body {
     width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+  }
+
+  .word-chip {
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-sizing: border-box;
   }
 }
 
@@ -1466,18 +1475,29 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 8px 0;
-    gap: 4px;
+    margin: 12px 0;
+    gap: 8px;
   }
 
   .example-usage .analysis-label {
     width: 100%;
-    margin: 0;
-    padding: 4px 0;
+    display: block;
     font-size: 0.9rem;
     color: #a0a0b0;
+    padding: 4px 0;
+    margin: 0;
     white-space: normal;
     order: -1;
+  }
+
+  .word-chips {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+    order: 0;
   }
 
   .example-usage .analysis-value {
@@ -1493,16 +1513,7 @@ body {
     white-space: pre-wrap;
     max-width: 100%;
     overflow: hidden;
-    margin-top: 4px;
-  }
-
-  .word-chips {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 8px 0;
+    order: 1;
   }
 
   .power-category-card {
@@ -1511,6 +1522,13 @@ body {
     width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+  }
+
+  .word-chip {
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-sizing: border-box;
   }
 }
 

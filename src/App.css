@@ -1492,3 +1492,17 @@ body {
   margin-bottom: 15px;
   white-space: pre-wrap;
 }
+
+/* Mobile Responsive Additions */
+@media screen and (max-width: 1024px) {
+  .feature-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .feature-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

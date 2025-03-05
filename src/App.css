@@ -443,12 +443,27 @@ body {
 .example-usage {
   margin: 8px 0;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
 }
 
 .example-usage .analysis-label {
-  margin-right: 4px;
+  color: #a0a0b0;
+  font-size: 0.9rem;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.example-usage .analysis-value {
+  flex: 1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
 }
 
 .power-words-suggestions {
@@ -702,6 +717,147 @@ body {
 @media (max-width: 768px) {
   .category-section {
     flex: 0 1 100%;
+  }
+
+  .example-usage {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0;
+    gap: 8px;
+  }
+
+  .example-usage .analysis-label {
+    width: 100%;
+    order: -1;
+    padding: 4px 0;
+    margin: 0;
+    white-space: normal;
+  }
+
+  .word-chips {
+    width: 100%;
+    order: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+  }
+
+  .example-usage .analysis-value {
+    width: 100%;
+    order: 1;
+    box-sizing: border-box;
+    padding: 12px;
+    margin: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .power-category-card {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    position: relative;
+  }
+
+  .example-usage {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding-top: 30px;
+  }
+
+  .example-usage .analysis-label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: auto;
+    font-size: 0.9rem;
+    color: #a0a0b0;
+    padding: 4px 0;
+  }
+
+  .word-chips {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 8px 0;
+  }
+
+  .word-chip {
+    width: fit-content;
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .example-usage .analysis-value {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-top: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .analysis-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    padding-top: 30px;
+  }
+
+  .analysis-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    font-size: 0.9rem;
+    color: #a0a0b0;
+    padding: 4px 0;
+  }
+
+  .word-chips {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+    order: 1;
+  }
+
+  .word-chip {
+    width: fit-content;
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .analysis-value {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-top: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    order: 2;
+  }
+
+  .example-usage .analysis-label {
+    display: none;
   }
 }
 
@@ -1395,6 +1551,102 @@ body {
   .tone-categories {
     grid-template-columns: 1fr;
   }
+
+  .example-usage {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0;
+    gap: 8px;
+  }
+
+  .example-usage .analysis-label {
+    width: 100%;
+    order: -1;
+    padding: 4px 0;
+    margin: 0;
+    white-space: normal;
+  }
+
+  .word-chips {
+    width: 100%;
+    order: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+  }
+
+  .example-usage .analysis-value {
+    width: 100%;
+    order: 1;
+    box-sizing: border-box;
+    padding: 12px;
+    margin: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .power-category-card {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    position: relative;
+  }
+
+  .example-usage {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding-top: 30px;
+  }
+
+  .example-usage .analysis-label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: auto;
+    font-size: 0.9rem;
+    color: #a0a0b0;
+    padding: 4px 0;
+  }
+
+  .word-chips {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+    order: 1;
+  }
+
+  .word-chip {
+    width: fit-content;
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .analysis-value {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-top: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    order: 2;
+  }
+
+  .example-usage .analysis-label {
+    display: none;
+  }
 }
 
 .back-home-button {
@@ -1491,4 +1743,439 @@ body {
   line-height: 1.6;
   margin-bottom: 15px;
   white-space: pre-wrap;
+}
+
+/* Mobile Responsive Additions */
+@media screen and (max-width: 1024px) {
+  .feature-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tone-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .auth-header {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    margin-bottom: 20px;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .auth-toggle-button {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto 20px;
+    display: block;
+  }
+
+  .tone-options {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .tone-category {
+    padding: 12px;
+  }
+
+  .logout-button {
+    width: calc(100% - 24px);
+    margin: 8px auto;
+    box-sizing: border-box;
+  }
+
+  .home-container {
+    padding: 0 12px;
+  }
+
+  .button-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .button-row button {
+    width: 100%;
+    margin: 0;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  /* Post Optimizer mobile adjustments */
+  .optimizer-container {
+    padding: 15px;
+    width: 100%;
+    margin: 10px 0;
+    box-sizing: border-box;
+  }
+
+  .controls-container {
+    padding: 10px;
+  }
+
+  .tone-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .optimizer-textarea {
+    padding: 12px;
+    font-size: 16px; /* Better for mobile input */
+  }
+
+  .hook-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .hook-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  /* Image to Prompt mobile adjustments */
+  .upload-section {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .image-preview {
+    margin: 15px 0;
+    padding: 15px;
+  }
+
+  .image-preview img {
+    max-height: 300px;
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .prompt-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .category-section {
+    width: 100%;
+    padding: 15px;
+    margin: 0;
+  }
+
+  .category-section select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .feature-description {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+
+  /* Prompt Assistant mobile adjustments */
+  .tab-content {
+    width: 100%;
+    padding: 0 12px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .input-container {
+    width: 100%;
+    margin: 10px 0;
+    padding: 0;
+  }
+
+  .prompt-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 15px 0;
+    width: 100%;
+  }
+
+  .category-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+  }
+
+  .category-section select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .supercharge-button {
+    width: 100%;
+    margin: 15px 0;
+  }
+
+  .prompt-result {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+  }
+
+  .prompt-text {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    word-wrap: break-word;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    border-radius: 12px;
+  }
+
+  .input-container {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .input-container textarea {
+    font-size: 16px;
+    padding: 12px;
+    min-height: 100px;
+    border-radius: 12px;
+  }
+
+  select.custom-select {
+    padding-right: 35px;
+    background-position: right 12px center;
+  }
+
+  .auth-form {
+    width: 100%;
+    max-width: none;
+    margin: 20px 0;
+    padding: 20px 15px;
+    box-sizing: border-box;
+  }
+
+  .auth-form input {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .auth-button {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .auth-links {
+    padding: 15px 0;
+  }
+
+  .tab-navigation {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin: 15px 0;
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+
+  .tab-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 0;
+  }
+
+  .tab-button.active {
+    background: linear-gradient(135deg, #00c2ff, #a855f7);
+    border-color: transparent;
+  }
+
+  .tab-content {
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  /* Admin table mobile adjustments */
+  .admin-table {
+    border-spacing: 0;
+  }
+
+  .admin-table thead {
+    display: none; /* Hide table headers on mobile */
+  }
+
+  .admin-table tr {
+    display: block;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .admin-table td {
+    display: block;
+    text-align: left;
+    padding: 12px 15px;
+    position: relative;
+    padding-left: 50%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .admin-table td:last-child {
+    border-bottom: none;
+  }
+
+  .admin-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: 45%;
+    padding-right: 10px;
+    color: #a0a0b0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: left;
+  }
+
+  .admin-input-form {
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .admin-input-form input,
+  .admin-input-form textarea {
+    font-size: 16px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .admin-container {
+    padding: 10px;
+  }
+
+  .status-toggle,
+  .delete-button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
+  .admin-table td:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  /* Power Words mobile adjustments */
+  .power-category-card {
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .power-category-card h4 {
+    font-size: 0.95rem;
+    padding-bottom: 10px;
+  }
+
+  .example-usage {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin: 12px 0;
+    width: 100%;
+  }
+
+  .example-usage .analysis-label {
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .example-usage .analysis-value {
+    width: 100%;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+  }
+
+  .word-chips {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .word-chip {
+    margin: 4px;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-sizing: border-box;
+  }
+
+  .power-words-suggestions {
+    padding: 10px;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .feature-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }

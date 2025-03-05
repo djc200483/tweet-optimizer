@@ -1642,6 +1642,59 @@ body {
     padding: 12px;
     margin-bottom: 15px;
   }
+
+  /* Prompt Assistant mobile adjustments */
+  .tab-content {
+    width: 100%;
+    padding: 0 12px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .input-container {
+    width: 100%;
+    margin: 10px 0;
+    padding: 0;
+  }
+
+  .prompt-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 15px 0;
+    width: 100%;
+  }
+
+  .category-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+  }
+
+  .category-section select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .supercharge-button {
+    width: 100%;
+    margin: 15px 0;
+  }
+
+  .prompt-result {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+  }
+
+  .prompt-text {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    word-wrap: break-word;
+  }
 }
 
 @media screen and (max-width: 640px) {

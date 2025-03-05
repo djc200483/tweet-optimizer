@@ -1567,6 +1567,81 @@ body {
     padding: 12px;
     font-size: 0.95rem;
   }
+
+  /* Post Optimizer mobile adjustments */
+  .optimizer-container {
+    padding: 15px;
+    width: 100%;
+    margin: 10px 0;
+    box-sizing: border-box;
+  }
+
+  .controls-container {
+    padding: 10px;
+  }
+
+  .tone-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .optimizer-textarea {
+    padding: 12px;
+    font-size: 16px; /* Better for mobile input */
+  }
+
+  .hook-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .hook-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  /* Image to Prompt mobile adjustments */
+  .upload-section {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .image-preview {
+    margin: 15px 0;
+    padding: 15px;
+  }
+
+  .image-preview img {
+    max-height: 300px;
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .prompt-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .category-section {
+    width: 100%;
+    padding: 15px;
+    margin: 0;
+  }
+
+  .category-section select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .feature-description {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
 }
 
 @media screen and (max-width: 640px) {

@@ -443,12 +443,25 @@ body {
 .example-usage {
   margin: 8px 0;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
 }
 
 .example-usage .analysis-label {
-  margin-right: 4px;
+  margin-bottom: 4px;
+  width: 100%;
+}
+
+.example-usage .analysis-value {
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
 }
 
 .power-words-suggestions {
@@ -1634,6 +1647,7 @@ body {
 
   .category-section select {
     width: 100%;
+    box-sizing: border-box;
     padding: 12px;
     font-size: 16px;
   }
@@ -1857,6 +1871,61 @@ body {
     flex-direction: column;
     gap: 8px;
     padding: 12px;
+  }
+
+  /* Power Words mobile adjustments */
+  .power-category-card {
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .power-category-card h4 {
+    font-size: 0.95rem;
+    padding-bottom: 10px;
+  }
+
+  .example-usage {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin: 12px 0;
+    width: 100%;
+  }
+
+  .example-usage .analysis-label {
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .example-usage .analysis-value {
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+  }
+
+  .word-chips {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .word-chip {
+    margin: 4px;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .power-words-suggestions {
+    padding: 10px;
+    box-sizing: border-box;
   }
 }
 

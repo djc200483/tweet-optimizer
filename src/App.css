@@ -1500,6 +1500,28 @@ body {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .auth-header {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    margin-bottom: 20px;
+  }
+
+  .auth-toggle-button {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto 20px;
+    display: block;
+  }
+}
+
 @media screen and (max-width: 640px) {
   .feature-cards {
     grid-template-columns: 1fr;

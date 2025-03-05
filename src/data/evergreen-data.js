@@ -247,9 +247,69 @@ export const nicheCategories = {
     "Sports Psychology",
     "Extreme Sports",
     "Olympic Sports",
-    "Team Sports",
-    "Individual Sports",
-    "Sports Nutrition"
+    "Fantasy Sports",
+    "Outdoor Activities & Recreation",
+    "Adventure Racing & Triathlons"
+  ],
+  "Parenting & Family": [
+    "Child Development",
+    "Positive Parenting",
+    "Parenting Teenagers",
+    "Single Parenting",
+    "Family Time Activities",
+    "Education at Home",
+    "Work-Life Balance for Parents",
+    "Parenting Hacks & Tips",
+    "Family Health & Well-being",
+    "Raising Independent Children"
+  ],
+  "Technology & Gadgets": [
+    "Tech Product Reviews",
+    "Gadgets & Wearables",
+    "Smartphone Tips & Tricks",
+    "Home Automation",
+    "Smart Home Devices",
+    "New Tech Innovations",
+    "Virtual Assistants",
+    "Gaming Consoles & PCs",
+    "3D Printing",
+    "Augmented & Virtual Reality Devices"
+  ],
+  "Self-Improvement": [
+    "Growth Mindset",
+    "Confidence Building",
+    "Self-Discipline",
+    "Overcoming Fear",
+    "Personal Transformation Stories",
+    "Public Speaking & Presentation Skills",
+    "Visualization Techniques",
+    "Breaking Bad Habits",
+    "Forgiveness & Letting Go",
+    "Overcoming Adversity"
+  ],
+  "Financial Freedom": [
+    "Passive Income Ideas",
+    "Money Mindset & Wealth Building",
+    "Investments for Beginners",
+    "Building Financial Security",
+    "Real Estate for Beginners",
+    "Side Hustles & Freelancing",
+    "Financial Freedom Stories",
+    "Credit Management & Debt",
+    "Planning for Early Retirement",
+    "Financial Independence & FIRE Movement"
+  ],
+  "Relationships & Communication": [
+    "Conflict Resolution",
+    "Non-Violent Communication",
+    "Strengthening Bonds",
+    "Empathy in Relationships",
+    "Active Listening",
+    "Compassionate Communication",
+    "Navigating Modern Dating",
+    "Relationship Red Flags",
+    "Couples Counseling",
+    "Digital Detox & Communication"
   ]
 };
 

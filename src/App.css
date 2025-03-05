@@ -738,7 +738,7 @@ body {
     order: -1;
   }
 
-  .word-chips {
+  .example-usage .word-chips {
     width: 100%;
     box-sizing: border-box;
     display: flex;
@@ -1490,7 +1490,7 @@ body {
     order: -1;
   }
 
-  .word-chips {
+  .example-usage .word-chips {
     width: 100%;
     box-sizing: border-box;
     display: flex;

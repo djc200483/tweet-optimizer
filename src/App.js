@@ -10,6 +10,7 @@ import ReverseEngineer from './components/ReverseEngineer';
 import PowerWords from './components/PowerWords';
 import PromptAssistant from './components/PromptAssistant';
 import ImageToPrompt from './components/ImageToPrompt';
+import EvergreenContent from './components/EvergreenContent';
 import Home from './components/Home';
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css';
@@ -231,6 +232,18 @@ function AppContent() {
             />
           </>
         );
+      case 'evergreen':
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <EvergreenContent />
+          </>
+        );
       case 'imageToPrompt':
         return (
           <>
@@ -418,6 +431,12 @@ function AppContent() {
                       onClick={() => setActiveTab('prompt')}
                     >
                       Prompt Assistant
+                    </button>
+                    <button 
+                      className={`tab-button ${activeTab === 'evergreen' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('evergreen')}
+                    >
+                      Evergreen Content
                     </button>
                   </>
                 )}

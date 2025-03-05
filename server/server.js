@@ -520,3 +520,79 @@ app.post('/analyze-image', authMiddleware, async (req, res) => {
     });
   }
 });
+
+// Evergreen Content endpoint
+app.post('/generate-evergreen-content', authMiddleware, async (req, res) => {
+  try {
+    const { niche, format, length } = req.body;
+    
+    if (!niche || !format || !length) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    const { hookTemplates, contentLengths } = require('./data/evergreen-data');
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          "role": "system",
+          "content": `You are tasked with creating a social media post for a specific niche. Here's what you need to do:
+
+1. **Niche**: The user has selected the niche **${niche}**.
+2. **Hook**: Select ONE hook from the following options tailored to this niche:
+    ${hookTemplates.join('\n    ')}
+    (Randomly select one hook from this list)
+
+3. **Post Format**: The user has selected this format:
+    **${format}**
+
+4. **CRITICAL - Content Length Requirements**:
+    You MUST create content that is EXACTLY within these limits:
+    - Short form: Maximum ${contentLengths.short} characters (not words, characters)
+      Example length: "Want to boost your productivity? Here's a simple trick I learned: take 5-minute breaks every 25 minutes. It's called the Pomodoro Technique, and it works wonders for focus."
+    
+    - Medium form: Maximum ${contentLengths.medium} characters (not words, characters)
+      Example length: "Want to boost your productivity? Here's a simple trick I learned: take 5-minute breaks every 25 minutes. It's called the Pomodoro Technique, and it works wonders for focus. The science behind it is fascinating - our brains naturally work in cycles of about 25 minutes. After that, our attention starts to drift. By taking short breaks, we reset our focus and maintain peak performance throughout the day. Try it tomorrow and let me know if you notice the difference!"
+    
+    - Long form: Maximum ${contentLengths.long} characters (not words, characters)
+      Example length: "Want to boost your productivity? Here's a simple trick I learned: take 5-minute breaks every 25 minutes. It's called the Pomodoro Technique, and it works wonders for focus. The science behind it is fascinating - our brains naturally work in cycles of about 25 minutes. After that, our attention starts to drift. By taking short breaks, we reset our focus and maintain peak performance throughout the day. The technique was developed by Francesco Cirillo in the late 1980s, and it's been proven effective by countless studies. The key is consistency - stick to the 25/5 pattern, and you'll see your productivity soar. I've been using this method for years, and it's transformed how I work. The best part? It's completely free and requires no special tools. Just a timer and your commitment to better work habits. Try it tomorrow and let me know if you notice the difference!"
+    
+    IMPORTANT: 
+    - Count your characters carefully
+    - If you exceed the limit, you must revise and shorten your content
+    - Do not include any content that would push you over the limit
+    - The character count includes ALL text, including spaces and punctuation
+
+5. **Instructions**: 
+    - Begin with the selected hook as your opening line, but integrate it naturally into the content without any labels or formatting
+    - Follow the selected post format structure, but do not include any format labels or markdown
+    - Create content that is:
+        - Engaging and valuable to the target audience
+        - Focused on providing actionable advice or insight
+        - Not too promotional—focus on delivering value first
+        - Keep the tone and style consistent with the selected niche
+        - MUST stay within the exact character limit specified above
+
+6. **Output Format**:
+    - Start with the hook naturally integrated into the first paragraph
+    - Continue with the main content following the selected format
+    - Include a call to action only if the format is specifically "A Call-to-Action Post"
+    - Do not include any labels, markdown formatting, or structural indicators
+    - The content should flow naturally as a single, cohesive post
+    - FINAL CHECK: Verify your content is within the character limit before submitting
+
+The post should feel natural and authentic to the niche while incorporating the selected hook and format type. UNDER NO CIRCUMSTANCES should the content exceed the specified character limit. Present the content as a single, flowing piece without any structural labels or formatting.`
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 1000
+    });
+
+    const generatedContent = completion.choices[0].message.content.trim();
+    res.json({ content: generatedContent });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error generating content' });
+  }
+});

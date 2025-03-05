@@ -723,15 +723,18 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 15px 0;
+    margin: 8px 0;
+    gap: 4px;
   }
 
   .example-usage .analysis-label {
     width: 100%;
-    margin-bottom: 8px;
+    margin: 0;
+    padding: 4px 0;
     font-size: 0.9rem;
     color: #a0a0b0;
     white-space: normal;
+    order: -1;
   }
 
   .example-usage .analysis-value {
@@ -747,14 +750,7 @@ body {
     white-space: pre-wrap;
     max-width: 100%;
     overflow: hidden;
-  }
-
-  .power-category-card {
-    padding: 15px;
-    margin: 10px 0;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
+    margin-top: 4px;
   }
 
   .word-chips {
@@ -763,15 +759,15 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 10px 0;
+    margin: 8px 0;
   }
 
-  .word-chip {
-    margin: 0;
-    font-size: 0.9rem;
-    padding: 8px 12px;
+  .power-category-card {
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
     box-sizing: border-box;
-    flex-grow: 0;
+    overflow: hidden;
   }
 }
 
@@ -1470,15 +1466,18 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 15px 0;
+    margin: 8px 0;
+    gap: 4px;
   }
 
   .example-usage .analysis-label {
     width: 100%;
-    margin-bottom: 8px;
+    margin: 0;
+    padding: 4px 0;
     font-size: 0.9rem;
     color: #a0a0b0;
     white-space: normal;
+    order: -1;
   }
 
   .example-usage .analysis-value {
@@ -1494,14 +1493,7 @@ body {
     white-space: pre-wrap;
     max-width: 100%;
     overflow: hidden;
-  }
-
-  .power-category-card {
-    padding: 15px;
-    margin: 10px 0;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
+    margin-top: 4px;
   }
 
   .word-chips {
@@ -1510,15 +1502,15 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 10px 0;
+    margin: 8px 0;
   }
 
-  .word-chip {
-    margin: 0;
-    font-size: 0.9rem;
-    padding: 8px 12px;
+  .power-category-card {
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
     box-sizing: border-box;
-    flex-grow: 0;
+    overflow: hidden;
   }
 }
 

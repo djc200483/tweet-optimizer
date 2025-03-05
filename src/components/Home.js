@@ -21,6 +21,12 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       id: 'power'
     },
     {
+      title: 'Evergreen Content',
+      description: 'Generate timeless content tailored to your niche with AI-powered insights.',
+      icon: '🌱',
+      id: 'evergreen'
+    },
+    {
       title: 'Prompt Assistant',
       description: 'Generate structured prompts for AI image generation tools.',
       icon: '🤖',

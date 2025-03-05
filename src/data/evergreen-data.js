@@ -1,0 +1,273 @@
+export const nicheCategories = {
+  "Personal Development": [
+    "Mindfulness & Meditation",
+    "Habit Building",
+    "Time Management",
+    "Productivity Hacks",
+    "Overcoming Procrastination",
+    "Goal Setting",
+    "Mental Health & Well-being",
+    "Positive Psychology",
+    "Emotional Intelligence",
+    "Stress Management"
+  ],
+  "Health & Wellness": [
+    "Nutrition & Dieting",
+    "Weight Loss Tips",
+    "Healthy Recipes",
+    "Fitness Routines",
+    "Home Workouts",
+    "Yoga & Flexibility",
+    "Mental Health in Fitness",
+    "Sleep & Recovery",
+    "Supplements and Vitamins",
+    "Healthy Aging"
+  ],
+  "Fitness & Strength Training": [
+    "Strength Training for Beginners",
+    "Bodyweight Workouts",
+    "Weightlifting Techniques",
+    "Powerlifting Tips",
+    "Endurance Training",
+    "Flexibility & Mobility",
+    "CrossFit Workouts",
+    "HIIT (High-Intensity Interval Training)",
+    "Athletic Performance",
+    "Post-Workout Recovery"
+  ],
+  "Personal Finance": [
+    "Budgeting & Saving Money",
+    "Investing Tips",
+    "Financial Independence & Early Retirement (FIRE)",
+    "Debt Management",
+    "Stock Market Insights",
+    "Cryptocurrency",
+    "Real Estate Investments",
+    "Retirement Planning",
+    "Passive Income Streams",
+    "Money Mindset"
+  ],
+  "Career Development": [
+    "Job Search & Interview Tips",
+    "Building a Personal Brand",
+    "Networking Strategies",
+    "Resume & Cover Letter Advice",
+    "Remote Work & Freelancing",
+    "Professional Growth & Development",
+    "Leadership & Management",
+    "Career Change Tips",
+    "Work-Life Balance",
+    "Entrepreneurship"
+  ],
+  "Business & Entrepreneurship": [
+    "Startup Strategies",
+    "Business Marketing",
+    "Sales Techniques",
+    "Customer Relationship Management",
+    "Business Productivity Tools",
+    "E-commerce & Online Business",
+    "Leadership in Business",
+    "Innovation & Creativity",
+    "Business Scaling Tips",
+    "Outsourcing & Delegation"
+  ],
+  "Technology & Innovation": [
+    "Artificial Intelligence (AI)",
+    "Machine Learning & Data Science",
+    "Blockchain & Cryptocurrency",
+    "Cloud Computing",
+    "Robotics & Automation",
+    "Augmented Reality (AR) & Virtual Reality (VR)",
+    "Internet of Things (IoT)",
+    "Cybersecurity",
+    "Software Development & Coding",
+    "Tech Startups"
+  ],
+  "Digital Marketing": [
+    "Social Media Strategy",
+    "Content Marketing",
+    "SEO (Search Engine Optimization)",
+    "SEM (Search Engine Marketing)",
+    "Affiliate Marketing",
+    "Email Marketing",
+    "Influencer Marketing",
+    "Paid Ads & PPC Campaigns",
+    "Brand Building",
+    "Web Analytics"
+  ],
+  "Lifestyle": [
+    "Minimalism & Simple Living",
+    "Sustainable Living",
+    "Travel & Adventure",
+    "Luxury Lifestyle",
+    "Tiny Homes & Off-the-Grid Living",
+    "Hobbies & Interests",
+    "Digital Nomad Lifestyle",
+    "Self-Care Routines",
+    "Time Freedom",
+    "Family Life & Parenting"
+  ],
+  "Relationships & Dating": [
+    "Healthy Relationships",
+    "Communication Skills",
+    "Conflict Resolution",
+    "Dating Advice",
+    "Marriage & Long-Term Relationships",
+    "Friendships & Social Skills",
+    "Family Dynamics",
+    "Dating in the Modern World",
+    "Online Dating Tips",
+    "Building Trust & Intimacy"
+  ],
+  "Food & Cooking": [
+    "Quick & Easy Recipes",
+    "Meal Prep Ideas",
+    "Vegan & Plant-Based Cooking",
+    "Baking & Desserts",
+    "International Cuisine",
+    "Cooking for Special Diets (Keto, Paleo, etc.)",
+    "Healthy Cooking Hacks",
+    "Gourmet Cooking Tips",
+    "Cooking for Beginners",
+    "Food Pairing & Flavor Combinations"
+  ],
+  "Arts & Creativity": [
+    "Painting & Drawing",
+    "Photography Tips",
+    "Graphic Design & Digital Art",
+    "DIY Projects & Crafts",
+    "Writing & Storytelling",
+    "Poetry",
+    "Fashion Design",
+    "Music Production",
+    "Dance",
+    "Creative Hobbies for Relaxation"
+  ],
+  "Education & Learning": [
+    "Study Tips & Hacks",
+    "Learning New Languages",
+    "Online Courses & Certifications",
+    "Lifelong Learning",
+    "Reading & Book Recommendations",
+    "Memory & Retention",
+    "Science & Technology Education",
+    "Online Learning Platforms",
+    "Self-Teaching Techniques",
+    "Student Success Tips"
+  ],
+  "History & Culture": [
+    "Ancient Civilizations",
+    "World Wars & Conflicts",
+    "Cultural Heritage",
+    "Historical Mysteries",
+    "Famous Figures in History",
+    "World Leaders",
+    "Evolution of Societies",
+    "Archaeological Discoveries",
+    "History of Art",
+    "Folklore & Legends"
+  ],
+  "Entertainment & Media": [
+    "Movie & TV Reviews",
+    "Celebrity News & Gossip",
+    "Music & Album Reviews",
+    "Gaming Insights & Reviews",
+    "Pop Culture Trends",
+    "Book Reviews & Recommendations",
+    "Comic Books & Graphic Novels",
+    "Reality TV",
+    "Documentaries & Docuseries",
+    "Live Performances & Concerts"
+  ],
+  "Environment & Sustainability": [
+    "Climate Change Awareness",
+    "Renewable Energy",
+    "Green Technologies",
+    "Waste Reduction",
+    "Conservation Efforts",
+    "Environmental Activism",
+    "Wildlife Protection",
+    "Eco-Friendly Products",
+    "Sustainability in Business",
+    "Green Urban Planning"
+  ],
+  "Social Issues & Advocacy": [
+    "Gender Equality",
+    "Racial Equality & Justice",
+    "LGBTQ+ Rights",
+    "Mental Health Awareness",
+    "Poverty & Homelessness",
+    "Refugee & Immigration Rights",
+    "Education for All",
+    "Disability Rights & Advocacy",
+    "Animal Rights",
+    "Climate Justice"
+  ],
+  "Spirituality & Religion": [
+    "Meditation & Mindfulness Practices",
+    "Yoga Philosophy",
+    "Religious Teachings",
+    "Exploring Faiths & Beliefs",
+    "Spiritual Growth & Enlightenment",
+    "Buddhism & Eastern Practices",
+    "Christianity & Biblical Insights",
+    "Hinduism & Vedic Teachings",
+    "New Age Spirituality",
+    "Mysticism & Occultism"
+  ],
+  "Travel & Adventure": [
+    "Adventure Travel Guides",
+    "Backpacking & Hiking",
+    "Travel Hacks & Tips",
+    "Luxury Travel",
+    "Solo Travel Experiences",
+    "Budget Travel Tips",
+    "Travel Blogging & Photography",
+    "Exploring New Destinations",
+    "Cultural Travel Experiences",
+    "Sustainable Travel"
+  ],
+  "Science & Nature": [
+    "Space Exploration",
+    "Earth Sciences",
+    "Marine Biology",
+    "Environmental Science",
+    "Animal Behavior",
+    "Genetics & Evolution",
+    "Astronomy & Astrophysics",
+    "Climate Science",
+    "Scientific Discoveries & Breakthroughs",
+    "Human Anatomy & Physiology"
+  ],
+  "Sports & Recreation": [
+    "Basketball Tips & Techniques",
+    "Soccer / Football Coaching",
+    "Tennis Tips",
+    "Golfing Techniques",
+    "Sports Psychology",
+    "Extreme Sports",
+    "Olympic Sports",
+    "Team Sports",
+    "Individual Sports",
+    "Sports Nutrition"
+  ]
+};
+
+export const postFormats = [
+  "A Question Post",
+  "A Tip Post",
+  "A How-To Post",
+  "A List Post",
+  "A Story Post",
+  "A Comparison Post",
+  "A Problem-Solution Post",
+  "A Case Study Post",
+  "A Definition Post",
+  "A Review Post"
+];
+
+export const contentLengths = {
+  "short": 150,
+  "medium": 400,
+  "long": 3000
+}; 

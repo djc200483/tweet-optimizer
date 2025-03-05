@@ -1545,6 +1545,28 @@ body {
   .home-container {
     padding: 0 12px;
   }
+
+  .button-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .button-row button {
+    width: 100%;
+    margin: 0;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.95rem;
+  }
 }
 
 @media screen and (max-width: 640px) {

@@ -552,19 +552,24 @@ app.post('/generate-evergreen-content', authMiddleware, async (req, res) => {
     - Medium form: Maximum ${contentLengths.medium} characters
     - Long form: Maximum ${contentLengths.long} characters
 
-5. **Instructions**: Use the selected niche, and the chosen Post Format and add one of the random hooks identified in the list to it to create a post that is:
-    - Engaging and valuable to the target audience
-    - Focused on providing actionable advice or insight
-    - Not too promotional—focus on delivering value first
-    - Keep the tone and style consistent with the selected niche
-    - Strictly adhere to the selected content length limit
+5. **Instructions**: 
+    - Begin with the selected hook as your opening line, but integrate it naturally into the content without any labels or formatting
+    - Follow the selected post format structure, but do not include any format labels or markdown
+    - Create content that is:
+        - Engaging and valuable to the target audience
+        - Focused on providing actionable advice or insight
+        - Not too promotional—focus on delivering value first
+        - Keep the tone and style consistent with the selected niche
+        - Strictly adhere to the selected content length limit
 
 6. **Output Format**:
-    - First line: The randomly selected hook
-    - Body: Content following the user's selected format
-    - Call to Action: ONLY include a call to action if the selected format is specifically "A Call-to-Action Post" or similar formats that explicitly require audience interaction. For other formats (like "A Comparison Post", "A Question Post", etc.), do not include a call to action unless it naturally fits the content.
+    - Start with the hook naturally integrated into the first paragraph
+    - Continue with the main content following the selected format
+    - Include a call to action only if the format is specifically "A Call-to-Action Post"
+    - Do not include any labels, markdown formatting, or structural indicators
+    - The content should flow naturally as a single, cohesive post
 
-The post should feel natural and authentic to the niche while incorporating the selected hook and format type, and must not exceed the specified character limit.`
+The post should feel natural and authentic to the niche while incorporating the selected hook and format type, and must not exceed the specified character limit. Present the content as a single, flowing piece without any structural labels or formatting.`
         }
       ],
       temperature: 0.7,

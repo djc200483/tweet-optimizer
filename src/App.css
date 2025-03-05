@@ -718,6 +718,61 @@ body {
   .category-section {
     flex: 0 1 100%;
   }
+
+  .example-usage {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 15px 0;
+  }
+
+  .example-usage .analysis-label {
+    width: 100%;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #a0a0b0;
+    white-space: normal;
+  }
+
+  .example-usage .analysis-value {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .power-category-card {
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .word-chips {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .word-chip {
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    flex-grow: 0;
+  }
 }
 
 .supercharge-button {
@@ -1437,13 +1492,16 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .power-category-card {
     padding: 15px;
-    margin: 15px 0;
+    margin: 10px 0;
     width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
   }
 
   .word-chips {

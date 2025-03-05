@@ -15,15 +15,6 @@ export default function Login({ onToggleForm }) {
   const isAdminEmail = process.env.REACT_APP_ADMIN_EMAIL && 
     email.toLowerCase() === process.env.REACT_APP_ADMIN_EMAIL.toLowerCase();
 
-  // Debug log
-  console.log('Login form state:', {
-    email,
-    isAdminEmail,
-    adminEmail: process.env.REACT_APP_ADMIN_EMAIL,
-    allEnv: process.env,
-    nodeEnv: process.env.NODE_ENV
-  });
-
   // Clear any auth errors when component mounts or unmounts
   useEffect(() => {
     clearAuthError();

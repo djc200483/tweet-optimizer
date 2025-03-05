@@ -760,20 +760,21 @@ body {
     width: 100%;
     padding: 15px;
     margin: 10px 0;
-    display: flex;
-    flex-direction: column;
   }
 
   .example-usage {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 8px 0;
+    margin: 12px 0;
+    gap: 12px;
   }
 
   .example-usage .analysis-label {
     width: 100%;
-    margin: 0 0 8px 0;
+    display: block;
+    font-size: 0.9rem;
+    color: #a0a0b0;
     padding: 4px 0;
     order: -1;
   }
@@ -789,13 +790,21 @@ body {
 
   .word-chip {
     width: fit-content;
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
   }
 
   .example-usage .analysis-value {
     width: 100%;
-    margin-top: 8px;
+    box-sizing: border-box;
     padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
     order: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
   }
 }
 
@@ -1531,20 +1540,21 @@ body {
     width: 100%;
     padding: 15px;
     margin: 10px 0;
-    display: flex;
-    flex-direction: column;
   }
 
   .example-usage {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 8px 0;
+    margin: 12px 0;
+    gap: 12px;
   }
 
   .example-usage .analysis-label {
     width: 100%;
-    margin: 0 0 8px 0;
+    display: block;
+    font-size: 0.9rem;
+    color: #a0a0b0;
     padding: 4px 0;
     order: -1;
   }
@@ -1560,13 +1570,21 @@ body {
 
   .word-chip {
     width: fit-content;
+    margin: 0;
+    font-size: 0.9rem;
+    padding: 8px 12px;
   }
 
   .example-usage .analysis-value {
     width: 100%;
-    margin-top: 8px;
+    box-sizing: border-box;
     padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
     order: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
   }
 }
 

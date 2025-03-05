@@ -550,8 +550,13 @@ app.post('/generate-evergreen-content', authMiddleware, async (req, res) => {
 4. **CRITICAL - Content Length Requirements**:
     You MUST create content that is EXACTLY within these limits:
     - Short form: Maximum ${contentLengths.short} characters (not words, characters)
+      Example length: "Want to boost your productivity? Here's a simple trick I learned: take 5-minute breaks every 25 minutes. It's called the Pomodoro Technique, and it works wonders for focus."
+    
     - Medium form: Maximum ${contentLengths.medium} characters (not words, characters)
+      Example length: "Want to boost your productivity? Here's a simple trick I learned: take 5-minute breaks every 25 minutes. It's called the Pomodoro Technique, and it works wonders for focus. The science behind it is fascinating - our brains naturally work in cycles of about 25 minutes. After that, our attention starts to drift. By taking short breaks, we reset our focus and maintain peak performance throughout the day. Try it tomorrow and let me know if you notice the difference!"
+    
     - Long form: Maximum ${contentLengths.long} characters (not words, characters)
+      Example length: "Want to boost your productivity? Here's a simple trick I learned: take 5-minute breaks every 25 minutes. It's called the Pomodoro Technique, and it works wonders for focus. The science behind it is fascinating - our brains naturally work in cycles of about 25 minutes. After that, our attention starts to drift. By taking short breaks, we reset our focus and maintain peak performance throughout the day. The technique was developed by Francesco Cirillo in the late 1980s, and it's been proven effective by countless studies. The key is consistency - stick to the 25/5 pattern, and you'll see your productivity soar. I've been using this method for years, and it's transformed how I work. The best part? It's completely free and requires no special tools. Just a timer and your commitment to better work habits. Try it tomorrow and let me know if you notice the difference!"
     
     IMPORTANT: 
     - Count your characters carefully

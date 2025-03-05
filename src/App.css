@@ -449,11 +449,11 @@ body {
 
 .example-usage .analysis-label {
   margin-bottom: 4px;
-  width: 100%;
+  width: auto;
 }
 
 .example-usage .analysis-value {
-  width: 100%;
+  width: auto;
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: pre-wrap;
@@ -1902,6 +1902,7 @@ body {
 
   .example-usage .analysis-value {
     width: 100%;
+    box-sizing: border-box;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
@@ -1915,12 +1916,16 @@ body {
   .word-chips {
     width: 100%;
     box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .word-chip {
     margin: 4px;
     font-size: 0.9rem;
     padding: 8px 12px;
+    box-sizing: border-box;
   }
 
   .power-words-suggestions {

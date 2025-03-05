@@ -547,10 +547,17 @@ app.post('/generate-evergreen-content', authMiddleware, async (req, res) => {
 3. **Post Format**: The user has selected this format:
     **${format}**
 
-4. **Content Length**: The user has selected **${length} form**:
-    - Short form: Maximum ${contentLengths.short} characters
-    - Medium form: Maximum ${contentLengths.medium} characters
-    - Long form: Maximum ${contentLengths.long} characters
+4. **CRITICAL - Content Length Requirements**:
+    You MUST create content that is EXACTLY within these limits:
+    - Short form: Maximum ${contentLengths.short} characters (not words, characters)
+    - Medium form: Maximum ${contentLengths.medium} characters (not words, characters)
+    - Long form: Maximum ${contentLengths.long} characters (not words, characters)
+    
+    IMPORTANT: 
+    - Count your characters carefully
+    - If you exceed the limit, you must revise and shorten your content
+    - Do not include any content that would push you over the limit
+    - The character count includes ALL text, including spaces and punctuation
 
 5. **Instructions**: 
     - Begin with the selected hook as your opening line, but integrate it naturally into the content without any labels or formatting
@@ -560,7 +567,7 @@ app.post('/generate-evergreen-content', authMiddleware, async (req, res) => {
         - Focused on providing actionable advice or insight
         - Not too promotional—focus on delivering value first
         - Keep the tone and style consistent with the selected niche
-        - Strictly adhere to the selected content length limit
+        - MUST stay within the exact character limit specified above
 
 6. **Output Format**:
     - Start with the hook naturally integrated into the first paragraph
@@ -568,8 +575,9 @@ app.post('/generate-evergreen-content', authMiddleware, async (req, res) => {
     - Include a call to action only if the format is specifically "A Call-to-Action Post"
     - Do not include any labels, markdown formatting, or structural indicators
     - The content should flow naturally as a single, cohesive post
+    - FINAL CHECK: Verify your content is within the character limit before submitting
 
-The post should feel natural and authentic to the niche while incorporating the selected hook and format type, and must not exceed the specified character limit. Present the content as a single, flowing piece without any structural labels or formatting.`
+The post should feel natural and authentic to the niche while incorporating the selected hook and format type. UNDER NO CIRCUMSTANCES should the content exceed the specified character limit. Present the content as a single, flowing piece without any structural labels or formatting.`
         }
       ],
       temperature: 0.7,

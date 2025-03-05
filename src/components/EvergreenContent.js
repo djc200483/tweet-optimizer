@@ -110,7 +110,7 @@ export default function EvergreenContent() {
           <div className="prompt-result">
             <div className="button-row">
               <button 
-                className="generate-button"
+                className="submit-button"
                 onClick={handleGenerate}
                 disabled={!selectedOptions.subcategory || !selectedOptions.format || !selectedOptions.length || isLoading}
               >

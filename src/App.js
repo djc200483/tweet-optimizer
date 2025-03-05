@@ -232,6 +232,18 @@ function AppContent() {
             />
           </>
         );
+      case 'evergreen':
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <EvergreenContent />
+          </>
+        );
       case 'imageToPrompt':
         return (
           <>
@@ -293,18 +305,6 @@ function AppContent() {
               ← Back to Home
             </button>
             <PromptAssistant />
-          </>
-        );
-      case 'evergreen':
-        return (
-          <>
-            <button 
-              className="back-home-button"
-              onClick={() => setCurrentFeature(null)}
-            >
-              ← Back to Home
-            </button>
-            <EvergreenContent />
           </>
         );
       default:

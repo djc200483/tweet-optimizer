@@ -12,12 +12,25 @@ export default function TweetOptimizer({
   isLoading,
   savedTweets,
   handleDelete,
-  handleCopy,
   tones,
   hookOptions,
   toneColors 
 }) {
   const [copiedVersions, setCopiedVersions] = useState({});
+
+  const handleCopy = (version, vIndex) => {
+    navigator.clipboard.writeText(version);
+    setCopiedVersions(prev => ({
+      ...prev,
+      [vIndex]: true
+    }));
+    setTimeout(() => {
+      setCopiedVersions(prev => ({
+        ...prev,
+        [vIndex]: false
+      }));
+    }, 2000);
+  };
 
   const handleToneSelect = (toneId) => {
     if (selectedTones.includes(toneId)) {

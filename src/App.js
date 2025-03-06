@@ -143,10 +143,6 @@ function AppContent() {
     }
   };
 
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text);
-  };
-
   const handleReverseAnalysis = async () => {
     if (reverseText.trim()) {
       try {

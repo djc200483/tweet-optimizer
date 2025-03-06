@@ -11,6 +11,9 @@ const adminRoutes = require('./routes/admin');
 const authMiddleware = require('./middleware/auth');
 // const axios = require('axios');  // Commented out for now
 
+// Utility function to replace em-dashes with hyphens
+const replaceEmDash = (text) => text.replace(/—/g, '-');
+
 // Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 console.log('Resend configured:', !!process.env.RESEND_API_KEY);
@@ -180,7 +183,7 @@ IMPORTANT RULES:
 
     // Get all variations and ensure they're properly formatted
     const rewrittenTweets = completion.choices.map(choice => 
-      choice.message.content.trim()
+      replaceEmDash(choice.message.content.trim())
     );
     
     res.json({ rewrittenTweets });
@@ -250,7 +253,7 @@ app.post('/analyze-tweet', authMiddleware, async (req, res) => {
       ],
     });
 
-    const analysis = completion.choices[0].message.content;
+    const analysis = replaceEmDash(completion.choices[0].message.content);
     res.json({ analysis });
   } catch (error) {
     console.error('Error:', error);
@@ -292,7 +295,7 @@ Create a personalized adaptation:`
       ],
     });
 
-    const adaptedTweet = completion.choices[0].message.content.trim();
+    const adaptedTweet = replaceEmDash(completion.choices[0].message.content.trim());
     res.json({ adaptedTweet });
   } catch (error) {
     console.error('Error:', error);
@@ -357,7 +360,7 @@ IMPORTANT:
     });
 
     // Parse the JSON response
-    const result = JSON.parse(completion.choices[0].message.content);
+    const result = JSON.parse(replaceEmDash(completion.choices[0].message.content));
 
     // Map the improvements to the UI format
     const suggestions = result.improvements.map(imp => ({
@@ -589,7 +592,7 @@ The post should feel natural and authentic to the niche while incorporating the 
       max_tokens: 1000
     });
 
-    const generatedContent = completion.choices[0].message.content.trim();
+    const generatedContent = replaceEmDash(completion.choices[0].message.content.trim());
     res.json({ content: generatedContent });
   } catch (error) {
     console.error('Error:', error);

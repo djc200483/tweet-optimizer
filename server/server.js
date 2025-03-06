@@ -535,6 +535,19 @@ app.post('/generate-evergreen-content', authMiddleware, async (req, res) => {
 
     const { hookTemplates, contentLengths } = require('./data/evergreen-data');
 
+    // Fisher-Yates shuffle implementation
+    const shuffleArray = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    // Randomly select 5 hooks using Fisher-Yates shuffle
+    const shuffledHooks = shuffleArray([...hookTemplates]);
+    const selectedHooks = shuffledHooks.slice(0, 5);
+
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
@@ -544,8 +557,8 @@ app.post('/generate-evergreen-content', authMiddleware, async (req, res) => {
 
 1. **Niche**: The user has selected the niche **${niche}**.
 2. **Hook**: Select ONE hook from the following options tailored to this niche:
-    ${hookTemplates.join('\n    ')}
-    (Randomly select one hook from this list)
+    ${selectedHooks.join('\n    ')}
+    (Select one hook from these 5 options)
 
 3. **Post Format**: The user has selected this format:
     **${format}**

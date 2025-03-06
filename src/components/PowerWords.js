@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -11,6 +11,14 @@ export default function PowerWords({
   setPowerResults,
   handlePowerAnalysis
 }) {
+  const [copiedWord, setCopiedWord] = useState(null);
+
+  const handleWordCopy = (word) => {
+    navigator.clipboard.writeText(word);
+    setCopiedWord(word);
+    setTimeout(() => setCopiedWord(null), 2000);
+  };
+
   return (
     <div className="tab-content">
       <div className="input-container">
@@ -57,8 +65,8 @@ export default function PowerWords({
                         <span 
                           key={wordIndex} 
                           className="word-chip"
-                          onClick={() => navigator.clipboard.writeText(word)}
-                          title="Click to copy"
+                          onClick={() => handleWordCopy(word)}
+                          title={copiedWord === word ? 'Copied!' : 'Click to copy'}
                         >
                           {word}
                         </span>

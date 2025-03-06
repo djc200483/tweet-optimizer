@@ -11,6 +11,7 @@ export default function ImageToPrompt() {
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -86,9 +87,9 @@ export default function ImageToPrompt() {
   };
 
   const handleCopy = () => {
-    if (generatedPrompt) {
-      navigator.clipboard.writeText(generatedPrompt);
-    }
+    navigator.clipboard.writeText(generatedPrompt);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (
@@ -131,7 +132,7 @@ export default function ImageToPrompt() {
           <div className="prompt-result">
             <div className="prompt-text">{generatedPrompt}</div>
             <button className="copy-button" onClick={handleCopy}>
-              Copy Prompt
+              {isCopied ? 'Copied!' : 'Copy'}
             </button>
           </div>
         </div>

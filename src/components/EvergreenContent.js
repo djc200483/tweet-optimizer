@@ -13,6 +13,7 @@ export default function EvergreenContent() {
   });
   const [generatedContent, setGeneratedContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const categories = {
     category: {
@@ -79,6 +80,12 @@ export default function EvergreenContent() {
     }
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(generatedContent);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
   return (
     <div className="tab-content">
       <div className="input-container">
@@ -127,10 +134,10 @@ export default function EvergreenContent() {
                 <div className="button-row">
                   <button 
                     className="copy-button"
-                    onClick={() => navigator.clipboard.writeText(generatedContent)}
+                    onClick={handleCopy}
                     disabled={isLoading}
                   >
-                    Copy Content
+                    {isCopied ? 'Copied!' : 'Copy Content'}
                   </button>
                 </div>
               </div>

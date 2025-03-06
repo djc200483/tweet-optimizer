@@ -15,6 +15,8 @@ export default function PromptAssistant() {
   });
   const [superchargedPrompt, setSuperchargedPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const [isSuperchargedCopied, setIsSuperchargedCopied] = useState(false);
 
   const categories = {
     subject: {
@@ -141,6 +143,18 @@ export default function PromptAssistant() {
     }
   };
 
+  const handleCopyPrompt = () => {
+    navigator.clipboard.writeText(generatePrompt());
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  const handleCopySupercharged = () => {
+    navigator.clipboard.writeText(superchargedPrompt);
+    setIsSuperchargedCopied(true);
+    setTimeout(() => setIsSuperchargedCopied(false), 2000);
+  };
+
   return (
     <div className="tab-content">
       <div className="input-container">
@@ -177,10 +191,10 @@ export default function PromptAssistant() {
             <div className="button-row">
               <button 
                 className="copy-button"
-                onClick={() => navigator.clipboard.writeText(generatePrompt())}
+                onClick={handleCopyPrompt}
                 disabled={isLoading}
               >
-                Copy Prompt
+                {isCopied ? 'Copied!' : 'Copy Prompt'}
               </button>
               <button 
                 className="supercharge-button"
@@ -200,10 +214,10 @@ export default function PromptAssistant() {
                 <div className="button-row">
                   <button 
                     className="copy-button"
-                    onClick={() => navigator.clipboard.writeText(superchargedPrompt)}
+                    onClick={handleCopySupercharged}
                     disabled={isLoading}
                   >
-                    Copy Supercharged Prompt
+                    {isSuperchargedCopied ? 'Copied!' : 'Copy Supercharged Prompt'}
                   </button>
                 </div>
               </div>

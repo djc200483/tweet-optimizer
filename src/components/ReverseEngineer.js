@@ -15,6 +15,7 @@ export default function ReverseEngineer({
   const [showAdaptation, setShowAdaptation] = useState(false);
   const [adaptedTweet, setAdaptedTweet] = useState('');
   const [isAdapting, setIsAdapting] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleAdaptation = async () => {
     try {
@@ -64,6 +65,12 @@ export default function ReverseEngineer({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(adaptedTweet);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (
@@ -124,9 +131,9 @@ export default function ReverseEngineer({
               </div>
               <button 
                 className="copy-button"
-                onClick={() => navigator.clipboard.writeText(adaptedTweet)}
+                onClick={handleCopy}
               >
-                Copy
+                {isCopied ? 'Copied!' : 'Copy'}
               </button>
             </div>
           )}

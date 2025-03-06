@@ -784,7 +784,8 @@ body {
   .word-chips {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 8px;
     margin: 8px 0;
   }
@@ -806,6 +807,7 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
+    order: 2;
   }
 
   .analysis-item {
@@ -1444,19 +1446,17 @@ body {
 }
 
 .action-button {
-  background: linear-gradient(135deg, #4a5568, #2d3748);
+  padding: 8px 16px;
+  background-color: #28a745;
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.8rem;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s;
 }
 
 .action-button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  background-color: #218838;
 }
 
 .tone-label {
@@ -1621,7 +1621,6 @@ body {
     flex-wrap: wrap;
     gap: 8px;
     margin: 8px 0;
-    order: 1;
   }
 
   .word-chip {

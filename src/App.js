@@ -225,7 +225,6 @@ function AppContent() {
               handleSubmit={handleSubmit}
               isLoading={isLoading}
               savedTweets={savedTweets}
-              handleCopy={handleCopy}
               tones={tones}
               hookOptions={hookOptions}
               toneColors={toneColors}

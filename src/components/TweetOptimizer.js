@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
 export default function TweetOptimizer({ 
@@ -17,6 +17,8 @@ export default function TweetOptimizer({
   hookOptions,
   toneColors 
 }) {
+  const [copiedVersions, setCopiedVersions] = useState({});
+
   const handleToneSelect = (toneId) => {
     if (selectedTones.includes(toneId)) {
       // If tone is already selected, remove it
@@ -113,9 +115,9 @@ export default function TweetOptimizer({
                   <div className="result-actions">
                     <button
                       className="action-button"
-                      onClick={() => handleCopy(version)}
+                      onClick={() => handleCopy(version, vIndex)}
                     >
-                      Copy
+                      {copiedVersions[vIndex] ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
                 </div>

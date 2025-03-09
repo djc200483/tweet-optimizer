@@ -19,8 +19,6 @@ export default function PromptAssistant() {
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isSuperchargedCopied, setIsSuperchargedCopied] = useState(false);
-  const [showImageFxTooltip, setShowImageFxTooltip] = useState(false);
-  const [showFluxTooltip, setShowFluxTooltip] = useState(false);
   const [generatedImages, setGeneratedImages] = useState([]);
   const [showImageGrid, setShowImageGrid] = useState(false);
   const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
@@ -177,22 +175,6 @@ export default function PromptAssistant() {
     setTimeout(() => setIsSuperchargedCopied(false), 2000);
   };
 
-  const handleGenerateWithImageFx = () => {
-    // Copy the supercharged prompt to clipboard
-    navigator.clipboard.writeText(superchargedPrompt);
-    
-    // Show the tooltip
-    setShowImageFxTooltip(true);
-    
-    // Hide the tooltip after 3 seconds
-    setTimeout(() => {
-      setShowImageFxTooltip(false);
-    }, 3000);
-    
-    // Open ImageFX in a new tab
-    window.open('https://labs.google/fx/tools/image-fx', '_blank');
-  };
-
   const handleGenerateWithFlux = async (fromSupercharged = false) => {
     try {
       setIsGenerateLoading(true);
@@ -253,12 +235,6 @@ export default function PromptAssistant() {
       console.log('Valid image URLs:', validImages);
       setGeneratedImages(validImages);
       setShowImageGrid(true);
-
-      // Show success tooltip
-      setShowFluxTooltip(true);
-      setTimeout(() => {
-        setShowFluxTooltip(false);
-      }, 3000);
       
     } catch (error) {
       console.error('Error generating images:', error);
@@ -342,11 +318,6 @@ export default function PromptAssistant() {
                   >
                     {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
                   </button>
-                  {showFluxTooltip && (
-                    <div className="tooltip">
-                      Prompt copied! Generating image with Flux...
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -391,11 +362,6 @@ export default function PromptAssistant() {
                       >
                         {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
                       </button>
-                      {showFluxTooltip && (
-                        <div className="tooltip">
-                          Prompt copied! Generating image with Flux...
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>

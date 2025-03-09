@@ -623,6 +623,8 @@ const replicate = new Replicate({
 app.post('/generate-image', authMiddleware, async (req, res) => {
   try {
     const { prompt, aspectRatio } = req.body;
+    console.log('Generating image with prompt:', prompt);
+    console.log('Aspect ratio:', aspectRatio);
 
     if (!prompt) {
       return res.status(400).json({ error: 'Prompt is required' });
@@ -654,22 +656,47 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
         height = 1024;
     }
 
+    console.log('Using dimensions:', { width, height });
+
     const output = await replicate.run(
       "black-forest-labs/flux-schnell",
       {
         input: {
           prompt: prompt,
-          go_fast: true, // Enable optimized inference
-          num_outputs: 4, // Generate 4 images
-          num_inference_steps: 4, // Use 4 inference steps
-          output_format: "png", // Specify PNG output format
+          go_fast: true,
+          num_outputs: 4,
+          num_inference_steps: 4,
+          output_format: "png",
           width: width,
           height: height
         }
       }
     );
 
-    res.json({ imageUrl: output });
+    console.log('Replicate API response:', output);
+
+    // Ensure output is an array of URLs
+    if (!Array.isArray(output)) {
+      console.error('Unexpected output format:', output);
+      throw new Error('Invalid response from image generation API');
+    }
+
+    // Validate URLs
+    const validUrls = output.filter(url => {
+      try {
+        new URL(url);
+        return true;
+      } catch {
+        console.error('Invalid URL in output:', url);
+        return false;
+      }
+    });
+
+    if (validUrls.length === 0) {
+      throw new Error('No valid image URLs generated');
+    }
+
+    res.json({ imageUrl: validUrls });
   } catch (error) {
     console.error('Error generating image:', error);
     res.status(500).json({ error: 'Error generating image', details: error.message });

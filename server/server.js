@@ -619,13 +619,28 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
+// Add logging for Replicate configuration
+console.log('Replicate API Token configured:', {
+  exists: !!process.env.REPLICATE_API_TOKEN,
+  length: process.env.REPLICATE_API_TOKEN?.length,
+  prefix: process.env.REPLICATE_API_TOKEN?.substring(0, 4)
+});
+
 // Add this before the module.exports
 app.post('/generate-image', authMiddleware, async (req, res) => {
   try {
-    const { prompt, aspectRatio, num_outputs = 2 } = req.body;  // Default to 2 if not specified
+    const { prompt, aspectRatio, num_outputs = 2 } = req.body;
     console.log('Generating image with prompt:', prompt);
     console.log('Aspect ratio:', aspectRatio);
     console.log('Number of outputs:', num_outputs);
+    console.log('Replicate API Token status:', {
+      exists: !!process.env.REPLICATE_API_TOKEN,
+      length: process.env.REPLICATE_API_TOKEN?.length
+    });
+
+    if (!process.env.REPLICATE_API_TOKEN) {
+      throw new Error('Replicate API Token is not configured');
+    }
 
     if (!prompt) {
       return res.status(400).json({ error: 'Prompt is required' });

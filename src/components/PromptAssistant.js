@@ -92,10 +92,15 @@ export default function PromptAssistant() {
   ];
 
   const handleOptionChange = (category, value) => {
-    setSelectedOptions({
+    const newOptions = {
       ...selectedOptions,
       [category]: value
-    });
+    };
+    setSelectedOptions(newOptions);
+    
+    // Update the generated prompt whenever options change
+    const newPrompt = generatePrompt();
+    setGeneratedPrompt(newPrompt);
   };
 
   const generatePrompt = () => {
@@ -111,7 +116,6 @@ export default function PromptAssistant() {
     if (selectedOptions.extraDetails) parts.push(`with ${selectedOptions.extraDetails.toLowerCase()} effects`);
     
     const prompt = parts.join(', ');
-    setGeneratedPrompt(prompt);
     return prompt;
   };
 
@@ -266,7 +270,7 @@ export default function PromptAssistant() {
             <h3>Generated Prompt:</h3>
             <div className="prompt-text">
               <textarea
-                value={generatedPrompt || generatePrompt()}
+                value={generatedPrompt}
                 onChange={(e) => setGeneratedPrompt(e.target.value)}
                 className="prompt-edit-textarea"
                 rows={2}

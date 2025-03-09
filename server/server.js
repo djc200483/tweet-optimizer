@@ -658,6 +658,9 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
 
     console.log('Using dimensions:', { width, height });
 
+    // Log Replicate token status
+    console.log('Replicate API Token configured:', !!process.env.REPLICATE_API_TOKEN);
+
     const output = await replicate.run(
       "black-forest-labs/flux-schnell",
       {
@@ -673,32 +676,48 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       }
     );
 
-    console.log('Replicate API response:', output);
+    console.log('Raw Replicate API response:', JSON.stringify(output, null, 2));
 
-    // Ensure output is an array of URLs
-    if (!Array.isArray(output)) {
-      console.error('Unexpected output format:', output);
-      throw new Error('Invalid response from image generation API');
+    // Ensure output is an array
+    if (!output || !Array.isArray(output)) {
+      console.error('Unexpected output format from Replicate:', output);
+      throw new Error('Invalid response format from image generation API');
     }
 
-    // Validate URLs
+    // Filter out any non-string or empty values
     const validUrls = output.filter(url => {
+      if (typeof url !== 'string' || !url) {
+        console.error('Invalid URL in output:', url);
+        return false;
+      }
       try {
         new URL(url);
         return true;
-      } catch {
-        console.error('Invalid URL in output:', url);
+      } catch (error) {
+        console.error('Invalid URL format:', url, error);
         return false;
       }
     });
 
+    console.log('Filtered valid URLs:', validUrls);
+
     if (validUrls.length === 0) {
-      throw new Error('No valid image URLs generated');
+      throw new Error('No valid image URLs were generated');
     }
 
     res.json({ imageUrl: validUrls });
   } catch (error) {
-    console.error('Error generating image:', error);
-    res.status(500).json({ error: 'Error generating image', details: error.message });
+    console.error('Error generating image:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code
+    });
+    res.status(500).json({ 
+      error: 'Error generating image', 
+      details: error.message,
+      type: error.name,
+      code: error.code
+    });
   }
 });

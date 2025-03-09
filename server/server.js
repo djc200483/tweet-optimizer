@@ -677,7 +677,12 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       }
     }
 
-    console.log('Using dimensions:', { width, height, aspectRatio });
+    console.log('Aspect ratio calculation:', {
+      requestedRatio: aspectRatio,
+      calculatedWidth: width,
+      calculatedHeight: height,
+      actualRatio: (width / height).toFixed(2)
+    });
 
     // Create the prediction with detailed input logging
     const predictionInput = {
@@ -699,7 +704,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     console.log('Sending prediction with input:', JSON.stringify(predictionInput, null, 2));
     const prediction = await replicate.predictions.create(predictionInput);
 
-    console.log('Prediction created with response:', JSON.stringify(prediction, null, 2));
+    console.log('Initial prediction response:', JSON.stringify(prediction, null, 2));
 
     // Wait for the prediction to complete
     let finalPrediction = await replicate.predictions.get(prediction.id);

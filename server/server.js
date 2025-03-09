@@ -647,36 +647,31 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     }
 
     // Convert aspect ratio to width and height
-    let width, height;
+    let width = 1024;
+    let height = 1024;
     
-    switch (aspectRatio) {
-      case '16:9':
-        width = 1024;
-        height = Math.round(1024 * (9/16));  // 576
-        break;
-      case '9:16':
-        height = 1024;
-        width = Math.round(1024 * (9/16));   // 576
-        break;
-      case '4:3':
-        width = 1024;
-        height = Math.round(1024 * (3/4));   // 768
-        break;
-      case '3:4':
-        height = 1024;
-        width = Math.round(1024 * (3/4));    // 768
-        break;
-      default: // 1:1
-        width = 1024;
-        height = 1024;
+    if (aspectRatio) {
+      switch (aspectRatio) {
+        case '16:9':
+          height = Math.round(width * (9/16));  // 576
+          break;
+        case '9:16':
+          width = Math.round(height * (9/16));   // 576
+          break;
+        case '4:3':
+          height = Math.round(width * (3/4));   // 768
+          break;
+        case '3:4':
+          width = Math.round(height * (3/4));    // 768
+          break;
+      }
     }
 
     console.log('Using dimensions:', { width, height, aspectRatio });
-    console.log('Replicate API Token configured:', !!process.env.REPLICATE_API_TOKEN);
 
     // Create the prediction
     const prediction = await replicate.predictions.create({
-      version: "5e40e75f3c8a8b1b3f2d3f9723a5b205f4b8d7a2a82ec2af9c09b9f1e6688c05",
+      version: "bf53bdb93d739c9c915091cfa5f49ca662d11273a5eb30e7a2ec1939bcf27a00",
       input: {
         prompt: prompt,
         go_fast: true,

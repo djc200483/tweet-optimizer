@@ -234,24 +234,26 @@ export default function PromptAssistant() {
                   />
                 </div>
                 <div className="button-row">
-                  <button 
-                    className="copy-button"
-                    onClick={handleCopySupercharged}
-                    disabled={isLoading}
-                  >
-                    {isSuperchargedCopied ? 'Copied!' : 'Copy Supercharged Prompt'}
-                  </button>
                   <div className="generate-image-section">
                     <div className="generate-image-instruction">
                       The prompt will be copied automatically. Paste it in ImageFX when it opens.
                     </div>
-                    <button 
-                      className="generate-image-button"
-                      onClick={handleGenerateWithImageFx}
-                      disabled={isLoading}
-                    >
-                      Generate with ImageFX
-                    </button>
+                    <div className="button-group">
+                      <button 
+                        className="copy-button"
+                        onClick={handleCopySupercharged}
+                        disabled={isLoading}
+                      >
+                        {isSuperchargedCopied ? 'Copied!' : 'Copy Supercharged Prompt'}
+                      </button>
+                      <button 
+                        className="generate-image-button"
+                        onClick={handleGenerateWithImageFx}
+                        disabled={isLoading}
+                      >
+                        Generate with ImageFX
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

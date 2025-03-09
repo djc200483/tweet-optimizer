@@ -225,8 +225,8 @@ body {
   display: flex;
   gap: 10px;
   margin-top: 15px;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .hook-select {
@@ -2230,11 +2230,28 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  align-items: flex-start;
+  align-items: flex-end;
+  min-width: 250px;
 }
 
 .generate-image-instruction {
   color: #a0a0b0;
   font-size: 0.9rem;
   line-height: 1.4;
+  text-align: right;
+  margin-bottom: 4px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+    gap: 15px;
+  }
 }

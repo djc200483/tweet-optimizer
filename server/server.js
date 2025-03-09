@@ -2,6 +2,7 @@ require('dotenv').config();  // Move this to very top
 const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
+const Replicate = require('replicate');
 const db = require('./db');
 const fs = require('fs');
 const path = require('path');
@@ -610,5 +611,67 @@ The post should feel natural and authentic to the niche while incorporating the 
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Error generating content' });
+  }
+});
+
+// Initialize Replicate
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
+
+// Add this before the module.exports
+app.post('/generate-image', authMiddleware, async (req, res) => {
+  try {
+    const { prompt, aspectRatio } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({ error: 'Prompt is required' });
+    }
+
+    // Convert aspect ratio to width and height
+    let width = 1024;
+    let height = 1024;
+    
+    switch (aspectRatio) {
+      case '16:9':
+        width = 1024;
+        height = 576;
+        break;
+      case '9:16':
+        width = 576;
+        height = 1024;
+        break;
+      case '4:3':
+        width = 1024;
+        height = 768;
+        break;
+      case '3:4':
+        width = 768;
+        height = 1024;
+        break;
+      default: // 1:1
+        width = 1024;
+        height = 1024;
+    }
+
+    const output = await replicate.run(
+      "black-forest-labs/flux-schnell",
+      {
+        input: {
+          prompt: prompt,
+          go_fast: true, // Enable optimized inference
+          num_outputs: 4, // Generate 4 images
+          num_inference_steps: 4, // Use 4 inference steps
+          output_format: "png", // Specify PNG output format
+          width: width,
+          height: height
+        }
+      }
+    );
+
+    res.json({ imageUrl: output });
+  } catch (error) {
+    console.error('Error generating image:', error);
+    res.status(500).json({ error: 'Error generating image', details: error.message });
   }
 });

@@ -20,6 +20,9 @@ export default function PromptAssistant() {
   const [isSuperchargedCopied, setIsSuperchargedCopied] = useState(false);
   const [showImageFxTooltip, setShowImageFxTooltip] = useState(false);
   const [showFluxTooltip, setShowFluxTooltip] = useState(false);
+  const [generatedImages, setGeneratedImages] = useState([]);
+  const [showImageGrid, setShowImageGrid] = useState(false);
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
 
   const categories = {
     subject: {
@@ -79,6 +82,14 @@ export default function PromptAssistant() {
                 'Action Streaks', 'Fire', 'Smoke', 'Explosions', 'Light Rays', 'God Rays']
     }
   };
+
+  const aspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '16:9', label: 'Landscape (16:9)' },
+    { value: '9:16', label: 'Portrait (9:16)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '3:4', label: 'Portrait (3:4)' }
+  ];
 
   const handleOptionChange = (category, value) => {
     setSelectedOptions({
@@ -176,19 +187,51 @@ export default function PromptAssistant() {
     window.open('https://labs.google/fx/tools/image-fx', '_blank');
   };
 
-  const handleGenerateWithFlux = () => {
-    // Copy the prompt to clipboard
-    navigator.clipboard.writeText(superchargedPrompt);
-    
-    // Show the tooltip
-    setShowFluxTooltip(true);
-    
-    // Hide the tooltip after 3 seconds
-    setTimeout(() => {
-      setShowFluxTooltip(false);
-    }, 3000);
-    
-    // TODO: Will implement Flux generation here
+  const handleGenerateWithFlux = async () => {
+    try {
+      setIsLoading(true);
+      setGeneratedImages([]); // Clear previous images
+      setShowImageGrid(false);
+      
+      // Get the appropriate prompt (either supercharged or regular)
+      const promptToUse = superchargedPrompt || generatedPrompt || generatePrompt();
+      
+      // Call the backend endpoint
+      const response = await fetch(`${API_URL}/generate-image`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          prompt: promptToUse,
+          aspectRatio: selectedAspectRatio
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate image');
+      }
+      
+      const data = await response.json();
+      
+      // Handle the array of image URLs
+      if (Array.isArray(data.imageUrl)) {
+        setGeneratedImages(data.imageUrl);
+        setShowImageGrid(true);
+      }
+
+      // Show success tooltip
+      setShowFluxTooltip(true);
+      setTimeout(() => {
+        setShowFluxTooltip(false);
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to generate image. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -246,6 +289,18 @@ export default function PromptAssistant() {
               </button>
               <div className="generate-image-section">
                 <div className="button-group">
+                  <select
+                    value={selectedAspectRatio}
+                    onChange={(e) => setSelectedAspectRatio(e.target.value)}
+                    className="aspect-ratio-select"
+                    disabled={isLoading}
+                  >
+                    {aspectRatios.map(ratio => (
+                      <option key={ratio.value} value={ratio.value}>
+                        {ratio.label}
+                      </option>
+                    ))}
+                  </select>
                   <button 
                     className="generate-image-button"
                     onClick={() => handleGenerateWithFlux()}
@@ -283,13 +338,18 @@ export default function PromptAssistant() {
                       >
                         {isSuperchargedCopied ? 'Copied!' : 'Copy Supercharged Prompt'}
                       </button>
-                      <button 
-                        className="generate-image-button"
-                        onClick={handleGenerateWithImageFx}
+                      <select
+                        value={selectedAspectRatio}
+                        onChange={(e) => setSelectedAspectRatio(e.target.value)}
+                        className="aspect-ratio-select"
                         disabled={isLoading}
                       >
-                        Generate with ImageFX
-                      </button>
+                        {aspectRatios.map(ratio => (
+                          <option key={ratio.value} value={ratio.value}>
+                            {ratio.label}
+                          </option>
+                        ))}
+                      </select>
                       <button 
                         className="generate-image-button"
                         onClick={() => handleGenerateWithFlux()}
@@ -297,11 +357,6 @@ export default function PromptAssistant() {
                       >
                         Generate with Flux
                       </button>
-                      {showImageFxTooltip && (
-                        <div className="tooltip">
-                          Prompt copied! Paste it in ImageFX when it opens.
-                        </div>
-                      )}
                       {showFluxTooltip && (
                         <div className="tooltip">
                           Prompt copied! Generating image with Flux...
@@ -315,6 +370,86 @@ export default function PromptAssistant() {
           </div>
         )}
       </div>
+      
+      {showImageGrid && generatedImages.length > 0 && (
+        <div className="generated-images-container">
+          <h3>Generated Images:</h3>
+          <div className="image-grid">
+            {generatedImages.map((imageUrl, index) => (
+              <div key={index} className="image-item">
+                <img 
+                  src={imageUrl} 
+                  alt={`Generated ${index + 1}`}
+                  onClick={() => window.open(imageUrl, '_blank')}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
-} 
+}
+
+// Add this CSS at the end of your existing CSS file or in a new style tag
+const styles = `
+  .generated-images-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+  }
+
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .image-item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .image-item:hover {
+    transform: scale(1.02);
+  }
+
+  .image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .aspect-ratio-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  .aspect-ratio-select:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+
+  .button-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+`;
+
+// Insert styles into document
+const styleSheet = document.createElement("style");
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet); 

@@ -13,11 +13,13 @@ export default function PromptAssistant() {
     timePeriod: '',
     extraDetails: ''
   });
+  const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [superchargedPrompt, setSuperchargedPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isSuperchargedCopied, setIsSuperchargedCopied] = useState(false);
   const [showImageFxTooltip, setShowImageFxTooltip] = useState(false);
+  const [showFluxTooltip, setShowFluxTooltip] = useState(false);
 
   const categories = {
     subject: {
@@ -97,7 +99,9 @@ export default function PromptAssistant() {
     if (selectedOptions.timePeriod) parts.push(`set in ${selectedOptions.timePeriod}`);
     if (selectedOptions.extraDetails) parts.push(`with ${selectedOptions.extraDetails.toLowerCase()} effects`);
     
-    return parts.join(', ');
+    const prompt = parts.join(', ');
+    setGeneratedPrompt(prompt);
+    return prompt;
   };
 
   const handleSupercharge = async () => {
@@ -109,7 +113,7 @@ export default function PromptAssistant() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          tweet: generatePrompt(),
+          tweet: generatedPrompt || generatePrompt(),
           tone: 'hyper-detailed',
           hook: 'descriptive',
           customInstructions: `Transform this image generation prompt into an extensively detailed masterpiece. 
@@ -145,7 +149,7 @@ export default function PromptAssistant() {
   };
 
   const handleCopyPrompt = () => {
-    navigator.clipboard.writeText(generatePrompt());
+    navigator.clipboard.writeText(generatedPrompt || generatePrompt());
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
@@ -170,6 +174,21 @@ export default function PromptAssistant() {
     
     // Open ImageFX in a new tab
     window.open('https://labs.google/fx/tools/image-fx', '_blank');
+  };
+
+  const handleGenerateWithFlux = () => {
+    // Copy the prompt to clipboard
+    navigator.clipboard.writeText(superchargedPrompt);
+    
+    // Show the tooltip
+    setShowFluxTooltip(true);
+    
+    // Hide the tooltip after 3 seconds
+    setTimeout(() => {
+      setShowFluxTooltip(false);
+    }, 3000);
+    
+    // TODO: Will implement Flux generation here
   };
 
   return (
@@ -203,7 +222,12 @@ export default function PromptAssistant() {
           <div className="prompt-result">
             <h3>Generated Prompt:</h3>
             <div className="prompt-text">
-              {generatePrompt()}
+              <textarea
+                value={generatedPrompt || generatePrompt()}
+                onChange={(e) => setGeneratedPrompt(e.target.value)}
+                className="prompt-edit-textarea"
+                rows={2}
+              />
             </div>
             <div className="button-row">
               <button 
@@ -220,6 +244,22 @@ export default function PromptAssistant() {
               >
                 {isLoading ? <LoadingSpinner size="inline" /> : 'Supercharge Prompt'}
               </button>
+              <div className="generate-image-section">
+                <div className="button-group">
+                  <button 
+                    className="generate-image-button"
+                    onClick={() => handleGenerateWithFlux()}
+                    disabled={isLoading}
+                  >
+                    Generate with Flux
+                  </button>
+                  {showFluxTooltip && (
+                    <div className="tooltip">
+                      Prompt copied! Generating image with Flux...
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {superchargedPrompt && (
@@ -235,9 +275,6 @@ export default function PromptAssistant() {
                 </div>
                 <div className="button-row">
                   <div className="generate-image-section">
-                    <div className="generate-image-instruction">
-                      The prompt will be copied automatically. Paste it in ImageFX when it opens.
-                    </div>
                     <div className="button-group">
                       <button 
                         className="copy-button"
@@ -253,6 +290,23 @@ export default function PromptAssistant() {
                       >
                         Generate with ImageFX
                       </button>
+                      <button 
+                        className="generate-image-button"
+                        onClick={() => handleGenerateWithFlux()}
+                        disabled={isLoading}
+                      >
+                        Generate with Flux
+                      </button>
+                      {showImageFxTooltip && (
+                        <div className="tooltip">
+                          Prompt copied! Paste it in ImageFX when it opens.
+                        </div>
+                      )}
+                      {showFluxTooltip && (
+                        <div className="tooltip">
+                          Prompt copied! Generating image with Flux...
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -686,8 +686,6 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     // Log detailed prediction output
     console.log('Prediction output details:', {
       status: finalPrediction.status,
-      requestedWidth: width,
-      requestedHeight: height,
       requestedAspectRatio: aspectRatio,
       outputUrls: finalPrediction.output
     });

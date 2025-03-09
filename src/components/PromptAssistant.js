@@ -24,6 +24,7 @@ export default function PromptAssistant() {
   const [generatedImages, setGeneratedImages] = useState([]);
   const [showImageGrid, setShowImageGrid] = useState(false);
   const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
+  const [superchargedAspectRatio, setSuperchargedAspectRatio] = useState('1:1');
 
   // Add useEffect to update prompt whenever selectedOptions changes
   useEffect(() => {
@@ -198,8 +199,9 @@ export default function PromptAssistant() {
       setGeneratedImages([]); // Clear previous images
       setShowImageGrid(false);
       
-      // Get the appropriate prompt (either supercharged or regular)
+      // Get the appropriate prompt and aspect ratio based on which section we're in
       const promptToUse = superchargedPrompt || generatedPrompt || generatePrompt();
+      const aspectRatioToUse = superchargedPrompt ? superchargedAspectRatio : selectedAspectRatio;
       
       console.log('Sending prompt to generate images:', promptToUse);
       
@@ -212,7 +214,7 @@ export default function PromptAssistant() {
         },
         body: JSON.stringify({ 
           prompt: promptToUse,
-          aspectRatio: selectedAspectRatio,
+          aspectRatio: aspectRatioToUse,
           num_outputs: 2
         }),
       });
@@ -435,8 +437,19 @@ const styles = `
   .generated-images-container {
     margin-top: 20px;
     padding: 20px;
-    background: #f5f5f5;
-    border-radius: 8px;
+    background: rgba(30, 32, 40, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+  }
+
+  .generated-images-container h3 {
+    margin: 0 0 16px 0;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #00c2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .image-grid {
@@ -453,14 +466,17 @@ const styles = `
     position: relative;
     aspect-ratio: 1;
     overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    background: rgba(25, 27, 35, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .image-item:hover {
-    transform: scale(1.02);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 194, 255, 0.2);
   }
 
   .image-item img {
@@ -522,6 +538,16 @@ const styles = `
 
     .aspect-ratio-select {
       width: 100%;
+    }
+
+    .image-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .generated-images-container {
+      padding: 15px;
+      margin: 15px 0;
     }
   }
 `;

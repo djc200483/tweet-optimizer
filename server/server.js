@@ -649,7 +649,6 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     // Convert aspect ratio to width and height
     let width = 1024;
     let height = 1024;
-    let aspectRatioPrompt = '';
     
     if (aspectRatio) {
       // Base size of 1024 for the longer dimension
@@ -659,27 +658,22 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
         case '16:9':
           width = baseSize;
           height = Math.round(baseSize * (9/16));  // 576
-          aspectRatioPrompt = ', wide landscape format, 16:9 aspect ratio, cinematic widescreen';
           break;
         case '9:16':
           height = baseSize;
           width = Math.round(baseSize * (9/16));   // 576
-          aspectRatioPrompt = ', vertical portrait format, 9:16 aspect ratio, mobile phone format';
           break;
         case '4:3':
           width = baseSize;
           height = Math.round(baseSize * (3/4));   // 768
-          aspectRatioPrompt = ', landscape format, 4:3 aspect ratio';
           break;
         case '3:4':
           height = baseSize;
           width = Math.round(baseSize * (3/4));    // 768
-          aspectRatioPrompt = ', portrait format, 3:4 aspect ratio';
           break;
         default: // 1:1
           width = baseSize;
           height = baseSize;
-          aspectRatioPrompt = ', square format, 1:1 aspect ratio';
       }
     }
 
@@ -687,15 +681,14 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       requestedRatio: aspectRatio,
       calculatedWidth: width,
       calculatedHeight: height,
-      actualRatio: (width / height).toFixed(2),
-      aspectRatioPrompt
+      actualRatio: (width / height).toFixed(2)
     });
 
     // Create the prediction with detailed input logging
     const predictionInput = {
-      version: "bf53bdb93d739c9c915091cfa5f49ca662d11273a5eb30e7a2ec1939bcf27a00",
+      version: "black-forest-labs/flux-schnell",
       input: {
-        prompt: prompt + aspectRatioPrompt,
+        prompt: prompt,
         go_fast: true,
         num_outputs: num_outputs,
         num_inference_steps: 4,
@@ -728,6 +721,15 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     if (finalPrediction.status === "failed") {
       throw new Error(finalPrediction.error || 'Image generation failed');
     }
+
+    // Log detailed prediction output
+    console.log('Prediction output details:', {
+      status: finalPrediction.status,
+      requestedWidth: width,
+      requestedHeight: height,
+      requestedAspectRatio: aspectRatio,
+      outputUrls: finalPrediction.output
+    });
 
     // The output should be in finalPrediction.output
     if (!finalPrediction.output || !Array.isArray(finalPrediction.output)) {

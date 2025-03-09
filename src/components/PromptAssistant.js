@@ -465,7 +465,6 @@ const styles = `
 
   .image-item {
     position: relative;
-    aspect-ratio: 1;
     overflow: hidden;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -473,6 +472,8 @@ const styles = `
     transition: all 0.3s ease;
     background: rgba(25, 27, 35, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+    height: auto;
   }
 
   .image-item:hover {
@@ -482,8 +483,9 @@ const styles = `
 
   .image-item img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
 
   .aspect-ratio-select {

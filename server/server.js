@@ -651,26 +651,36 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     let height = 1024;
     
     if (aspectRatio) {
+      // Base size of 1024 for the longer dimension
+      const baseSize = 1024;
+      
       switch (aspectRatio) {
         case '16:9':
-          height = Math.round(width * (9/16));  // 576
+          width = baseSize;
+          height = Math.round(baseSize * (9/16));  // 576
           break;
         case '9:16':
-          width = Math.round(height * (9/16));   // 576
+          height = baseSize;
+          width = Math.round(baseSize * (9/16));   // 576
           break;
         case '4:3':
-          height = Math.round(width * (3/4));   // 768
+          width = baseSize;
+          height = Math.round(baseSize * (3/4));   // 768
           break;
         case '3:4':
-          width = Math.round(height * (3/4));    // 768
+          height = baseSize;
+          width = Math.round(baseSize * (3/4));    // 768
           break;
+        default: // 1:1
+          width = baseSize;
+          height = baseSize;
       }
     }
 
     console.log('Using dimensions:', { width, height, aspectRatio });
 
-    // Create the prediction
-    const prediction = await replicate.predictions.create({
+    // Create the prediction with detailed input logging
+    const predictionInput = {
       version: "bf53bdb93d739c9c915091cfa5f49ca662d11273a5eb30e7a2ec1939bcf27a00",
       input: {
         prompt: prompt,
@@ -684,9 +694,12 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
         scheduler: "K_EULER",
         seed: Math.floor(Math.random() * 1000000)
       }
-    });
+    };
+    
+    console.log('Sending prediction with input:', JSON.stringify(predictionInput, null, 2));
+    const prediction = await replicate.predictions.create(predictionInput);
 
-    console.log('Prediction created:', prediction);
+    console.log('Prediction created with response:', JSON.stringify(prediction, null, 2));
 
     // Wait for the prediction to complete
     let finalPrediction = await replicate.predictions.get(prediction.id);

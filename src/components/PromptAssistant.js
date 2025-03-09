@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -23,6 +23,12 @@ export default function PromptAssistant() {
   const [generatedImages, setGeneratedImages] = useState([]);
   const [showImageGrid, setShowImageGrid] = useState(false);
   const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
+
+  // Add useEffect to update prompt whenever selectedOptions changes
+  useEffect(() => {
+    const newPrompt = generatePrompt();
+    setGeneratedPrompt(newPrompt);
+  }, [selectedOptions]);
 
   const categories = {
     subject: {
@@ -92,15 +98,10 @@ export default function PromptAssistant() {
   ];
 
   const handleOptionChange = (category, value) => {
-    const newOptions = {
-      ...selectedOptions,
+    setSelectedOptions(prevOptions => ({
+      ...prevOptions,
       [category]: value
-    };
-    setSelectedOptions(newOptions);
-    
-    // Update the generated prompt whenever options change
-    const newPrompt = generatePrompt();
-    setGeneratedPrompt(newPrompt);
+    }));
   };
 
   const generatePrompt = () => {
@@ -115,8 +116,7 @@ export default function PromptAssistant() {
     if (selectedOptions.timePeriod) parts.push(`set in ${selectedOptions.timePeriod}`);
     if (selectedOptions.extraDetails) parts.push(`with ${selectedOptions.extraDetails.toLowerCase()} effects`);
     
-    const prompt = parts.join(', ');
-    return prompt;
+    return parts.join(', ');
   };
 
   const handleSupercharge = async () => {

@@ -226,7 +226,12 @@ export default function PromptAssistant() {
               <div className="supercharged-result">
                 <h3>Supercharged Prompt:</h3>
                 <div className="prompt-text">
-                  {superchargedPrompt}
+                  <textarea
+                    value={superchargedPrompt}
+                    onChange={(e) => setSuperchargedPrompt(e.target.value)}
+                    className="prompt-edit-textarea"
+                    rows={4}
+                  />
                 </div>
                 <div className="button-row">
                   <button 
@@ -236,18 +241,18 @@ export default function PromptAssistant() {
                   >
                     {isSuperchargedCopied ? 'Copied!' : 'Copy Supercharged Prompt'}
                   </button>
-                  <button 
-                    className="generate-image-button"
-                    onClick={handleGenerateWithImageFx}
-                    disabled={isLoading}
-                  >
-                    Generate with ImageFX
-                  </button>
-                  {showImageFxTooltip && (
-                    <div className="tooltip">
-                      Prompt copied! Paste it in ImageFX when it opens
+                  <div className="generate-image-section">
+                    <div className="generate-image-instruction">
+                      The prompt will be copied automatically. Paste it in ImageFX when it opens.
                     </div>
-                  )}
+                    <button 
+                      className="generate-image-button"
+                      onClick={handleGenerateWithImageFx}
+                      disabled={isLoading}
+                    >
+                      Generate with ImageFX
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

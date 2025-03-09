@@ -15,7 +15,8 @@ export default function PromptAssistant() {
   });
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [superchargedPrompt, setSuperchargedPrompt] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSuperchargeLoading, setIsSuperchargeLoading] = useState(false);
+  const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isSuperchargedCopied, setIsSuperchargedCopied] = useState(false);
   const [showImageFxTooltip, setShowImageFxTooltip] = useState(false);
@@ -121,7 +122,7 @@ export default function PromptAssistant() {
 
   const handleSupercharge = async () => {
     try {
-      setIsLoading(true);
+      setIsSuperchargeLoading(true);
       const response = await fetch(`${API_URL}/rewrite-tweet`, {
         method: 'POST',
         headers: {
@@ -156,10 +157,10 @@ export default function PromptAssistant() {
       
       setSuperchargedPrompt(data.rewrittenTweets[0]);
     } catch (error) {
-      console.error('Error:', error);
-      setSuperchargedPrompt(''); // Clear any previous result
+      console.error('Error supercharging prompt:', error);
+      alert(error.message || 'Failed to supercharge prompt. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsSuperchargeLoading(false);
     }
   };
 
@@ -193,7 +194,7 @@ export default function PromptAssistant() {
 
   const handleGenerateWithFlux = async () => {
     try {
-      setIsLoading(true);
+      setIsGenerateLoading(true);
       setGeneratedImages([]); // Clear previous images
       setShowImageGrid(false);
       
@@ -211,7 +212,8 @@ export default function PromptAssistant() {
         },
         body: JSON.stringify({ 
           prompt: promptToUse,
-          aspectRatio: selectedAspectRatio
+          aspectRatio: selectedAspectRatio,
+          num_outputs: 2
         }),
       });
       
@@ -259,7 +261,7 @@ export default function PromptAssistant() {
       console.error('Error generating images:', error);
       alert(error.message || 'Failed to generate images. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsGenerateLoading(false);
     }
   };
 
@@ -277,7 +279,7 @@ export default function PromptAssistant() {
               <select
                 value={selectedOptions[key]}
                 onChange={(e) => handleOptionChange(key, e.target.value)}
-                disabled={isLoading}
+                disabled={isSuperchargeLoading || isGenerateLoading}
               >
                 <option value="">Select {category.title}</option>
                 {category.options.map(option => (
@@ -305,16 +307,16 @@ export default function PromptAssistant() {
               <button 
                 className="copy-button"
                 onClick={handleCopyPrompt}
-                disabled={isLoading}
+                disabled={isSuperchargeLoading || isGenerateLoading}
               >
                 {isCopied ? 'Copied!' : 'Copy Prompt'}
               </button>
               <button 
                 className="supercharge-button"
                 onClick={handleSupercharge}
-                disabled={isLoading}
+                disabled={isSuperchargeLoading || isGenerateLoading}
               >
-                {isLoading ? <LoadingSpinner size="inline" /> : 'Supercharge Prompt'}
+                {isSuperchargeLoading ? <LoadingSpinner size="inline" /> : 'Supercharge Prompt'}
               </button>
               <div className="generate-image-section">
                 <div className="button-group">
@@ -322,7 +324,7 @@ export default function PromptAssistant() {
                     value={selectedAspectRatio}
                     onChange={(e) => setSelectedAspectRatio(e.target.value)}
                     className="aspect-ratio-select"
-                    disabled={isLoading}
+                    disabled={isSuperchargeLoading || isGenerateLoading}
                   >
                     {aspectRatios.map(ratio => (
                       <option key={ratio.value} value={ratio.value}>
@@ -333,9 +335,9 @@ export default function PromptAssistant() {
                   <button 
                     className="generate-image-button"
                     onClick={() => handleGenerateWithFlux()}
-                    disabled={isLoading}
+                    disabled={isSuperchargeLoading || isGenerateLoading}
                   >
-                    Generate with Flux
+                    {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
                   </button>
                   {showFluxTooltip && (
                     <div className="tooltip">
@@ -363,7 +365,7 @@ export default function PromptAssistant() {
                       <button 
                         className="copy-button"
                         onClick={handleCopySupercharged}
-                        disabled={isLoading}
+                        disabled={isSuperchargeLoading || isGenerateLoading}
                       >
                         {isSuperchargedCopied ? 'Copied!' : 'Copy Supercharged Prompt'}
                       </button>
@@ -371,7 +373,7 @@ export default function PromptAssistant() {
                         value={selectedAspectRatio}
                         onChange={(e) => setSelectedAspectRatio(e.target.value)}
                         className="aspect-ratio-select"
-                        disabled={isLoading}
+                        disabled={isSuperchargeLoading || isGenerateLoading}
                       >
                         {aspectRatios.map(ratio => (
                           <option key={ratio.value} value={ratio.value}>
@@ -382,9 +384,9 @@ export default function PromptAssistant() {
                       <button 
                         className="generate-image-button"
                         onClick={() => handleGenerateWithFlux()}
-                        disabled={isLoading}
+                        disabled={isSuperchargeLoading || isGenerateLoading}
                       >
-                        Generate with Flux
+                        {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
                       </button>
                       {showFluxTooltip && (
                         <div className="tooltip">
@@ -442,6 +444,9 @@ const styles = `
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     margin-top: 16px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .image-item {
@@ -466,23 +471,58 @@ const styles = `
 
   .aspect-ratio-select {
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: #ffffff;
     font-size: 14px;
-    margin-right: 8px;
+    color: #333;
     cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 140px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    padding-right: 32px;
+  }
+
+  .aspect-ratio-select:hover {
+    border-color: #0070f3;
+  }
+
+  .aspect-ratio-select:focus {
+    outline: none;
+    border-color: #0070f3;
+    box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
   }
 
   .aspect-ratio-select:disabled {
     background-color: #f5f5f5;
+    border-color: #ddd;
+    color: #999;
     cursor: not-allowed;
+    opacity: 0.7;
   }
 
   .button-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .button-group {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .aspect-ratio-select {
+      width: 100%;
+    }
   }
 `;
 

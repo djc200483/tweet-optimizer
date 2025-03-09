@@ -17,6 +17,7 @@ export default function PromptAssistant() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isSuperchargedCopied, setIsSuperchargedCopied] = useState(false);
+  const [showImageFxTooltip, setShowImageFxTooltip] = useState(false);
 
   const categories = {
     subject: {
@@ -155,6 +156,22 @@ export default function PromptAssistant() {
     setTimeout(() => setIsSuperchargedCopied(false), 2000);
   };
 
+  const handleGenerateWithImageFx = () => {
+    // Copy the supercharged prompt to clipboard
+    navigator.clipboard.writeText(superchargedPrompt);
+    
+    // Show the tooltip
+    setShowImageFxTooltip(true);
+    
+    // Hide the tooltip after 3 seconds
+    setTimeout(() => {
+      setShowImageFxTooltip(false);
+    }, 3000);
+    
+    // Open ImageFX in a new tab
+    window.open('https://labs.google/fx/tools/image-fx', '_blank');
+  };
+
   return (
     <div className="tab-content">
       <div className="input-container">
@@ -219,6 +236,18 @@ export default function PromptAssistant() {
                   >
                     {isSuperchargedCopied ? 'Copied!' : 'Copy Supercharged Prompt'}
                   </button>
+                  <button 
+                    className="generate-image-button"
+                    onClick={handleGenerateWithImageFx}
+                    disabled={isLoading}
+                  >
+                    Generate with ImageFX
+                  </button>
+                  {showImageFxTooltip && (
+                    <div className="tooltip">
+                      Prompt copied! Paste it in ImageFX when it opens
+                    </div>
+                  )}
                 </div>
               </div>
             )}

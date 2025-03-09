@@ -797,54 +797,6 @@ body {
     padding: 8px 12px;
   }
 
-  .example-usage .analysis-value {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    margin-top: 8px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-    order: 2;
-  }
-
-  .analysis-item {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: relative;
-    padding-top: 30px;
-  }
-
-  .analysis-label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: auto;
-    font-size: 0.9rem;
-    color: #a0a0b0;
-    padding: 4px 0;
-  }
-
-  .word-chips {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 8px 0;
-    order: 1;
-  }
-
-  .word-chip {
-    width: fit-content;
-    margin: 0;
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-
   .analysis-value {
     width: 100%;
     box-sizing: border-box;
@@ -2176,5 +2128,80 @@ body {
   .feature-cards {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+}
+
+.generate-image-button {
+  background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.generate-image-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+}
+
+.generate-image-button:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.tooltip {
+  position: absolute;
+  background: #2A2B32;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+  white-space: nowrap;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add responsive styles for mobile */
+@media (max-width: 768px) {
+  .button-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .generate-image-button {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .tooltip {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0;
   }
 }

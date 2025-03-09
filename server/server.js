@@ -657,35 +657,36 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     }
 
     console.log('Using dimensions:', { width, height });
-
-    // Log Replicate token status
     console.log('Replicate API Token configured:', !!process.env.REPLICATE_API_TOKEN);
 
-    const output = await replicate.run(
-      "black-forest-labs/flux-schnell",
-      {
-        input: {
-          prompt: prompt,
-          go_fast: true,
-          num_outputs: 4,
-          num_inference_steps: 4,
-          output_format: "png",
-          width: width,
-          height: height
-        }
+    // Create the prediction
+    const prediction = await replicate.predictions.create({
+      version: "black-forest-labs/flux-schnell",
+      input: {
+        prompt: prompt,
+        go_fast: true,
+        num_outputs: 4,
+        num_inference_steps: 4,
+        output_format: "png",
+        width: width,
+        height: height
       }
-    );
+    });
 
-    console.log('Raw Replicate API response:', JSON.stringify(output, null, 2));
+    console.log('Prediction created:', prediction);
 
-    // Ensure output is an array
-    if (!output || !Array.isArray(output)) {
-      console.error('Unexpected output format from Replicate:', output);
+    // Wait for the prediction to complete
+    let finalPrediction = await replicate.wait(prediction);
+    console.log('Final prediction:', finalPrediction);
+
+    // The output should be in finalPrediction.output
+    if (!finalPrediction.output || !Array.isArray(finalPrediction.output)) {
+      console.error('Unexpected output format:', finalPrediction);
       throw new Error('Invalid response format from image generation API');
     }
 
     // Filter out any non-string or empty values
-    const validUrls = output.filter(url => {
+    const validUrls = finalPrediction.output.filter(url => {
       if (typeof url !== 'string' || !url) {
         console.error('Invalid URL in output:', url);
         return false;

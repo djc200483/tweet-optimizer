@@ -200,11 +200,14 @@ export default function PromptAssistant() {
       // Get the appropriate prompt (either supercharged or regular)
       const promptToUse = superchargedPrompt || generatedPrompt || generatePrompt();
       
+      console.log('Sending prompt to generate images:', promptToUse);
+      
       // Call the backend endpoint
       const response = await fetch(`${API_URL}/generate-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({ 
           prompt: promptToUse,
@@ -213,16 +216,38 @@ export default function PromptAssistant() {
       });
       
       if (!response.ok) {
-        throw new Error('Failed to generate image');
+        const errorData = await response.json();
+        console.error('Server error:', errorData);
+        throw new Error(errorData.error || 'Failed to generate image');
       }
       
       const data = await response.json();
+      console.log('Received image data:', data);
       
-      // Handle the array of image URLs
-      if (Array.isArray(data.imageUrl)) {
-        setGeneratedImages(data.imageUrl);
-        setShowImageGrid(true);
+      // Validate the response data
+      if (!data.imageUrl || !Array.isArray(data.imageUrl)) {
+        console.error('Invalid response format:', data);
+        throw new Error('Invalid response format from server');
       }
+
+      // Filter out any invalid URLs
+      const validImages = data.imageUrl.filter(url => {
+        try {
+          new URL(url);
+          return true;
+        } catch {
+          console.error('Invalid image URL:', url);
+          return false;
+        }
+      });
+
+      if (validImages.length === 0) {
+        throw new Error('No valid images were generated');
+      }
+
+      console.log('Valid image URLs:', validImages);
+      setGeneratedImages(validImages);
+      setShowImageGrid(true);
 
       // Show success tooltip
       setShowFluxTooltip(true);
@@ -231,8 +256,8 @@ export default function PromptAssistant() {
       }, 3000);
       
     } catch (error) {
-      console.error('Error:', error);
-      alert('Failed to generate image. Please try again.');
+      console.error('Error generating images:', error);
+      alert(error.message || 'Failed to generate images. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -384,7 +409,15 @@ export default function PromptAssistant() {
                 <img 
                   src={imageUrl} 
                   alt={`Generated ${index + 1}`}
-                  onClick={() => window.open(imageUrl, '_blank')}
+                  onError={(e) => {
+                    console.error('Image failed to load:', imageUrl);
+                    e.target.onerror = null;
+                    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjNjY2Ij5JbWFnZSBmYWlsZWQgdG8gbG9hZDwvdGV4dD48L3N2Zz4=';
+                  }}
+                  onClick={() => {
+                    console.log('Opening image in new tab:', imageUrl);
+                    window.open(imageUrl, '_blank');
+                  }}
                 />
               </div>
             ))}

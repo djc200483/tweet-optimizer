@@ -646,44 +646,6 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    // Convert aspect ratio to width and height
-    let width = 1024;
-    let height = 1024;
-    
-    if (aspectRatio) {
-      // Base size of 1024 for the longer dimension
-      const baseSize = 1024;
-      
-      switch (aspectRatio) {
-        case '16:9':
-          width = baseSize;
-          height = Math.round(baseSize * (9/16));  // 576
-          break;
-        case '9:16':
-          height = baseSize;
-          width = Math.round(baseSize * (9/16));   // 576
-          break;
-        case '4:3':
-          width = baseSize;
-          height = Math.round(baseSize * (3/4));   // 768
-          break;
-        case '3:4':
-          height = baseSize;
-          width = Math.round(baseSize * (3/4));    // 768
-          break;
-        default: // 1:1
-          width = baseSize;
-          height = baseSize;
-      }
-    }
-
-    console.log('Aspect ratio calculation:', {
-      requestedRatio: aspectRatio,
-      calculatedWidth: width,
-      calculatedHeight: height,
-      actualRatio: (width / height).toFixed(2)
-    });
-
     // Create the prediction with detailed input logging
     const predictionInput = {
       version: "black-forest-labs/flux-schnell",
@@ -694,8 +656,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
         num_inference_steps: 4,
         guidance_scale: 7.5,
         output_format: "png",
-        width: width,
-        height: height,
+        aspect_ratio: aspectRatio,  // Use the aspect_ratio parameter directly
         scheduler: "K_EULER",
         seed: Math.floor(Math.random() * 1000000)
       }

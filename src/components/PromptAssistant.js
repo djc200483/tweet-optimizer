@@ -193,17 +193,18 @@ export default function PromptAssistant() {
     window.open('https://labs.google/fx/tools/image-fx', '_blank');
   };
 
-  const handleGenerateWithFlux = async () => {
+  const handleGenerateWithFlux = async (fromSupercharged = false) => {
     try {
       setIsGenerateLoading(true);
       setGeneratedImages([]); // Clear previous images
       setShowImageGrid(false);
       
-      // Get the appropriate prompt and aspect ratio based on which section we're in
-      const promptToUse = superchargedPrompt || generatedPrompt || generatePrompt();
-      const aspectRatioToUse = superchargedPrompt ? superchargedAspectRatio : selectedAspectRatio;
+      // Get the appropriate prompt and aspect ratio based on which section triggered the generation
+      const promptToUse = fromSupercharged ? superchargedPrompt : (generatedPrompt || generatePrompt());
+      const aspectRatioToUse = fromSupercharged ? superchargedAspectRatio : selectedAspectRatio;
       
       console.log('Sending prompt to generate images:', promptToUse);
+      console.log('Using aspect ratio:', aspectRatioToUse);
       
       // Call the backend endpoint
       const response = await fetch(`${API_URL}/generate-image`, {
@@ -336,7 +337,7 @@ export default function PromptAssistant() {
                   </select>
                   <button 
                     className="generate-image-button"
-                    onClick={() => handleGenerateWithFlux()}
+                    onClick={() => handleGenerateWithFlux(false)}
                     disabled={isSuperchargeLoading || isGenerateLoading}
                   >
                     {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
@@ -372,8 +373,8 @@ export default function PromptAssistant() {
                         {isSuperchargedCopied ? 'Copied!' : 'Copy Supercharged Prompt'}
                       </button>
                       <select
-                        value={selectedAspectRatio}
-                        onChange={(e) => setSelectedAspectRatio(e.target.value)}
+                        value={superchargedAspectRatio}
+                        onChange={(e) => setSuperchargedAspectRatio(e.target.value)}
                         className="aspect-ratio-select"
                         disabled={isSuperchargeLoading || isGenerateLoading}
                       >
@@ -385,7 +386,7 @@ export default function PromptAssistant() {
                       </select>
                       <button 
                         className="generate-image-button"
-                        onClick={() => handleGenerateWithFlux()}
+                        onClick={() => handleGenerateWithFlux(true)}
                         disabled={isSuperchargeLoading || isGenerateLoading}
                       >
                         {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}

@@ -8,7 +8,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function Auth({ onClose }) {
   const [currentForm, setCurrentForm] = useState('login');
-  const { setOnClose } = useAuth();
+  const { setOnClose, login } = useAuth();
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,9 +21,8 @@ export default function Auth({ onClose }) {
   }, [onClose, setOnClose]);
 
   const handleFormToggle = (form) => {
-    console.log('Toggling form to:', form);
     setCurrentForm(form);
-    setError(''); // Clear any existing errors when switching forms
+    setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -32,43 +31,18 @@ export default function Auth({ onClose }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/auth/${currentForm === 'login' ? 'login' : 'register'}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password, x_handle }),
-      });
-
-      // Add timeout for slow connections
-      const timeoutId = setTimeout(() => {
-        setError('Request timed out. Please check your connection and try again.');
-      }, 15000);
-
-      const data = await response.json();
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        setError(data.error || 'Authentication failed. Please try again.');
+      const result = await login(email, password);
+      if (!result.success) {
+        setError(result.error || 'Authentication failed. Please try again.');
         return;
       }
-      handleSuccess();
+      onClose();
     } catch (error) {
       console.error('Auth error:', error);
-      // More descriptive error for iOS users
-      setError(
-        'Connection failed. Please check your internet connection and try again. ' +
-        'If the problem persists, try refreshing the page.'
-      );
+      setError('Connection failed. Please check your internet connection and try again.');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSuccess = () => {
-    if (onClose) onClose();
   };
 
   return (
@@ -79,7 +53,7 @@ export default function Auth({ onClose }) {
       >
         ← Back to Home
       </button>
-      {error && <div className="auth-error">{error}</div>}
+      
       {currentForm === 'login' && (
         <Login 
           onToggleForm={handleFormToggle}
@@ -91,6 +65,7 @@ export default function Auth({ onClose }) {
           error={error}
         />
       )}
+      
       {currentForm === 'register' && (
         <Register 
           onToggleForm={handleFormToggle}
@@ -104,6 +79,7 @@ export default function Auth({ onClose }) {
           error={error}
         />
       )}
+      
       {currentForm === 'forgot' && (
         <div className="auth-form">
           <h2>Forgot Password</h2>

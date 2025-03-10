@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { Link } from 'react-router-dom';
 import LoadingSpinner from '../LoadingSpinner';
@@ -11,22 +11,8 @@ export default function Login({ onToggleForm, email, setEmail, password, setPass
   const isAdminEmail = process.env.REACT_APP_ADMIN_EMAIL && 
     email.toLowerCase() === process.env.REACT_APP_ADMIN_EMAIL.toLowerCase();
 
-  // Use auth context error if available
-  useEffect(() => {
-    if (error) {
-      setError(error);
-    }
-  }, [error]);
-
-  // Clear any auth errors when component mounts or unmounts
-  useEffect(() => {
-    clearAuthError();
-    return () => clearAuthError();
-  }, [clearAuthError]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
 
     try {
@@ -34,16 +20,10 @@ export default function Login({ onToggleForm, email, setEmail, password, setPass
       await onSubmit(e);
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.message || 'An error occurred during login');
     } finally {
       setIsLoading(false);
     }
   };
-
-  // Clear error when email or password changes
-  useEffect(() => {
-    setError('');
-  }, [email, password]);
 
   return (
     <div className="auth-form">

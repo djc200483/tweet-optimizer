@@ -31,16 +31,17 @@ export default function Login({ onToggleForm }) {
       const result = await login(email, password);
       console.log('Login result:', result);
       if (!result.success) {
-        setError(`Login failed: ${result.error || 'Unknown error'}`);
-        setTimeout(() => setError(''), 5000);
+        setError(result.error || 'Invalid email or password');
+        // Keep error visible for 3 seconds
+        setTimeout(() => setError(''), 3000);
       } else {
         // Close the auth form on successful login
         onClose && onClose();
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError(`Login error: ${err.message}`);
-      setTimeout(() => setError(''), 5000);
+      setError(err.message || 'An error occurred during login');
+      setTimeout(() => setError(''), 3000);
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +50,11 @@ export default function Login({ onToggleForm }) {
   return (
     <div className="auth-form">
       <h2>Login</h2>
-      {error && <div className="auth-error">{error}</div>}
+      {error && (
+        <div className="auth-error" style={{ marginBottom: '1rem' }}>
+          {error}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">

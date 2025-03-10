@@ -916,9 +916,24 @@ body {
 .auth-error {
   color: #e0245e;
   background: #ffebee;
-  padding: 10px;
+  padding: 12px;
   border-radius: 4px;
   margin: 10px 0;
+  border: 1px solid #e0245e;
+  font-weight: 500;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .auth-success {

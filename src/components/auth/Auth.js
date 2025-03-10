@@ -13,6 +13,7 @@ export default function Auth({ onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [x_handle, setXHandle] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     setOnClose(() => onClose);
@@ -25,12 +26,11 @@ export default function Auth({ onClose }) {
     setError(''); // Clear any existing errors when switching forms
   };
 
-  const handleSuccess = () => {
-    if (onClose) onClose();
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
     try {
       const response = await fetch(`${API_URL}/auth/${currentForm === 'login' ? 'login' : 'register'}`, {
         method: 'POST',
@@ -62,7 +62,13 @@ export default function Auth({ onClose }) {
         'Connection failed. Please check your internet connection and try again. ' +
         'If the problem persists, try refreshing the page.'
       );
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleSuccess = () => {
+    if (onClose) onClose();
   };
 
   return (
@@ -82,6 +88,7 @@ export default function Auth({ onClose }) {
           password={password}
           setPassword={setPassword}
           onSubmit={handleSubmit}
+          error={error}
         />
       )}
       {currentForm === 'register' && (
@@ -94,6 +101,7 @@ export default function Auth({ onClose }) {
           x_handle={x_handle}
           setXHandle={setXHandle}
           onSubmit={handleSubmit}
+          error={error}
         />
       )}
       {currentForm === 'forgot' && (

@@ -3,12 +3,9 @@ import { useAuth } from './AuthContext';
 import { Link } from 'react-router-dom';
 import LoadingSpinner from '../LoadingSpinner';
 
-export default function Login({ onToggleForm }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+export default function Login({ onToggleForm, email, setEmail, password, setPassword, onSubmit, error }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { login, clearAuthError, authError } = useAuth();
+  const { clearAuthError } = useAuth();
 
   // Check if this is admin login attempt
   const isAdminEmail = process.env.REACT_APP_ADMIN_EMAIL && 
@@ -16,10 +13,10 @@ export default function Login({ onToggleForm }) {
 
   // Use auth context error if available
   useEffect(() => {
-    if (authError) {
-      setError(authError);
+    if (error) {
+      setError(error);
     }
-  }, [authError]);
+  }, [error]);
 
   // Clear any auth errors when component mounts or unmounts
   useEffect(() => {
@@ -34,11 +31,7 @@ export default function Login({ onToggleForm }) {
 
     try {
       console.log('Login attempt:', { email, isAdmin: isAdminEmail });
-      const result = await login(email, password);
-      console.log('Login result:', result);
-      if (!result.success) {
-        setError(result.error || 'Invalid email or password');
-      }
+      await onSubmit(e);
     } catch (err) {
       console.error('Login error:', err);
       setError(err.message || 'An error occurred during login');

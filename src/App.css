@@ -914,15 +914,18 @@ body {
 }
 
 .auth-error {
-  color: #e0245e;
-  background: #ffebee;
+  color: #ff3333;
+  background: rgba(255, 51, 51, 0.1);
   padding: 12px;
-  border-radius: 4px;
-  margin: 10px 0;
-  border: 1px solid #e0245e;
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  border: 1px solid #ff3333;
   font-weight: 500;
   text-align: center;
   animation: fadeIn 0.3s ease-in-out;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @keyframes fadeIn {
@@ -1050,28 +1053,6 @@ body {
 }
 
 .auth-error-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: #e0245e;
-  color: white;
-  padding: 10px;
-  text-align: center;
-  z-index: 1001;
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.api-error-banner {
   position: fixed;
   top: 0;
   left: 0;

@@ -8,11 +8,18 @@ export default function Login({ onToggleForm }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login, clearAuthError } = useAuth();
+  const { login, clearAuthError, authError } = useAuth();
 
   // Check if this is admin login attempt
   const isAdminEmail = process.env.REACT_APP_ADMIN_EMAIL && 
     email.toLowerCase() === process.env.REACT_APP_ADMIN_EMAIL.toLowerCase();
+
+  // Use auth context error if available
+  useEffect(() => {
+    if (authError) {
+      setError(authError);
+    }
+  }, [authError]);
 
   // Clear any auth errors when component mounts or unmounts
   useEffect(() => {
@@ -49,7 +56,7 @@ export default function Login({ onToggleForm }) {
     <div className="auth-form">
       <h2>Login</h2>
       {error && (
-        <div className="auth-error" style={{ marginBottom: '1rem' }}>
+        <div className="auth-error">
           {error}
         </div>
       )}

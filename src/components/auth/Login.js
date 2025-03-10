@@ -31,14 +31,19 @@ export default function Login({ onToggleForm }) {
       console.log('Login result:', result);
       if (!result.success) {
         setError(result.error || 'Invalid email or password');
-        setIsLoading(false);
       }
     } catch (err) {
       console.error('Login error:', err);
       setError(err.message || 'An error occurred during login');
+    } finally {
       setIsLoading(false);
     }
   };
+
+  // Clear error when email or password changes
+  useEffect(() => {
+    setError('');
+  }, [email, password]);
 
   return (
     <div className="auth-form">
@@ -49,7 +54,7 @@ export default function Login({ onToggleForm }) {
         </div>
       )}
       
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input

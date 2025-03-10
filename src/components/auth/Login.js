@@ -31,14 +31,11 @@ export default function Login({ onToggleForm }) {
       console.log('Login result:', result);
       if (!result.success) {
         setError(result.error || 'Invalid email or password');
-      } else {
-        // Close the auth form on successful login
-        onClose && onClose();
+        setIsLoading(false);
       }
     } catch (err) {
       console.error('Login error:', err);
       setError(err.message || 'An error occurred during login');
-    } finally {
       setIsLoading(false);
     }
   };

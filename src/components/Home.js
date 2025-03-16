@@ -37,6 +37,12 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       description: 'Convert images into detailed AI-ready prompts.',
       icon: '🎨',
       id: 'imageToPrompt'
+    },
+    {
+      title: 'Image Generator',
+      description: 'Create AI-generated images from your text prompts.',
+      icon: '🖼️',
+      id: 'imageGenerator'
     }
   ];
 

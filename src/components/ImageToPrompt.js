@@ -196,12 +196,13 @@ export default function ImageToPrompt() {
           </div>
 
           <div className="aspect-ratio-section">
-            <label htmlFor="aspect-ratio">Select Aspect Ratio:</label>
+            <label htmlFor="aspect-ratio" style={{ marginRight: '12px' }}>Select Aspect Ratio:</label>
             <select
               id="aspect-ratio"
               value={selectedAspectRatio}
               onChange={(e) => setSelectedAspectRatio(e.target.value)}
               className="aspect-ratio-select"
+              style={{ marginRight: '12px' }}
             >
               {aspectRatios.map(ratio => (
                 <option key={ratio.value} value={ratio.value}>
@@ -211,7 +212,7 @@ export default function ImageToPrompt() {
             </select>
 
             <button
-              className="generate-button"
+              className="submit-button"
               onClick={handleGenerateWithFlux}
               disabled={isGenerateLoading}
             >

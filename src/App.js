@@ -10,6 +10,7 @@ import ReverseEngineer from './components/ReverseEngineer';
 import PowerWords from './components/PowerWords';
 import PromptAssistant from './components/PromptAssistant';
 import ImageToPrompt from './components/ImageToPrompt';
+import ImageGenerator from './components/ImageGenerator';
 import EvergreenContent from './components/EvergreenContent';
 import Home from './components/Home';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -302,6 +303,18 @@ function AppContent() {
             <PromptAssistant />
           </>
         );
+      case 'imageGenerator':
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <ImageGenerator />
+          </>
+        );
       default:
         return <Home 
           onSelectFeature={setCurrentFeature} 
@@ -426,6 +439,12 @@ function AppContent() {
                       onClick={() => setActiveTab('prompt')}
                     >
                       Prompt Assistant
+                    </button>
+                    <button 
+                      className={`tab-button ${activeTab === 'imageGenerator' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('imageGenerator')}
+                    >
+                      Image Generator
                     </button>
                     <button 
                       className={`tab-button ${activeTab === 'evergreen' ? 'active' : ''}`}

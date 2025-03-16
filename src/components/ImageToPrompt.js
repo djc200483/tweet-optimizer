@@ -12,6 +12,18 @@ export default function ImageToPrompt() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isCopied, setIsCopied] = useState(false);
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
+  const [generatedImages, setGeneratedImages] = useState([]);
+  const [showImageGrid, setShowImageGrid] = useState(false);
+  const [isGenerateLoading, setIsGenerateLoading] = useState(false);
+
+  const aspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '16:9', label: 'Landscape (16:9)' },
+    { value: '9:16', label: 'Portrait (9:16)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '3:4', label: 'Portrait (3:4)' }
+  ];
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -78,6 +90,7 @@ export default function ImageToPrompt() {
 
       const data = await response.json();
       setGeneratedPrompt(data.prompt);
+      setShowImageGrid(false); // Reset image grid when new prompt is generated
     } catch (err) {
       console.error('Error:', err);
       setError('Failed to analyze image. Please try again.');
@@ -90,6 +103,52 @@ export default function ImageToPrompt() {
     navigator.clipboard.writeText(generatedPrompt);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  const handleGenerateWithFlux = async () => {
+    try {
+      setIsGenerateLoading(true);
+      setGeneratedImages([]); // Clear previous images
+      setShowImageGrid(false);
+      
+      console.log('Sending prompt to generate images:', generatedPrompt);
+      console.log('Using aspect ratio:', selectedAspectRatio);
+      
+      const response = await fetch(`${API_URL}/generate-image`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ 
+          prompt: generatedPrompt,
+          aspectRatio: selectedAspectRatio,
+          num_outputs: 2
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Server error:', errorData);
+        throw new Error(errorData.error || 'Failed to generate image');
+      }
+      
+      const data = await response.json();
+      console.log('Received image data:', data);
+      
+      if (!data.imageUrl || !Array.isArray(data.imageUrl)) {
+        console.error('Invalid response format:', data);
+        throw new Error('Invalid response format from server');
+      }
+
+      setGeneratedImages(data.imageUrl.filter(url => url && typeof url === 'string'));
+      setShowImageGrid(true);
+    } catch (err) {
+      console.error('Error generating images:', err);
+      setError('Failed to generate images. Please try again.');
+    } finally {
+      setIsGenerateLoading(false);
+    }
   };
 
   return (
@@ -135,6 +194,40 @@ export default function ImageToPrompt() {
               {isCopied ? 'Copied!' : 'Copy'}
             </button>
           </div>
+
+          <div className="aspect-ratio-section">
+            <label htmlFor="aspect-ratio">Select Aspect Ratio:</label>
+            <select
+              id="aspect-ratio"
+              value={selectedAspectRatio}
+              onChange={(e) => setSelectedAspectRatio(e.target.value)}
+              className="aspect-ratio-select"
+            >
+              {aspectRatios.map(ratio => (
+                <option key={ratio.value} value={ratio.value}>
+                  {ratio.label}
+                </option>
+              ))}
+            </select>
+
+            <button
+              className="generate-button"
+              onClick={handleGenerateWithFlux}
+              disabled={isGenerateLoading}
+            >
+              {isGenerateLoading ? <LoadingSpinner /> : 'Generate with Flux'}
+            </button>
+          </div>
+
+          {showImageGrid && generatedImages.length > 0 && (
+            <div className="image-grid">
+              {generatedImages.map((imageUrl, index) => (
+                <div key={index} className="generated-image">
+                  <img src={imageUrl} alt={`Generated ${index + 1}`} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

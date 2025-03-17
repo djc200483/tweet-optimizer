@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+// Authentication middleware that ensures user ID is always set
+// When ENFORCE_AUTH is off, uses a default user ID of 1
 const authMiddleware = async (req, res, next) => {
   try {
     console.log('Auth headers:', req.headers);

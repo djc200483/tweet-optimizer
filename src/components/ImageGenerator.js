@@ -159,7 +159,7 @@ export default function ImageGenerator() {
               <div className="image-grid">
                 {generatedImages.map((image, index) => (
                   <div key={index} className="image-item">
-                    <img src={image.s3_url || image.image_url} alt={`Generated ${index + 1}`} />
+                    <img src={image.originalUrl} alt={`Generated ${index + 1}`} />
                   </div>
                 ))}
               </div>

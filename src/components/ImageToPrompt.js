@@ -236,9 +236,9 @@ export default function ImageToPrompt() {
             <div className="generated-images-container">
               <h3>Generated Images</h3>
               <div className="image-grid">
-                {generatedImages.map((imageUrl, index) => (
+                {generatedImages.map((image, index) => (
                   <div key={index} className="image-item">
-                    <img src={imageUrl} alt={`Generated ${index + 1}`} />
+                    <img src={image.originalUrl} alt={`Generated ${index + 1}`} />
                   </div>
                 ))}
               </div>

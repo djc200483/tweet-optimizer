@@ -359,19 +359,19 @@ export default function PromptAssistant() {
         <div className="generated-images-container">
           <h3>Generated Images:</h3>
           <div className="image-grid">
-            {generatedImages.map((imageUrl, index) => (
+            {generatedImages.map((image, index) => (
               <div key={index} className="image-item">
                 <img 
-                  src={imageUrl} 
+                  src={image.originalUrl} 
                   alt={`Generated ${index + 1}`}
                   onError={(e) => {
-                    console.error('Image failed to load:', imageUrl);
+                    console.error('Image failed to load:', image.originalUrl);
                     e.target.onerror = null;
                     e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjNjY2Ij5JbWFnZSBmYWlsZWQgdG8gbG9hZDwvdGV4dD48L3N2Zz4=';
                   }}
                   onClick={() => {
-                    console.log('Opening image in new tab:', imageUrl);
-                    window.open(imageUrl, '_blank');
+                    console.log('Opening image in new tab:', image.originalUrl);
+                    window.open(image.originalUrl, '_blank');
                   }}
                 />
               </div>

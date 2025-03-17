@@ -5,52 +5,9 @@ const { Pool } = require('pg');
 
 // Debug: Log current directory and environment variables
 console.log('Current directory:', process.cwd());
-const envPath = path.join(__dirname, '..', '.env');
-console.log('Looking for .env at:', envPath);
-
-// Read and parse the .env file manually
-try {
-  // Try reading with different encodings
-  let envContent;
-  try {
-    // Try UTF-16
-    envContent = fs.readFileSync(envPath, 'utf16le');
-  } catch (e) {
-    // Fallback to UTF-8
-    envContent = fs.readFileSync(envPath, 'utf8');
-  }
-
-  // Clean the content
-  envContent = envContent
-    .replace(/^\uFEFF/, '') // Remove BOM
-    .replace(/[^\x00-\x7F]/g, ''); // Remove non-ASCII characters
-  
-  console.log('Found .env file with content length:', envContent.length);
-  
-  // Parse each line and set environment variables
-  const lines = envContent.split('\n');
-  lines.forEach((line, index) => {
-    line = line.trim();
-    if (!line || line.startsWith('#')) return; // Skip empty lines and comments
-    
-    const match = line.match(/^([^=]+)=(.*)$/);
-    if (match) {
-      const key = match[1].trim();
-      const value = match[2].trim();
-      // Clean the key name to ensure no special characters
-      const cleanKey = key.replace(/[^\x00-\x7F]/g, '');
-      console.log(`Setting ${cleanKey}=${value.substring(0, 20)}...`);
-      process.env[cleanKey] = value;
-    }
-  });
-  
-  console.log('After parsing, DATABASE_URL exists:', !!process.env.DATABASE_URL);
-  if (process.env.DATABASE_URL) {
-    console.log('DATABASE_URL starts with:', process.env.DATABASE_URL.substring(0, 30));
-  }
-} catch (err) {
-  console.error('Error reading .env file:', err);
-  process.exit(1);
+console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+if (process.env.DATABASE_URL) {
+  console.log('DATABASE_URL starts with:', process.env.DATABASE_URL.substring(0, 30));
 }
 
 // Parse the DATABASE_URL to add sslmode=disable
@@ -175,6 +132,5 @@ async function migrate(direction = 'up') {
   }
 }
 
-// Execute migrations based on command line argument
-const direction = process.argv[2] === 'down' ? 'down' : 'up';
-migrate(direction); 
+// Export the migrate function
+module.exports = migrate; 

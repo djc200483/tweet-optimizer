@@ -228,7 +228,7 @@ export default function PromptAssistant() {
             body: JSON.stringify({
               prompt: promptToUse,
               imageUrl: image.originalUrl,
-              s3Key: image.s3Key
+              s3Key: image.s3Url
             }),
           });
 

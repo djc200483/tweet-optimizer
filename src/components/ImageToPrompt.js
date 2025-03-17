@@ -153,7 +153,7 @@ export default function ImageToPrompt() {
             body: JSON.stringify({
               prompt: generatedPrompt,
               imageUrl: image.originalUrl,
-              s3Key: image.s3Key
+              s3Key: image.s3Url
             }),
           });
 

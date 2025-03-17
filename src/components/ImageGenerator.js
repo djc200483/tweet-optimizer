@@ -74,8 +74,8 @@ export default function ImageGenerator() {
             },
             body: JSON.stringify({
               prompt: prompt,
-              imageUrl: image.image_url,
-              s3Key: image.s3_key
+              imageUrl: image.originalUrl,
+              s3Key: image.s3Url
             }),
           });
 

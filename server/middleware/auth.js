@@ -2,16 +2,16 @@ const jwt = require('jsonwebtoken');
 
 const authMiddleware = async (req, res, next) => {
   try {
-    // Skip auth check if feature flag is off
-    if (!process.env.ENFORCE_AUTH) {
-      return next();
-    }
-
     console.log('Auth headers:', req.headers);
     const token = req.header('Authorization')?.replace('Bearer ', '');
     console.log('Extracted token:', token);
     
     if (!token) {
+      // If auth is not enforced, create a default user
+      if (!process.env.ENFORCE_AUTH) {
+        req.user = { id: 1 }; // Default user ID
+        return next();
+      }
       return res.status(401).json({ error: 'Authentication required' });
     }
 
@@ -20,6 +20,11 @@ const authMiddleware = async (req, res, next) => {
     req.user = { id: decoded.id };
     next();
   } catch (error) {
+    // If auth is not enforced, create a default user
+    if (!process.env.ENFORCE_AUTH) {
+      req.user = { id: 1 }; // Default user ID
+      return next();
+    }
     res.status(401).json({ error: 'Invalid token' });
   }
 };

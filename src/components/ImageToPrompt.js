@@ -141,37 +141,8 @@ export default function ImageToPrompt() {
         throw new Error('Invalid response format from server');
       }
 
-      // Save each generated image to the database
-      const savedImages = await Promise.all(data.images.map(async (image) => {
-        try {
-          const saveResponse = await fetch(`${API_URL}/api/images`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              prompt: generatedPrompt,
-              imageUrl: image.originalUrl,
-              s3Key: image.s3Url
-            }),
-          });
-
-          if (!saveResponse.ok) {
-            console.error('Failed to save image:', await saveResponse.json());
-            return image; // Return original image if save fails
-          }
-
-          const savedImage = await saveResponse.json();
-          console.log('Saved image to database:', savedImage);
-          return savedImage;
-        } catch (err) {
-          console.error('Error saving image:', err);
-          return image; // Return original image if save fails
-        }
-      }));
-
-      setGeneratedImages(savedImages);
+      // Use the images directly from the server response
+      setGeneratedImages(data.images);
       setShowImageGrid(true);
     } catch (err) {
       console.error('Error generating images:', err);

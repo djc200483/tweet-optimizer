@@ -666,6 +666,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     console.log('Generating image with prompt:', prompt);
     console.log('Aspect ratio:', aspectRatio);
     console.log('Number of outputs:', num_outputs);
+    console.log('User ID:', userId);
     console.log('Replicate API Token status:', {
       exists: !!process.env.REPLICATE_API_TOKEN,
       length: process.env.REPLICATE_API_TOKEN?.length
@@ -757,6 +758,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       const key = `images/${userId}/${timestamp}-${index}.png`;
 
       // Upload to S3
+      console.log('Uploading to S3:', { key, imageUrl });
       const s3Result = await uploadImageToS3(imageUrl, key);
       
       if (!s3Result.success) {
@@ -770,23 +772,39 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
 
       // Save to database
       try {
-        await db.query(
-          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5)',
+        console.log('Saving to database:', {
+          userId,
+          prompt,
+          imageUrl,
+          s3Url: s3Result.s3Url,
+          aspectRatio
+        });
+        
+        const result = await db.query(
+          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
           [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio]
         );
+        
+        console.log('Database save result:', result.rows[0]);
+        return {
+          originalUrl: imageUrl,
+          s3Url: s3Result.s3Url,
+          id: result.rows[0].id
+        };
       } catch (dbError) {
-        console.error('Failed to save to database:', dbError);
+        console.error('Failed to save to database:', {
+          error: dbError,
+          message: dbError.message,
+          code: dbError.code,
+          detail: dbError.detail,
+          hint: dbError.hint
+        });
         return {
           originalUrl: imageUrl,
           s3Url: s3Result.s3Url,
           error: 'Failed to save to database'
         };
       }
-
-      return {
-        originalUrl: imageUrl,
-        s3Url: s3Result.s3Url
-      };
     }));
 
     res.json({ images: processedImages });

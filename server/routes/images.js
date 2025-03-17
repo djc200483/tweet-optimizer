@@ -52,9 +52,7 @@ router.post('/', authMiddleware, async (req, res) => {
     const { prompt, imageUrl, s3Key } = req.body;
     
     const result = await db.query(
-      `INSERT INTO generated_images (user_id, prompt, image_url, s3_key) 
-       VALUES ($1, $2, $3, $4) 
-       RETURNING *`,
+      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url) VALUES ($1, $2, $3, $4) RETURNING *',
       [req.user.id, prompt, imageUrl, s3Key]
     );
     

@@ -2,6 +2,34 @@
   padding: 20px;
 }
 
+.gallery-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.tab-button {
+  padding: 10px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.tab-button.active {
+  background: #007AFF;
+  color: white;
+}
+
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -77,6 +105,13 @@
   gap: 15px;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.creator {
+  color: #007AFF;
+  font-weight: 500;
 }
 
 .date {

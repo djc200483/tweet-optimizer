@@ -3,57 +3,61 @@ const router = express.Router();
 const db = require('../db');
 const authMiddleware = require('../middleware/auth');
 
-// Get all generated images for a user
-router.get('/', authMiddleware, async (req, res) => {
+// Get user's personal images
+router.get('/my-images', authMiddleware, async (req, res) => {
   try {
-    // If a specific user's images are requested
-    if (req.query.userId) {
-      const result = await db.query(
-        `SELECT 
-          gi.*,
-          CASE 
-            WHEN u.deleted_at IS NOT NULL THEN 'Deleted User'
-            ELSE u.x_handle 
-          END as creator_handle
-        FROM generated_images gi
-        LEFT JOIN users u ON gi.user_id = u.id
-        WHERE gi.user_id = $1 
-          AND (gi.is_private = false OR gi.user_id = $2)
-        ORDER BY gi.created_at DESC`,
-        [req.query.userId, req.user.id]
-      );
-      res.json(result.rows);
-    } else {
-      // Get current user's images
-      const result = await db.query(
-        `SELECT 
-          gi.*,
-          CASE 
-            WHEN u.deleted_at IS NOT NULL THEN 'Deleted User'
-            ELSE u.x_handle 
-          END as creator_handle
-        FROM generated_images gi
-        LEFT JOIN users u ON gi.user_id = u.id
-        WHERE gi.user_id = $1
-        ORDER BY gi.created_at DESC`,
-        [req.user.id]
-      );
-      res.json(result.rows);
-    }
+    const result = await db.query(
+      `SELECT 
+        gi.*,
+        CASE 
+          WHEN u.deleted_at IS NOT NULL THEN 'Deleted User'
+          ELSE u.x_handle 
+        END as creator_handle
+      FROM generated_images gi
+      LEFT JOIN users u ON gi.user_id = u.id
+      WHERE gi.user_id = $1
+      ORDER BY gi.created_at DESC`,
+      [req.user.id]
+    );
+    res.json(result.rows);
   } catch (error) {
-    console.error('Error fetching generated images:', error);
-    res.status(500).json({ error: 'Failed to fetch generated images' });
+    console.error('Error fetching personal images:', error);
+    res.status(500).json({ error: 'Failed to fetch personal images' });
+  }
+});
+
+// Get all public images (explore)
+router.get('/explore', authMiddleware, async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT 
+        gi.*,
+        CASE 
+          WHEN u.deleted_at IS NOT NULL THEN 'Deleted User'
+          ELSE u.x_handle 
+        END as creator_handle
+      FROM generated_images gi
+      LEFT JOIN users u ON gi.user_id = u.id
+      WHERE gi.is_private = false
+      ORDER BY gi.created_at DESC
+      LIMIT 100`,  // Limiting to prevent overwhelming response
+      []
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching explore images:', error);
+    res.status(500).json({ error: 'Failed to fetch explore images' });
   }
 });
 
 // Save a new generated image
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { prompt, imageUrl, s3Key } = req.body;
+    const { prompt, imageUrl, s3Key, isPrivate = false } = req.body;
     
     const result = await db.query(
-      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url) VALUES ($1, $2, $3, $4) RETURNING *',
-      [req.user.id, prompt, imageUrl, s3Key]
+      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, is_private) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [req.user.id, prompt, imageUrl, s3Key, isPrivate]
     );
     
     res.status(201).json(result.rows[0]);

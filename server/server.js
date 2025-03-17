@@ -1,4 +1,13 @@
 require('dotenv').config();  // Move this to very top
+
+// Add debug logging for environment variables
+console.log('Environment variables loaded:', {
+  hasDbUrl: !!process.env.DATABASE_URL,
+  dbUrlStart: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 20) + '...' : 'not found',
+  nodeEnv: process.env.NODE_ENV,
+  pwd: process.cwd()
+});
+
 const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
@@ -9,8 +18,16 @@ const path = require('path');
 const { Resend } = require('resend');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const imageRoutes = require('./routes/images');
 const authMiddleware = require('./middleware/auth');
 // const axios = require('axios');  // Commented out for now
+
+// Check if this is a migration command
+if (process.argv[2] === 'migrate') {
+  const direction = process.argv[3] === 'down' ? 'down' : 'up';
+  require('./db/migrate')(direction);
+  return;
+}
 
 // Utility function to replace em-dashes with hyphens
 const replaceEmDash = (text) => text.replace(/—/g, '-');
@@ -75,6 +92,9 @@ app.use('/auth', authRoutes);
 console.log('Setting up admin routes...');
 app.use('/admin', adminRoutes);
 console.log('Admin routes configured');
+// Image routes
+app.use('/api/images', imageRoutes);
+console.log('Image routes configured');
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -619,6 +639,9 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
+// Import S3 service
+const { uploadImageToS3 } = require('./s3Service');
+
 // Add logging for Replicate configuration
 console.log('Replicate API Token configured:', {
   exists: !!process.env.REPLICATE_API_TOKEN,
@@ -630,6 +653,7 @@ console.log('Replicate API Token configured:', {
 app.post('/generate-image', authMiddleware, async (req, res) => {
   try {
     const { prompt, aspectRatio, num_outputs = 2 } = req.body;
+    const userId = req.user.id; // Get user ID from auth middleware
     console.log('Generating image with prompt:', prompt);
     console.log('Aspect ratio:', aspectRatio);
     console.log('Number of outputs:', num_outputs);
@@ -656,7 +680,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
         num_inference_steps: 4,
         guidance_scale: 7.5,
         output_format: "png",
-        aspect_ratio: aspectRatio,  // Use the aspect_ratio parameter directly
+        aspect_ratio: aspectRatio,
         scheduler: "K_EULER",
         seed: Math.floor(Math.random() * 1000000)
       }
@@ -717,7 +741,46 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       throw new Error('No valid image URLs were generated');
     }
 
-    res.json({ imageUrl: validUrls });
+    // Process each image: upload to S3 and save to database
+    const processedImages = await Promise.all(validUrls.map(async (imageUrl, index) => {
+      // Generate a unique key for S3
+      const timestamp = new Date().getTime();
+      const key = `images/${userId}/${timestamp}-${index}.png`;
+
+      // Upload to S3
+      const s3Result = await uploadImageToS3(imageUrl, key);
+      
+      if (!s3Result.success) {
+        console.error('Failed to upload to S3:', s3Result.error);
+        return {
+          originalUrl: imageUrl,
+          s3Url: null,
+          error: s3Result.error
+        };
+      }
+
+      // Save to database
+      try {
+        await db.query(
+          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5)',
+          [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio]
+        );
+      } catch (dbError) {
+        console.error('Failed to save to database:', dbError);
+        return {
+          originalUrl: imageUrl,
+          s3Url: s3Result.s3Url,
+          error: 'Failed to save to database'
+        };
+      }
+
+      return {
+        originalUrl: imageUrl,
+        s3Url: s3Result.s3Url
+      };
+    }));
+
+    res.json({ images: processedImages });
   } catch (error) {
     console.error('Error generating image:', {
       message: error.message,
@@ -731,5 +794,40 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       type: error.name,
       code: error.code
     });
+  }
+});
+
+// Add this before the module.exports
+app.get('/api/images', authMiddleware, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 12; // Images per page
+    const offset = (page - 1) * limit;
+    const userId = req.query.userId || req.user.id;
+    const isPrivate = req.query.isPrivate === 'true';
+
+    // Build the query based on privacy setting
+    let query = `
+      SELECT id, prompt, image_url, s3_url, aspect_ratio, created_at, is_private
+      FROM generated_images
+      WHERE user_id = $1
+    `;
+    const queryParams = [userId];
+
+    if (isPrivate) {
+      query += ' AND is_private = true';
+    } else {
+      query += ' AND is_private = false';
+    }
+
+    query += ' ORDER BY created_at DESC LIMIT $2 OFFSET $3';
+    queryParams.push(limit, offset);
+
+    const result = await db.query(query, queryParams);
+    
+    res.json({ images: result.rows });
+  } catch (error) {
+    console.error('Error fetching images:', error);
+    res.status(500).json({ error: 'Error fetching images' });
   }
 });

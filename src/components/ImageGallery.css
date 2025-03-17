@@ -1,0 +1,166 @@
+.image-gallery {
+  padding: 20px;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.image-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(30, 32, 40, 0.95);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.image-item:hover {
+  transform: translateY(-2px);
+}
+
+.image-item img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: rgba(30, 32, 40, 0.95);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  display: block;
+}
+
+.modal-info {
+  padding: 20px;
+  color: white;
+}
+
+.image-prompt {
+  font-size: 16px;
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+}
+
+.image-metadata {
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.date {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.aspect-ratio {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.close-modal:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.error-message {
+  color: #ff3b30;
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 59, 48, 0.1);
+  border-radius: 8px;
+  margin: 20px;
+}
+
+.no-images-message {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1100px) {
+  .masonry-grid {
+    margin-left: -12px;
+  }
+  .masonry-grid_column {
+    padding-left: 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .masonry-grid {
+    margin-left: -8px;
+  }
+  .masonry-grid_column {
+    padding-left: 8px;
+  }
+  
+  .modal-info {
+    padding: 15px;
+  }
+  
+  .image-prompt {
+    font-size: 14px;
+  }
+  
+  .image-metadata {
+    font-size: 12px;
+  }
+} 

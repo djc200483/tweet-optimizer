@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { useAuth } from './auth/AuthContext';
+import ImageGallery from './ImageGallery';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function ImageGenerator() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+  const [activeTab, setActiveTab] = useState('generate');
   const [prompt, setPrompt] = useState('');
   const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
   const [generatedImages, setGeneratedImages] = useState([]);
-  const [showImageGrid, setShowImageGrid] = useState(false);
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -29,8 +30,7 @@ export default function ImageGenerator() {
 
     try {
       setIsGenerateLoading(true);
-      setGeneratedImages([]); // Clear previous images
-      setShowImageGrid(false);
+      setGeneratedImages([]);
       setError('');
       
       console.log('Sending prompt to generate images:', prompt);
@@ -58,13 +58,42 @@ export default function ImageGenerator() {
       const data = await response.json();
       console.log('Received image data:', data);
       
-      if (!data.imageUrl || !Array.isArray(data.imageUrl)) {
+      if (!data.images || !Array.isArray(data.images)) {
         console.error('Invalid response format:', data);
         throw new Error('Invalid response format from server');
       }
 
-      setGeneratedImages(data.imageUrl.filter(url => url && typeof url === 'string'));
-      setShowImageGrid(true);
+      // Save each generated image to the database
+      const savedImages = await Promise.all(data.images.map(async (image) => {
+        try {
+          const saveResponse = await fetch(`${API_URL}/api/images`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              prompt: prompt,
+              imageUrl: image.image_url,
+              s3Key: image.s3_key
+            }),
+          });
+
+          if (!saveResponse.ok) {
+            console.error('Failed to save image:', await saveResponse.json());
+            return image; // Return original image if save fails
+          }
+
+          const savedImage = await saveResponse.json();
+          console.log('Saved image to database:', savedImage);
+          return savedImage;
+        } catch (err) {
+          console.error('Error saving image:', err);
+          return image; // Return original image if save fails
+        }
+      }));
+
+      setGeneratedImages(savedImages);
     } catch (err) {
       console.error('Error generating images:', err);
       setError('Failed to generate images. Please try again.');
@@ -79,75 +108,96 @@ export default function ImageGenerator() {
         <p>Create stunning AI-generated images from your text prompts. Simply enter your prompt, choose your preferred aspect ratio, and let our AI bring your vision to life.</p>
       </div>
 
-      <div className="prompt-input-section">
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Enter your image prompt here..."
-          className="prompt-textarea"
-          rows={4}
-          style={{
-            width: '100%',
-            padding: '12px',
-            borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            background: 'rgba(30, 32, 40, 0.95)',
-            color: '#ffffff',
-            fontSize: '14px',
-            resize: 'vertical',
-            marginBottom: '16px'
-          }}
-        />
-
-        {error && <div className="error-message">{error}</div>}
-
-        <div className="aspect-ratio-section">
-          <label htmlFor="aspect-ratio" style={{ marginRight: '12px' }}>Select Aspect Ratio:</label>
-          <select
-            id="aspect-ratio"
-            value={selectedAspectRatio}
-            onChange={(e) => setSelectedAspectRatio(e.target.value)}
-            className="aspect-ratio-select"
-            style={{ marginRight: '12px' }}
-          >
-            {aspectRatios.map(ratio => (
-              <option key={ratio.value} value={ratio.value}>
-                {ratio.label}
-              </option>
-            ))}
-          </select>
-
-          <button
-            className="generate-flux-button"
-            onClick={handleGenerateWithFlux}
-            disabled={isGenerateLoading || !prompt.trim()}
-            style={{
-              background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: '500',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 2px 8px rgba(255, 107, 107, 0.2)'
-            }}
-          >
-            {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
-          </button>
-        </div>
+      <div className="tabs">
+        <button 
+          className={`tab ${activeTab === 'generate' ? 'active' : ''}`}
+          onClick={() => setActiveTab('generate')}
+        >
+          Generate
+        </button>
+        <button 
+          className={`tab ${activeTab === 'gallery' ? 'active' : ''}`}
+          onClick={() => setActiveTab('gallery')}
+        >
+          Gallery
+        </button>
       </div>
 
-      {showImageGrid && generatedImages.length > 0 && (
-        <div className="generated-images-container">
-          <h3>Generated Images</h3>
-          <div className="image-grid">
-            {generatedImages.map((imageUrl, index) => (
-              <div key={index} className="image-item">
-                <img src={imageUrl} alt={`Generated ${index + 1}`} />
-              </div>
-            ))}
+      {activeTab === 'generate' ? (
+        <div className="prompt-input-section">
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="Enter your image prompt here..."
+            className="prompt-textarea"
+            rows={4}
+            style={{
+              width: '100%',
+              padding: '12px',
+              borderRadius: '8px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'rgba(30, 32, 40, 0.95)',
+              color: '#ffffff',
+              fontSize: '14px',
+              resize: 'vertical',
+              marginBottom: '16px'
+            }}
+          />
+
+          {error && <div className="error-message">{error}</div>}
+
+          <div className="aspect-ratio-section">
+            <label htmlFor="aspect-ratio" style={{ marginRight: '12px' }}>Select Aspect Ratio:</label>
+            <select
+              id="aspect-ratio"
+              value={selectedAspectRatio}
+              onChange={(e) => setSelectedAspectRatio(e.target.value)}
+              className="aspect-ratio-select"
+              style={{ marginRight: '12px' }}
+            >
+              {aspectRatios.map(ratio => (
+                <option key={ratio.value} value={ratio.value}>
+                  {ratio.label}
+                </option>
+              ))}
+            </select>
+
+            <button
+              className="generate-flux-button"
+              onClick={handleGenerateWithFlux}
+              disabled={isGenerateLoading || !prompt.trim()}
+              style={{
+                background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '500',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 2px 8px rgba(255, 107, 107, 0.2)'
+              }}
+            >
+              {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
+            </button>
           </div>
+
+          {generatedImages.length > 0 && (
+            <div className="generated-images-container">
+              <h3>Generated Images</h3>
+              <div className="image-grid">
+                {generatedImages.map((image, index) => (
+                  <div key={index} className="image-item">
+                    <img src={image.s3_url || image.image_url} alt={`Generated ${index + 1}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="gallery-section">
+          <ImageGallery userId={user.id} />
         </div>
       )}
     </div>

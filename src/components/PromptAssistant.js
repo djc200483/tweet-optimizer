@@ -211,29 +211,42 @@ export default function PromptAssistant() {
       const data = await response.json();
       console.log('Received image data:', data);
       
-      // Validate the response data
-      if (!data.imageUrl || !Array.isArray(data.imageUrl)) {
+      if (!data.images || !Array.isArray(data.images)) {
         console.error('Invalid response format:', data);
         throw new Error('Invalid response format from server');
       }
 
-      // Filter out any invalid URLs
-      const validImages = data.imageUrl.filter(url => {
+      // Save each generated image to the database
+      const savedImages = await Promise.all(data.images.map(async (image) => {
         try {
-          new URL(url);
-          return true;
-        } catch {
-          console.error('Invalid image URL:', url);
-          return false;
+          const saveResponse = await fetch(`${API_URL}/api/images`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify({
+              prompt: promptToUse,
+              imageUrl: image.originalUrl,
+              s3Key: image.s3Key
+            }),
+          });
+
+          if (!saveResponse.ok) {
+            console.error('Failed to save image:', await saveResponse.json());
+            return image; // Return original image if save fails
+          }
+
+          const savedImage = await saveResponse.json();
+          console.log('Saved image to database:', savedImage);
+          return savedImage;
+        } catch (err) {
+          console.error('Error saving image:', err);
+          return image; // Return original image if save fails
         }
-      });
+      }));
 
-      if (validImages.length === 0) {
-        throw new Error('No valid images were generated');
-      }
-
-      console.log('Valid image URLs:', validImages);
-      setGeneratedImages(validImages);
+      setGeneratedImages(savedImages);
       setShowImageGrid(true);
       
     } catch (error) {

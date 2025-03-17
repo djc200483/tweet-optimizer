@@ -662,14 +662,19 @@ console.log('Replicate API Token configured:', {
 app.post('/generate-image', authMiddleware, async (req, res) => {
   try {
     const { prompt, aspectRatio, num_outputs = 2 } = req.body;
-    const userId = req.user.id; // Get user ID from auth middleware
-    console.log('Generating image with prompt:', prompt);
-    console.log('Aspect ratio:', aspectRatio);
-    console.log('Number of outputs:', num_outputs);
-    console.log('User ID:', userId);
-    console.log('Replicate API Token status:', {
-      exists: !!process.env.REPLICATE_API_TOKEN,
-      length: process.env.REPLICATE_API_TOKEN?.length
+    const userId = req.user.id;
+    console.log('=== Starting image generation process ===');
+    console.log('Request details:', {
+      prompt,
+      aspectRatio,
+      num_outputs,
+      userId
+    });
+
+    console.log('Replicate configuration:', {
+      tokenExists: !!process.env.REPLICATE_API_TOKEN,
+      tokenLength: process.env.REPLICATE_API_TOKEN?.length,
+      tokenPrefix: process.env.REPLICATE_API_TOKEN?.substring(0, 4)
     });
 
     if (!process.env.REPLICATE_API_TOKEN) {
@@ -696,37 +701,36 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       }
     };
     
-    console.log('Sending prediction with input:', JSON.stringify(predictionInput, null, 2));
+    console.log('Creating prediction with input:', JSON.stringify(predictionInput, null, 2));
     const prediction = await replicate.predictions.create(predictionInput);
-
-    console.log('Initial prediction response:', JSON.stringify(prediction, null, 2));
+    console.log('Initial prediction created:', JSON.stringify(prediction, null, 2));
 
     // Wait for the prediction to complete
     let finalPrediction = await replicate.predictions.get(prediction.id);
+    console.log('Initial prediction status:', finalPrediction.status);
 
     // Keep polling until the prediction is complete
     while (finalPrediction.status !== "succeeded" && finalPrediction.status !== "failed") {
-      console.log('Waiting for prediction...', finalPrediction.status);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+      console.log('Waiting for prediction...', {
+        status: finalPrediction.status,
+        id: prediction.id
+      });
+      await new Promise(resolve => setTimeout(resolve, 1000));
       finalPrediction = await replicate.predictions.get(prediction.id);
     }
 
-    console.log('Final prediction:', finalPrediction);
+    console.log('Final prediction status:', {
+      status: finalPrediction.status,
+      error: finalPrediction.error,
+      output: finalPrediction.output
+    });
 
     if (finalPrediction.status === "failed") {
       throw new Error(finalPrediction.error || 'Image generation failed');
     }
 
-    // Log detailed prediction output
-    console.log('Prediction output details:', {
-      status: finalPrediction.status,
-      requestedAspectRatio: aspectRatio,
-      outputUrls: finalPrediction.output
-    });
-
-    // The output should be in finalPrediction.output
     if (!finalPrediction.output || !Array.isArray(finalPrediction.output)) {
-      console.error('Unexpected output format:', finalPrediction);
+      console.error('Invalid prediction output:', finalPrediction);
       throw new Error('Invalid response format from image generation API');
     }
 
@@ -745,21 +749,26 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       }
     });
 
-    console.log('Filtered valid URLs:', validUrls);
+    console.log('Valid image URLs:', validUrls);
 
     if (validUrls.length === 0) {
       throw new Error('No valid image URLs were generated');
     }
 
     // Process each image: upload to S3 and save to database
+    console.log('=== Starting image processing ===');
     const processedImages = await Promise.all(validUrls.map(async (imageUrl, index) => {
+      console.log(`Processing image ${index + 1}/${validUrls.length}`);
+      
       // Generate a unique key for S3
       const timestamp = new Date().getTime();
       const key = `images/${userId}/${timestamp}-${index}.png`;
+      console.log('Generated S3 key:', key);
 
       // Upload to S3
-      console.log('Uploading to S3:', { key, imageUrl });
+      console.log('Initiating S3 upload:', { key, imageUrl });
       const s3Result = await uploadImageToS3(imageUrl, key);
+      console.log('S3 upload result:', s3Result);
       
       if (!s3Result.success) {
         console.error('Failed to upload to S3:', s3Result.error);
@@ -785,19 +794,20 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
           [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio]
         );
         
-        console.log('Database save result:', result.rows[0]);
+        console.log('Database save successful:', result.rows[0]);
         return {
           originalUrl: imageUrl,
           s3Url: s3Result.s3Url,
           id: result.rows[0].id
         };
       } catch (dbError) {
-        console.error('Failed to save to database:', {
+        console.error('Database error:', {
           error: dbError,
           message: dbError.message,
           code: dbError.code,
           detail: dbError.detail,
-          hint: dbError.hint
+          hint: dbError.hint,
+          where: dbError.where
         });
         return {
           originalUrl: imageUrl,
@@ -807,9 +817,11 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       }
     }));
 
+    console.log('=== Image processing complete ===');
+    console.log('Processed images:', processedImages);
     res.json({ images: processedImages });
   } catch (error) {
-    console.error('Error generating image:', {
+    console.error('Error in image generation:', {
       message: error.message,
       stack: error.stack,
       name: error.name,

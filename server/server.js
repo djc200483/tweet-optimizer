@@ -20,7 +20,16 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const imageRoutes = require('./routes/images');
 const authMiddleware = require('./middleware/auth');
+const migrate = require('./db/migrate');
 // const axios = require('axios');  // Commented out for now
+
+// Run migrations on startup
+console.log('Running database migrations...');
+migrate('up').then(() => {
+  console.log('Migrations completed successfully');
+}).catch(error => {
+  console.error('Error running migrations:', error);
+});
 
 // Check if this is a migration command
 if (process.argv[2] === 'migrate') {

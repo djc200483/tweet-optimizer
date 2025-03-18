@@ -48,9 +48,10 @@
 
 .generated-images-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 280px));
   gap: 16px;
   padding: 0;
+  justify-content: center;
 }
 
 .generated-image-item {
@@ -61,7 +62,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   cursor: pointer;
-  width: 100%;
+  max-width: 280px;
 }
 
 .generated-image-item img {

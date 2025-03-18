@@ -183,20 +183,13 @@ export default function ImageToPrompt() {
           onClick={handleSubmit}
           disabled={!selectedFile || isLoading}
           style={{
-            background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+            background: 'rgba(30, 32, 40, 0.95)',
             color: 'white',
-            border: 'none',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
             padding: '10px 20px',
             borderRadius: '8px',
             cursor: 'pointer',
-            fontWeight: '500',
-            transition: 'all 0.3s ease',
-            boxShadow: '0 2px 8px rgba(255, 107, 107, 0.2)',
-            minWidth: '160px',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px'
+            fontSize: '14px'
           }}
         >
           {isLoading ? <LoadingSpinner size="inline" /> : 'Generate Prompt'}
@@ -231,7 +224,20 @@ export default function ImageToPrompt() {
             <button
               onClick={handleGenerateWithFlux}
               disabled={isGenerateLoading}
-              className="generate-flux-button"
+              style={{
+                background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+                color: 'white',
+                border: 'none',
+                width: '129.64px',
+                height: '36px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
             >
               {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
             </button>

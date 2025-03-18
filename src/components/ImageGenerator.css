@@ -41,7 +41,7 @@
 }
 
 .generated-images-container {
-  margin-top: 20px;
+  margin: 20px 0;
   width: 100%;
 }
 
@@ -49,7 +49,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
-  padding: 16px;
+  padding: 0;
 }
 
 .generated-image-item {

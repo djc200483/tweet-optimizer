@@ -1,5 +1,5 @@
 .image-gallery {
-  padding: 20px;
+  padding: 0;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -39,7 +39,7 @@
 .image-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 16px;
   padding: 0;
   width: 100%;
 }
@@ -52,7 +52,8 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   cursor: pointer;
-  aspect-ratio: auto;
+  aspect-ratio: 1;
+  width: 100%;
 }
 
 .image-item:hover {
@@ -61,9 +62,9 @@
 
 .image-item img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .image-modal {

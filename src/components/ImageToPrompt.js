@@ -182,22 +182,8 @@ export default function ImageToPrompt() {
           className="submit-button"
           onClick={handleSubmit}
           disabled={!selectedFile || isLoading}
-          style={{
-            background: !selectedFile ? 'rgb(42, 43, 50)' : 'linear-gradient(135deg, #00c2ff, #a855f7)',
-            color: 'white',
-            border: 'none',
-            width: '129.64px',
-            height: '36px',
-            borderRadius: '8px',
-            fontSize: '14px',
-            cursor: !selectedFile ? 'not-allowed' : 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px'
-          }}
         >
-          {isLoading ? <LoadingSpinner size="inline" /> : 'Generate Prompt'}
+          {isLoading ? <LoadingSpinner /> : 'Generate Prompt'}
         </button>
       </div>
 

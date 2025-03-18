@@ -88,7 +88,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  min-width: 120px;
 }
 
 .generate-flux-button:hover {
@@ -97,14 +97,14 @@
 }
 
 .generate-flux-button:disabled {
-  opacity: 0.7;
   cursor: not-allowed;
-  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .generate-flux-button .loading-spinner {
-  border-color: rgba(255, 255, 255, 0.3);
-  border-top-color: white;
   width: 16px;
   height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
 } 

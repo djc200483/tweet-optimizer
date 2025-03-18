@@ -117,9 +117,23 @@ export default function ImageGenerator() {
           </select>
 
           <button
-            className="generate-flux-button"
             onClick={handleGenerateWithFlux}
             disabled={isGenerateLoading || !prompt.trim()}
+            style={{
+              background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+              color: 'white',
+              border: 'none',
+              width: '129.64px',
+              height: '36px',
+              borderRadius: '8px',
+              fontSize: '14px',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              visibility: prompt.trim() ? 'visible' : 'hidden'
+            }}
           >
             {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
           </button>

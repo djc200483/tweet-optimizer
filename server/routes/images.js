@@ -30,17 +30,22 @@ router.get('/my-images', authMiddleware, async (req, res) => {
 router.get('/explore', authMiddleware, async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT 
-        gi.*,
-        CASE 
-          WHEN u.deleted_at IS NOT NULL THEN 'Deleted User'
-          ELSE u.x_handle 
-        END as creator_handle
-      FROM generated_images gi
-      LEFT JOIN users u ON gi.user_id = u.id
-      WHERE gi.is_private = false
-      ORDER BY gi.created_at DESC
-      LIMIT 100`,  // Limiting to prevent overwhelming response
+      `WITH ranked_images AS (
+        SELECT 
+          gi.*,
+          CASE 
+            WHEN u.deleted_at IS NOT NULL THEN 'Deleted User'
+            ELSE u.x_handle 
+          END as creator_handle,
+          ROW_NUMBER() OVER (PARTITION BY DATE_TRUNC('second', gi.created_at) ORDER BY gi.created_at) as rn
+        FROM generated_images gi
+        LEFT JOIN users u ON gi.user_id = u.id
+        WHERE gi.is_private = false
+      )
+      SELECT * FROM ranked_images 
+      WHERE rn = 1
+      ORDER BY created_at DESC
+      LIMIT 2000`,
       []
     );
     res.json(result.rows);

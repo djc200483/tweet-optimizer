@@ -183,13 +183,18 @@ export default function ImageToPrompt() {
           onClick={handleSubmit}
           disabled={!selectedFile || isLoading}
           style={{
-            background: 'rgba(30, 32, 40, 0.95)',
+            background: !selectedFile ? 'rgb(42, 43, 50)' : 'linear-gradient(135deg, #00c2ff, #a855f7)',
             color: 'white',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            padding: '10px 20px',
+            border: 'none',
+            width: '129.64px',
+            height: '36px',
             borderRadius: '8px',
-            cursor: 'pointer',
-            fontSize: '14px'
+            fontSize: '14px',
+            cursor: !selectedFile ? 'not-allowed' : 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
           }}
         >
           {isLoading ? <LoadingSpinner size="inline" /> : 'Generate Prompt'}

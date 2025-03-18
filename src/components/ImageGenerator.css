@@ -90,6 +90,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
 }
 
 .generate-flux-button:hover {
@@ -101,10 +102,13 @@
   background: linear-gradient(135deg, rgb(255, 107, 107), rgb(255, 142, 83));
   opacity: 0.7;
   cursor: not-allowed;
+  transform: none;
 }
 
 .generate-flux-button .loading-spinner {
   width: 16px;
   height: 16px;
   margin: 0;
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: white;
 } 

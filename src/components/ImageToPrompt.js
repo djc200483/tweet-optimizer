@@ -217,7 +217,7 @@ export default function ImageToPrompt() {
               onClick={handleGenerateWithFlux}
               disabled={isGenerateLoading}
             >
-              {isGenerateLoading ? <LoadingSpinner /> : 'Generate with Flux'}
+              {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
             </button>
           </div>
 

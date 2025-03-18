@@ -97,9 +97,9 @@
 }
 
 .generate-flux-button:disabled {
-  cursor: not-allowed;
-  pointer-events: none;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
   opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .generate-flux-button .loading-spinner {
@@ -107,4 +107,5 @@
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top: 2px solid white;
+  margin-right: 8px;
 } 

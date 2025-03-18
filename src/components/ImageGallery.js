@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './auth/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
+import Masonry from 'react-masonry-css';
 import './ImageGallery.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -12,6 +13,13 @@ export default function ImageGallery() {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [activeTab, setActiveTab] = useState('explore'); // Changed default to 'explore'
+
+  const breakpointColumns = {
+    default: 4,
+    1200: 3,
+    768: 2,
+    480: 1
+  };
 
   useEffect(() => {
     fetchImages(activeTab);
@@ -89,7 +97,11 @@ export default function ImageGallery() {
             : "No public images available yet. Be the first to share your creations!"}
         </div>
       ) : (
-        <div className="image-grid">
+        <Masonry
+          breakpointCols={breakpointColumns}
+          className="masonry-grid"
+          columnClassName="masonry-grid_column"
+        >
           {images.map((image) => (
             <div 
               key={image.id} 
@@ -99,7 +111,7 @@ export default function ImageGallery() {
               <img src={image.s3_url || image.image_url} alt={image.prompt} />
             </div>
           ))}
-        </div>
+        </Masonry>
       )}
 
       {selectedImage && (

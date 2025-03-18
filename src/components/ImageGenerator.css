@@ -38,4 +38,37 @@
 .gallery-section {
   width: 100%;
   min-height: 400px;
+}
+
+.generated-images-container {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.generated-images-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px;
+}
+
+.generated-image-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(30, 32, 40, 0.95);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.generated-image-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.generated-image-item:hover {
+  transform: translateY(-2px);
 } 

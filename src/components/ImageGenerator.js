@@ -121,7 +121,14 @@ export default function ImageGenerator() {
             onClick={handleGenerateWithFlux}
             disabled={isGenerateLoading || !prompt.trim()}
           >
-            {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
+            {isGenerateLoading ? (
+              <>
+                <LoadingSpinner size="inline" />
+                <span style={{ marginLeft: '4px' }}>Generating...</span>
+              </>
+            ) : (
+              'Generate with Flux'
+            )}
           </button>
         </div>
 

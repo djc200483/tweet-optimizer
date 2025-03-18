@@ -135,9 +135,9 @@ export default function ImageGenerator() {
         {generatedImages.length > 0 && (
           <div className="generated-images-container">
             <h3>Generated Images</h3>
-            <div className="generated-images-grid">
+            <div className="image-grid">
               {generatedImages.map((image, index) => (
-                <div key={index} className="generated-image-item">
+                <div key={index} className="image-item">
                   <img src={image.originalUrl} alt={`Generated ${index + 1}`} />
                 </div>
               ))}

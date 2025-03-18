@@ -296,7 +296,7 @@ export default function PromptAssistant() {
                     ))}
                   </select>
                   <button 
-                    className="generate-image-button"
+                    className="generate-flux-button"
                     onClick={() => handleGenerateWithFlux(false)}
                     disabled={isSuperchargeLoading || isGenerateLoading}
                   >
@@ -340,7 +340,7 @@ export default function PromptAssistant() {
                         ))}
                       </select>
                       <button 
-                        className="generate-image-button"
+                        className="generate-flux-button"
                         onClick={() => handleGenerateWithFlux(true)}
                         disabled={isSuperchargeLoading || isGenerateLoading}
                       >

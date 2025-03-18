@@ -90,6 +90,7 @@
   box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
   min-width: 150px;
   height: 40px;
+  width: fit-content;
 }
 
 .generate-flux-button:hover:not(:disabled) {
@@ -104,7 +105,8 @@
 }
 
 .generate-flux-button .loading-spinner-inline {
-  margin: 0 4px;
   border-color: rgba(255, 255, 255, 0.3);
   border-top-color: white;
+  width: 16px;
+  height: 16px;
 } 

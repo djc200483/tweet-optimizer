@@ -13,6 +13,7 @@ export default function ImageGallery() {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [activeTab, setActiveTab] = useState('explore'); // Changed default to 'explore'
+  const [isPromptCollapsed, setIsPromptCollapsed] = useState(true);
 
   const breakpointColumns = {
     default: 4,
@@ -117,9 +118,21 @@ export default function ImageGallery() {
       {selectedImage && (
         <div className="image-modal" onClick={() => setSelectedImage(null)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <img src={selectedImage.s3_url || selectedImage.image_url} alt={selectedImage.prompt} />
+            <div className="modal-image-container">
+              <img src={selectedImage.s3_url || selectedImage.image_url} alt={selectedImage.prompt} />
+            </div>
             <div className="modal-info">
-              <p className="image-prompt">{selectedImage.prompt}</p>
+              <div className={`image-prompt ${isPromptCollapsed ? 'collapsed' : ''}`}>
+                {selectedImage.prompt}
+              </div>
+              {selectedImage.prompt.length > 200 && (
+                <button 
+                  className="show-more-button"
+                  onClick={() => setIsPromptCollapsed(!isPromptCollapsed)}
+                >
+                  {isPromptCollapsed ? 'Show more' : 'Show less'}
+                </button>
+              )}
               <div className="image-metadata">
                 <span className="date">
                   {formatDate(selectedImage.created_at)}

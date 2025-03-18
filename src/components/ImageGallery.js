@@ -11,7 +11,7 @@ export default function ImageGallery() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [activeTab, setActiveTab] = useState('my-images'); // 'my-images' or 'explore'
+  const [activeTab, setActiveTab] = useState('explore'); // Changed default to 'explore'
 
   useEffect(() => {
     fetchImages(activeTab);
@@ -54,7 +54,7 @@ export default function ImageGallery() {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setSelectedImage(null); // Clear selected image when changing tabs
+    setSelectedImage(null);
   };
 
   if (loading) {
@@ -69,16 +69,16 @@ export default function ImageGallery() {
     <div className="image-gallery">
       <div className="gallery-tabs">
         <button 
-          className={`tab-button ${activeTab === 'my-images' ? 'active' : ''}`}
-          onClick={() => handleTabChange('my-images')}
-        >
-          My Images
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'explore' ? 'active' : ''}`}
+          className={`choose-image-button ${activeTab === 'explore' ? 'active' : ''}`}
           onClick={() => handleTabChange('explore')}
         >
           Explore
+        </button>
+        <button 
+          className={`choose-image-button ${activeTab === 'my-images' ? 'active' : ''}`}
+          onClick={() => handleTabChange('my-images')}
+        >
+          My Images
         </button>
       </div>
 

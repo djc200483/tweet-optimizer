@@ -1,6 +1,6 @@
 .image-gallery {
   padding: 0;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -12,36 +12,39 @@
 }
 
 .choose-image-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  color: white;
   padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #fff;
-  background: rgba(30, 32, 40, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
   min-width: 120px;
   text-align: center;
 }
 
 .choose-image-button:hover {
-  background: rgba(40, 42, 50, 0.95);
-  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
 }
 
 .choose-image-button.active {
-  background: linear-gradient(135deg, #FF6B6B, #FF8E53);
-  border: none;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
+  transform: translateY(-2px);
 }
 
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
   padding: 0;
   width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .image-item {
@@ -54,6 +57,8 @@
   cursor: pointer;
   aspect-ratio: 1;
   width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
 }
 
 .image-item:hover {

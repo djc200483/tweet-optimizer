@@ -76,39 +76,35 @@
 }
 
 .generate-flux-button {
-  background: linear-gradient(135deg, rgb(255, 107, 107), rgb(255, 142, 83));
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 12px;
+  font-size: 0.9rem;
   cursor: pointer;
-  font-weight: 500;
   transition: all 0.3s ease;
-  box-shadow: rgba(255, 107, 107, 0.2) 0px 2px 8px;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 150px;
-  height: 40px;
+  gap: 8px;
 }
 
 .generate-flux-button:hover {
-  transform: translateY(-1px);
-  box-shadow: rgba(255, 107, 107, 0.3) 0px 4px 12px;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
 }
 
 .generate-flux-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-  background: linear-gradient(135deg, rgb(255, 107, 107), rgb(255, 142, 83));
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
 }
 
 .generate-flux-button .loading-spinner {
-  margin-right: 8px;
   border-color: rgba(255, 255, 255, 0.3);
   border-top-color: white;
-  vertical-align: middle;
   width: 16px;
   height: 16px;
-  margin: 0;
 } 

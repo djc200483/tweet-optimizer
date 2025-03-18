@@ -7,7 +7,6 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function ImageGenerator() {
   const { token, user } = useAuth();
-  const [activeTab, setActiveTab] = useState('generate');
   const [prompt, setPrompt] = useState('');
   const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
   const [generatedImages, setGeneratedImages] = useState([]);
@@ -79,98 +78,82 @@ export default function ImageGenerator() {
         <p>Create stunning AI-generated images from your text prompts. Simply enter your prompt, choose your preferred aspect ratio, and let our AI bring your vision to life.</p>
       </div>
 
-      <div className="tabs">
-        <button 
-          className={`tab ${activeTab === 'generate' ? 'active' : ''}`}
-          onClick={() => setActiveTab('generate')}
-        >
-          Generate
-        </button>
-        <button 
-          className={`tab ${activeTab === 'gallery' ? 'active' : ''}`}
-          onClick={() => setActiveTab('gallery')}
-        >
-          Gallery
-        </button>
-      </div>
+      <div className="prompt-input-section">
+        <textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="Enter your image prompt here..."
+          className="prompt-textarea"
+          rows={4}
+          style={{
+            width: '100%',
+            padding: '12px',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'rgba(30, 32, 40, 0.95)',
+            color: '#ffffff',
+            fontSize: '14px',
+            resize: 'vertical',
+            marginBottom: '16px'
+          }}
+        />
 
-      {activeTab === 'generate' ? (
-        <div className="prompt-input-section">
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Enter your image prompt here..."
-            className="prompt-textarea"
-            rows={4}
+        {error && <div className="error-message">{error}</div>}
+
+        <div className="aspect-ratio-section">
+          <label htmlFor="aspect-ratio" style={{ marginRight: '12px' }}>Select Aspect Ratio:</label>
+          <select
+            id="aspect-ratio"
+            value={selectedAspectRatio}
+            onChange={(e) => setSelectedAspectRatio(e.target.value)}
+            className="aspect-ratio-select"
+            style={{ marginRight: '12px' }}
+          >
+            {aspectRatios.map(ratio => (
+              <option key={ratio.value} value={ratio.value}>
+                {ratio.label}
+              </option>
+            ))}
+          </select>
+
+          <button
+            className="generate-flux-button"
+            onClick={handleGenerateWithFlux}
+            disabled={isGenerateLoading || !prompt.trim()}
             style={{
-              width: '100%',
-              padding: '12px',
+              background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
               borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              background: 'rgba(30, 32, 40, 0.95)',
-              color: '#ffffff',
-              fontSize: '14px',
-              resize: 'vertical',
-              marginBottom: '16px'
+              cursor: 'pointer',
+              fontWeight: '500',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 2px 8px rgba(255, 107, 107, 0.2)'
             }}
-          />
-
-          {error && <div className="error-message">{error}</div>}
-
-          <div className="aspect-ratio-section">
-            <label htmlFor="aspect-ratio" style={{ marginRight: '12px' }}>Select Aspect Ratio:</label>
-            <select
-              id="aspect-ratio"
-              value={selectedAspectRatio}
-              onChange={(e) => setSelectedAspectRatio(e.target.value)}
-              className="aspect-ratio-select"
-              style={{ marginRight: '12px' }}
-            >
-              {aspectRatios.map(ratio => (
-                <option key={ratio.value} value={ratio.value}>
-                  {ratio.label}
-                </option>
-              ))}
-            </select>
-
-            <button
-              className="generate-flux-button"
-              onClick={handleGenerateWithFlux}
-              disabled={isGenerateLoading || !prompt.trim()}
-              style={{
-                background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
-                color: 'white',
-                border: 'none',
-                padding: '10px 20px',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontWeight: '500',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 8px rgba(255, 107, 107, 0.2)'
-              }}
-            >
-              {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
-            </button>
-          </div>
-
-          {generatedImages.length > 0 && (
-            <div className="generated-images-container">
-              <h3>Generated Images</h3>
-              <div className="image-grid">
-                {generatedImages.map((image, index) => (
-                  <div key={index} className="image-item">
-                    <img src={image.originalUrl} alt={`Generated ${index + 1}`} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          >
+            {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
+          </button>
         </div>
-      ) : (
-        <div className="gallery-section">
+
+        {generatedImages.length > 0 && (
+          <div className="generated-images-container">
+            <h3>Generated Images</h3>
+            <div className="image-grid">
+              {generatedImages.map((image, index) => (
+                <div key={index} className="image-item">
+                  <img src={image.originalUrl} alt={`Generated ${index + 1}`} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="gallery-section" style={{ marginTop: '40px' }}>
+          <h3>Image Gallery</h3>
           <ImageGallery userId={user.id} />
         </div>
-      )}
+      </div>
     </div>
   );
 } 

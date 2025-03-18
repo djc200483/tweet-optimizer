@@ -73,34 +73,4 @@
 
 .image-item:hover {
   transform: translateY(-2px);
-}
-
-.generate-flux-button {
-  background: linear-gradient(135deg, #00c2ff, #a855f7);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 120px;
-}
-
-.generate-flux-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
-}
-
-.generate-flux-button:disabled {
-  background: #cbd5e0;
-  cursor: not-allowed;
-}
-
-.generate-flux-button .loading-spinner {
-  margin-right: 8px;
 } 

@@ -149,7 +149,7 @@ export default function ImageGenerator() {
           </div>
         )}
 
-        <div className="gallery-section" style={{ marginTop: '40px' }}>
+        <div style={{ marginTop: '40px' }}>
           <h3>Image Gallery</h3>
           <ImageGallery userId={user.id} />
         </div>

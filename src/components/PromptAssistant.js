@@ -300,7 +300,12 @@ export default function PromptAssistant() {
                     onClick={() => handleGenerateWithFlux(false)}
                     disabled={isSuperchargeLoading || isGenerateLoading}
                   >
-                    {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
+                    {isGenerateLoading ? (
+                      <>
+                        <LoadingSpinner size="inline" />
+                        Generate with Flux
+                      </>
+                    ) : 'Generate with Flux'}
                   </button>
                 </div>
               </div>
@@ -344,7 +349,12 @@ export default function PromptAssistant() {
                         onClick={() => handleGenerateWithFlux(true)}
                         disabled={isSuperchargeLoading || isGenerateLoading}
                       >
-                        {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
+                        {isGenerateLoading ? (
+                          <>
+                            <LoadingSpinner size="inline" />
+                            Generate with Flux
+                          </>
+                        ) : 'Generate with Flux'}
                       </button>
                     </div>
                   </div>

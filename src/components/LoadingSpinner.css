@@ -1,5 +1,5 @@
 .loading-container {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
@@ -9,8 +9,6 @@
   border-top: 2px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  width: 16px;
-  height: 16px;
 }
 
 /* Default size */
@@ -24,7 +22,6 @@
   width: 16px;
   height: 16px;
   border-width: 2px;
-  margin: 0;
 }
 
 /* Large size for full-screen loading */

@@ -298,7 +298,20 @@ export default function PromptAssistant() {
                   <button 
                     onClick={() => handleGenerateWithFlux(false)}
                     disabled={isSuperchargeLoading || isGenerateLoading}
-                    className="generate-flux-button"
+                    style={{
+                      background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+                      color: 'white',
+                      border: 'none',
+                      width: '129.64px',
+                      height: '36px',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
                   >
                     {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
                   </button>

@@ -66,10 +66,6 @@ export default function ImageGallery() {
     setSelectedImage(null);
   };
 
-  const handleOpenInNewTab = (imageUrl) => {
-    window.open(imageUrl, '_blank');
-  };
-
   const handleCopyPrompt = async (prompt) => {
     try {
       await navigator.clipboard.writeText(prompt);

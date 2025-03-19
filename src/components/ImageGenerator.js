@@ -107,6 +107,7 @@ export default function ImageGenerator() {
           placeholder="Enter your image prompt here..."
           className="prompt-textarea"
           rows={1}
+          style={{ height: '42px' }}
         />
 
         {error && <div className="error-message">{error}</div>}

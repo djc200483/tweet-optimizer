@@ -115,8 +115,11 @@
   resize: none;
   margin-bottom: 16px;
   overflow-y: hidden;
-  min-height: 44px;
+  min-height: 42px;
+  height: 42px;
   line-height: 1.5;
+  display: block;
+  box-sizing: border-box;
   transition: height 0.1s ease;
 }
 

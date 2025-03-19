@@ -14,6 +14,7 @@ export default function ImageGallery() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [activeTab, setActiveTab] = useState('explore');
   const [isCopied, setIsCopied] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   const breakpointColumns = {
     default: 4,
@@ -76,6 +77,24 @@ export default function ImageGallery() {
     }
   };
 
+  const handleOpenModal = (image) => {
+    setScrollPosition(window.scrollY);
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.top = `-${window.scrollY}px`;
+    setSelectedImage(image);
+  };
+
+  const handleCloseModal = () => {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.style.top = '';
+    window.scrollTo(0, scrollPosition);
+    setSelectedImage(null);
+  };
+
   if (loading) {
     return <div className="loading-container"><LoadingSpinner /></div>;
   }
@@ -117,7 +136,7 @@ export default function ImageGallery() {
             <div 
               key={image.id} 
               className="image-item"
-              onClick={() => setSelectedImage(image)}
+              onClick={() => handleOpenModal(image)}
             >
               <img src={image.s3_url || image.image_url} alt={image.prompt} />
             </div>
@@ -126,7 +145,7 @@ export default function ImageGallery() {
       )}
 
       {selectedImage && (
-        <div className="image-modal" onClick={() => setSelectedImage(null)}>
+        <div className="image-modal" onClick={handleCloseModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-image-container">
               <img 
@@ -156,7 +175,7 @@ export default function ImageGallery() {
                       <path d="M11 5.5V3.5C11 2.67157 10.3284 2 9.5 2H3.5C2.67157 2 2 2.67157 2 3.5V9.5C2 10.3284 2.67157 11 3.5 11H5.5" strokeLinejoin="round"/>
                     </svg>
                   </button>
-                  <button className="close-modal" onClick={() => setSelectedImage(null)}>×</button>
+                  <button className="close-modal" onClick={handleCloseModal}>×</button>
                 </div>
               </div>
               

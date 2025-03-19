@@ -88,23 +88,39 @@
 
 .modal-content {
   position: relative;
-  width: 90vw;
-  height: 90vh;
+  width: 95vw;
+  height: 95vh;
   max-width: 1400px;
   background: rgba(30, 32, 40, 0.95);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  display: grid;
-  grid-template-rows: 1fr auto;
+  display: flex;
+  flex-direction: row;
 }
 
 .modal-image-container {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   overflow: hidden;
+  background: rgba(20, 22, 30, 0.95);
+}
+
+.modal-info {
+  width: 350px;
+  padding: 20px;
+  color: white;
+  background: rgba(30, 32, 40, 0.95);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(30, 32, 40, 0.95);
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-content img {
@@ -112,17 +128,7 @@
   max-height: 100%;
   object-fit: contain;
   display: block;
-}
-
-.modal-info {
-  padding: 20px;
-  color: white;
-  background: rgba(20, 22, 30, 0.95);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  max-height: 30vh;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(30, 32, 40, 0.95);
+  border-radius: 8px;
 }
 
 .modal-info::-webkit-scrollbar {
@@ -259,18 +265,19 @@
   }
 
   .modal-content {
-    width: 95vw;
-    height: 95vh;
-    grid-template-rows: 1fr minmax(auto, 40vh);
-  }
-
-  .modal-image-container {
-    padding: 10px;
+    flex-direction: column;
   }
 
   .modal-info {
-    padding: 15px;
+    width: 100%;
+    height: auto;
     max-height: 40vh;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .modal-image-container {
+    height: 60vh;
   }
 
   .image-prompt {
@@ -289,10 +296,6 @@
 }
 
 @media (max-width: 700px) {
-  .modal-info {
-    padding: 15px;
-  }
-  
   .image-prompt {
     font-size: 14px;
   }
@@ -300,4 +303,97 @@
   .image-metadata {
     font-size: 12px;
   }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.close-modal {
+  position: static;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.modal-prompt-section {
+  margin-bottom: 24px;
+}
+
+.prompt-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+}
+
+.modal-metadata {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 16px;
+  margin-bottom: 24px;
+}
+
+.metadata-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.metadata-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.metadata-value {
+  color: white;
+  font-size: 0.9rem;
+}
+
+.modal-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action-button {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.action-icon {
+  font-size: 1.1rem;
 } 

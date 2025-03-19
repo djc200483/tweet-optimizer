@@ -14,6 +14,7 @@ export default function ImageGallery() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [activeTab, setActiveTab] = useState('explore'); // Changed default to 'explore'
   const [isPromptCollapsed, setIsPromptCollapsed] = useState(true);
+  const [isCopied, setIsCopied] = useState(false);
 
   const breakpointColumns = {
     default: 4,
@@ -64,6 +65,20 @@ export default function ImageGallery() {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setSelectedImage(null);
+  };
+
+  const handleOpenInNewTab = (imageUrl) => {
+    window.open(imageUrl, '_blank');
+  };
+
+  const handleCopyPrompt = async (prompt) => {
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy prompt:', err);
+    }
   };
 
   if (loading) {
@@ -119,30 +134,61 @@ export default function ImageGallery() {
         <div className="image-modal" onClick={() => setSelectedImage(null)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-image-container">
-              <img src={selectedImage.s3_url || selectedImage.image_url} alt={selectedImage.prompt} />
+              <img 
+                src={selectedImage.s3_url || selectedImage.image_url} 
+                alt={selectedImage.prompt}
+                loading="lazy"
+              />
             </div>
             <div className="modal-info">
-              <div className={`image-prompt ${isPromptCollapsed ? 'collapsed' : ''}`}>
-                {selectedImage.prompt}
+              <div className="modal-header">
+                <div className="modal-title">Image Details</div>
+                <button className="close-modal" onClick={() => setSelectedImage(null)}>×</button>
               </div>
-              {selectedImage.prompt.length > 200 && (
+              
+              <div className="modal-prompt-section">
+                <div className="prompt-label">Prompt</div>
+                <div className={`image-prompt ${isPromptCollapsed ? 'collapsed' : ''}`}>
+                  {selectedImage.prompt}
+                </div>
+                {selectedImage.prompt.length > 200 && (
+                  <button 
+                    className="show-more-button"
+                    onClick={() => setIsPromptCollapsed(!isPromptCollapsed)}
+                  >
+                    {isPromptCollapsed ? 'Show more' : 'Show less'}
+                  </button>
+                )}
+              </div>
+
+              <div className="modal-metadata">
+                <div className="metadata-item">
+                  <span className="metadata-label">Created</span>
+                  <span className="metadata-value">{formatDate(selectedImage.created_at)}</span>
+                </div>
+                <div className="metadata-item">
+                  <span className="metadata-label">Aspect Ratio</span>
+                  <span className="metadata-value">{selectedImage.aspect_ratio}</span>
+                </div>
+              </div>
+
+              <div className="modal-actions">
                 <button 
-                  className="show-more-button"
-                  onClick={() => setIsPromptCollapsed(!isPromptCollapsed)}
+                  className="action-button"
+                  onClick={() => handleOpenInNewTab(selectedImage.s3_url || selectedImage.image_url)}
                 >
-                  {isPromptCollapsed ? 'Show more' : 'Show less'}
+                  <span className="action-icon">↗</span>
+                  Open in New Tab
                 </button>
-              )}
-              <div className="image-metadata">
-                <span className="date">
-                  {formatDate(selectedImage.created_at)}
-                </span>
-                <span className="aspect-ratio">
-                  {selectedImage.aspect_ratio}
-                </span>
+                <button 
+                  className="action-button"
+                  onClick={() => handleCopyPrompt(selectedImage.prompt)}
+                >
+                  <span className="action-icon">📋</span>
+                  {isCopied ? 'Copied!' : 'Copy Prompt'}
+                </button>
               </div>
             </div>
-            <button className="close-modal" onClick={() => setSelectedImage(null)}>×</button>
           </div>
         </div>
       )}

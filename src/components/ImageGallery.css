@@ -146,9 +146,25 @@
 }
 
 .modal-prompt-section {
-  margin-bottom: 24px;
-  flex-grow: 1;
-  min-height: 200px;
+  height: 75%;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(30, 32, 40, 0.95);
+}
+
+.modal-prompt-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-prompt-section::-webkit-scrollbar-track {
+  background: rgba(30, 32, 40, 0.95);
+}
+
+.modal-prompt-section::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
 }
 
 .image-prompt {
@@ -333,9 +349,10 @@
 }
 
 .modal-metadata {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  height: 25%;
   padding-top: 16px;
-  margin-bottom: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
 }
 
 .metadata-item {

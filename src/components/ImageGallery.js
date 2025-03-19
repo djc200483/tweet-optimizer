@@ -181,15 +181,13 @@ export default function ImageGallery() {
                   <svg 
                     width="16" 
                     height="16" 
-                    viewBox="0 0 24 24" 
+                    viewBox="0 0 16 16" 
                     fill="none" 
                     stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
+                    strokeWidth="1.5"
                   >
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    <rect x="5.5" y="5.5" width="9" height="9" rx="1.5" strokeLinejoin="round"/>
+                    <path d="M11 5.5V3.5C11 2.67157 10.3284 2 9.5 2H3.5C2.67157 2 2 2.67157 2 3.5V9.5C2 10.3284 2.67157 11 3.5 11H5.5" strokeLinejoin="round"/>
                   </svg>
                 </button>
               </div>

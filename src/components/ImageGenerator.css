@@ -79,29 +79,29 @@
   background: linear-gradient(135deg, #FF6B6B, #FF8E53);
   color: white;
   border: none;
-  padding: 10px 20px;
+  width: 129.64px;
+  height: 36px;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 14px;
   cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
-  min-width: 160px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-}
-
-.generate-flux-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  visibility: visible;
+  transition: opacity 0.2s ease;
 }
 
 .generate-flux-button:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
+}
+
+@media (max-width: 768px) {
+  .generate-flux-button {
+    width: 100%;
+    margin-top: 8px;
+  }
 }
 
 .prompt-textarea {
@@ -125,4 +125,101 @@
 
 .prompt-textarea::placeholder {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.sticky-toolbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(18, 18, 24, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 24px;
+}
+
+.toolbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.prompt-input-container {
+  flex: 1;
+}
+
+.toolbar-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.aspect-ratio-select {
+  background: rgba(30, 32, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 11px;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.aspect-ratio-select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.prompt-textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(30, 32, 40, 0.95);
+  color: #ffffff;
+  font-size: 14px;
+  resize: none;
+  overflow-y: hidden;
+  min-height: 42px;
+  height: 42px;
+  line-height: 1.5;
+  display: block;
+  box-sizing: border-box;
+  transition: height 0.1s ease;
+  margin: 0;
+}
+
+.prompt-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media screen and (max-width: 768px) {
+  .sticky-toolbar {
+    padding: 12px;
+  }
+
+  .toolbar-content {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toolbar-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .aspect-ratio-select {
+    flex: 1;
+    max-width: 45%;
+  }
+
+  .generate-flux-button {
+    flex: 1;
+    max-width: 45%;
+  }
 } 

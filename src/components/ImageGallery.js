@@ -140,9 +140,9 @@ export default function ImageGallery() {
                 <div className="modal-title">Image Details</div>
                 <div className="modal-header-actions">
                   <button 
-                    className="copy-button"
+                    className={`copy-button ${isCopied ? 'copied' : ''}`}
                     onClick={() => handleCopyPrompt(selectedImage.prompt)}
-                    title={isCopied ? 'Copied!' : 'Copy Prompt'}
+                    aria-label={isCopied ? 'Copied!' : 'Copy Prompt'}
                   >
                     <svg 
                       width="16" 

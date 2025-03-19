@@ -198,28 +198,40 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
   .sticky-toolbar {
-    padding: 12px;
+    padding: 8px;
   }
 
   .toolbar-content {
     flex-direction: column;
-    gap: 8px;
+    width: 100%;
+  }
+
+  .prompt-input-container {
+    width: 100%;
+  }
+
+  .prompt-textarea {
+    width: 100%;
+    min-width: 100%;
+    margin-right: 0;
   }
 
   .toolbar-controls {
     width: 100%;
-    justify-content: space-between;
+    flex-direction: column;
+    margin-top: 8px;
+    gap: 8px;
   }
 
   .aspect-ratio-select {
-    flex: 1;
-    max-width: 45%;
+    width: 100%;
+    margin: 0;
   }
 
   .generate-flux-button {
-    flex: 1;
-    max-width: 45%;
+    width: 100%;
+    margin: 0;
   }
 } 

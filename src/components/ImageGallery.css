@@ -220,8 +220,8 @@
   align-items: center;
 }
 
-.copy-button {
-  background: none;
+.modal-header-actions .copy-button {
+  background: transparent;
   border: none;
   color: rgba(255, 255, 255, 0.8);
   width: 30px;
@@ -232,34 +232,43 @@
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 0;
+  outline: none;
 }
 
-.copy-button:hover {
+.modal-header-actions .copy-button:hover {
   color: white;
+  background: transparent;
 }
 
-.copy-button svg {
+.modal-header-actions .copy-button:focus {
+  outline: none;
+  background: transparent;
+}
+
+.modal-header-actions .copy-button svg {
   width: 14px;
   height: 14px;
 }
 
-.close-modal {
+.modal-header-actions .close-modal {
   width: 30px;
   height: 30px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
-  color: white;
   border: none;
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
   font-size: 20px;
-  transition: background-color 0.2s ease;
+  padding: 0;
 }
 
-.close-modal:hover {
+.modal-header-actions .close-modal:hover {
   background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .loading-container {

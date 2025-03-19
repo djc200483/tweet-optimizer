@@ -389,6 +389,7 @@
     width: 100vw;
     border-radius: 0;
     padding: 16px;
+    overflow-y: auto;
   }
 
   .modal-image-container {
@@ -398,12 +399,13 @@
 
   .modal-info {
     width: 100%;
-    height: auto;
+    min-height: 0;
     border-left: none;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 16px 8px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
   }
 
   .modal-header {
@@ -433,6 +435,7 @@
     height: auto;
     max-height: none;
     padding: 0 8px;
+    overflow-y: visible;
   }
 
   .image-prompt {
@@ -448,9 +451,10 @@
     gap: 12px;
     flex-direction: column;
     align-items: flex-start;
-    margin-top: auto;
+    margin-top: 16px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
+    margin-bottom: 16px;
   }
 }
 

@@ -379,4 +379,85 @@
 
 .modal-actions, .action-button, .open-in-new-tab {
   display: none;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+  .modal-content {
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    border-radius: 0;
+    padding: 16px;
+  }
+
+  .modal-image-container {
+    flex: 0 0 50vh;
+    padding: 8px;
+  }
+
+  .modal-info {
+    width: 100%;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 8px;
+  }
+
+  .modal-header {
+    position: sticky;
+    top: 0;
+    background: rgba(30, 32, 40, 0.95);
+    z-index: 10;
+    padding: 16px 8px;
+    margin-bottom: 16px;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .modal-header-actions {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    background: rgba(30, 32, 40, 0.95);
+    padding: 8px;
+    border-radius: 8px;
+    z-index: 11;
+  }
+
+  .modal-prompt-section {
+    height: auto;
+    max-height: none;
+    padding: 0 8px;
+  }
+
+  .image-metadata {
+    padding: 16px 8px;
+    gap: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .image-prompt {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    padding: 0 8px;
+  }
+}
+
+/* Ensure modal takes full screen on very small devices */
+@media screen and (max-width: 480px) {
+  .image-modal {
+    padding: 0;
+  }
+
+  .modal-content {
+    padding: 8px;
+  }
+
+  .modal-image-container {
+    flex: 0 0 40vh;
+  }
 } 

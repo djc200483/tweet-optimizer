@@ -175,20 +175,6 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-.image-prompt.collapsed {
-  max-height: none;
-  overflow: visible;
-}
-
-.image-prompt.collapsed::after {
-  display: none;
-}
-
-.show-more-button {
-  font-size: 0.7rem;
-  padding: 4px 0;
-}
-
 .image-metadata {
   display: flex;
   gap: 15px;
@@ -326,6 +312,12 @@
   color: #fff;
 }
 
+.modal-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .close-modal {
   position: static;
   width: 30px;
@@ -340,6 +332,10 @@
   justify-content: center;
   font-size: 20px;
   transition: background-color 0.2s ease;
+}
+
+.close-modal:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .prompt-label {
@@ -384,14 +380,15 @@
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.8);
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0;
 }
 
 .copy-button:hover {
@@ -401,8 +398,8 @@
 }
 
 .copy-button svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
 .action-button {

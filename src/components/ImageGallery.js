@@ -12,8 +12,7 @@ export default function ImageGallery() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [activeTab, setActiveTab] = useState('explore'); // Changed default to 'explore'
-  const [isPromptCollapsed, setIsPromptCollapsed] = useState(true);
+  const [activeTab, setActiveTab] = useState('explore');
   const [isCopied, setIsCopied] = useState(false);
 
   const breakpointColumns = {
@@ -143,22 +142,33 @@ export default function ImageGallery() {
             <div className="modal-info">
               <div className="modal-header">
                 <div className="modal-title">Image Details</div>
-                <button className="close-modal" onClick={() => setSelectedImage(null)}>×</button>
+                <div className="modal-header-actions">
+                  <button 
+                    className="copy-button"
+                    onClick={() => handleCopyPrompt(selectedImage.prompt)}
+                    title={isCopied ? 'Copied!' : 'Copy Prompt'}
+                  >
+                    <svg 
+                      width="16" 
+                      height="16" 
+                      viewBox="0 0 16 16" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="1.5"
+                    >
+                      <rect x="5.5" y="5.5" width="9" height="9" rx="1.5" strokeLinejoin="round"/>
+                      <path d="M11 5.5V3.5C11 2.67157 10.3284 2 9.5 2H3.5C2.67157 2 2 2.67157 2 3.5V9.5C2 10.3284 2.67157 11 3.5 11H5.5" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <button className="close-modal" onClick={() => setSelectedImage(null)}>×</button>
+                </div>
               </div>
               
               <div className="modal-prompt-section">
                 <div className="prompt-label">Prompt</div>
-                <div className={`image-prompt ${isPromptCollapsed ? 'collapsed' : ''}`}>
+                <div className="image-prompt">
                   {selectedImage.prompt}
                 </div>
-                {selectedImage.prompt.length > 200 && (
-                  <button 
-                    className="show-more-button"
-                    onClick={() => setIsPromptCollapsed(!isPromptCollapsed)}
-                  >
-                    {isPromptCollapsed ? 'Show more' : 'Show less'}
-                  </button>
-                )}
               </div>
 
               <div className="modal-metadata">
@@ -170,26 +180,6 @@ export default function ImageGallery() {
                   <span className="metadata-label">Aspect Ratio</span>
                   <span className="metadata-value">{selectedImage.aspect_ratio}</span>
                 </div>
-              </div>
-
-              <div className="modal-actions">
-                <button 
-                  className="copy-button"
-                  onClick={() => handleCopyPrompt(selectedImage.prompt)}
-                  title={isCopied ? 'Copied!' : 'Copy Prompt'}
-                >
-                  <svg 
-                    width="16" 
-                    height="16" 
-                    viewBox="0 0 16 16" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="1.5"
-                  >
-                    <rect x="5.5" y="5.5" width="9" height="9" rx="1.5" strokeLinejoin="round"/>
-                    <path d="M11 5.5V3.5C11 2.67157 10.3284 2 9.5 2H3.5C2.67157 2 2 2.67157 2 3.5V9.5C2 10.3284 2.67157 11 3.5 11H5.5" strokeLinejoin="round"/>
-                  </svg>
-                </button>
               </div>
             </div>
           </div>

@@ -383,18 +383,21 @@
 
 /* Mobile Styles */
 @media screen and (max-width: 768px) {
+  .image-modal {
+    padding: 0;
+    overflow: hidden;
+  }
+
   .modal-content {
     flex-direction: column;
     height: 100vh;
     width: 100vw;
+    max-width: 100%;
     border-radius: 0;
-    padding: 16px;
+    padding: 0;
     overflow-y: auto;
-  }
-
-  .modal-image-container {
-    flex: 0 0 50vh;
-    padding: 8px;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .modal-info {
@@ -406,44 +409,15 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
-  .modal-header {
-    position: sticky;
-    top: 0;
-    background: rgba(30, 32, 40, 0.95);
-    z-index: 10;
-    padding: 16px 8px;
-    margin-bottom: 16px;
-  }
-
-  .modal-title {
-    font-size: 1rem;
-  }
-
-  .modal-header-actions {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    background: rgba(30, 32, 40, 0.95);
+  .modal-image-container {
+    flex: 0 0 50vh;
     padding: 8px;
-    border-radius: 8px;
-    z-index: 11;
-  }
-
-  .modal-prompt-section {
-    height: auto;
-    max-height: none;
-    padding: 0 8px;
-    overflow-y: visible;
-  }
-
-  .image-prompt {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    padding: 0 8px;
-    text-align: left;
-    margin-bottom: 16px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .image-metadata {
@@ -455,6 +429,23 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
     margin-bottom: 16px;
+    box-sizing: border-box;
+  }
+
+  .modal-prompt-section {
+    height: auto;
+    max-height: none;
+    padding: 0 8px;
+    overflow-y: visible;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .image-prompt {
+    width: 100%;
+    box-sizing: border-box;
+    word-wrap: break-word;
   }
 }
 

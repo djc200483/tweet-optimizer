@@ -145,27 +145,27 @@
   border-radius: 4px;
 }
 
+.modal-prompt-section {
+  margin-bottom: 24px;
+  flex-grow: 1;
+  min-height: 200px;
+}
+
 .image-prompt {
   font-size: 0.8rem;
   line-height: 1.4;
-  margin: 0 0 15px 0;
+  margin: 0;
   white-space: pre-wrap;
-  position: relative;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .image-prompt.collapsed {
-  max-height: 80px;
-  overflow: hidden;
+  max-height: none;
+  overflow: visible;
 }
 
 .image-prompt.collapsed::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 40px;
-  background: linear-gradient(transparent, rgba(20, 22, 30, 0.95));
+  display: none;
 }
 
 .show-more-button {
@@ -326,10 +326,6 @@
   transition: background-color 0.2s ease;
 }
 
-.modal-prompt-section {
-  margin-bottom: 24px;
-}
-
 .prompt-label {
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.7);
@@ -360,38 +356,38 @@
 }
 
 .modal-actions {
-  padding: 16px 20px;
-  background: rgba(30, 32, 40, 0.95);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: absolute;
+  top: 20px;
+  right: 60px;
   display: flex;
-  flex-direction: column;
   gap: 8px;
-  position: sticky;
-  bottom: 0;
-  margin: auto -20px -20px -20px;
 }
 
-.action-button {
-  width: 100%;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.1);
+.copy-button {
+  background: none;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
-  color: white;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.8rem;
 }
 
-.action-button:hover {
-  background: rgba(255, 255, 255, 0.15);
+.copy-button:hover {
+  background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.3);
+  color: white;
 }
 
-.action-icon {
-  font-size: 1.1rem;
+.copy-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.action-button {
+  display: none;
 } 

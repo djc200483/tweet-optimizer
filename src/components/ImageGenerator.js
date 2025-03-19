@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { useAuth } from './auth/AuthContext';
 import ImageGallery from './ImageGallery';
+import './ImageGenerator.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -26,13 +27,20 @@ export default function ImageGenerator() {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
+      textarea.style.height = `${textarea.scrollHeight}px`;
     }
   };
 
-  useEffect(() => {
+  const handlePromptChange = (e) => {
+    setPrompt(e.target.value);
     adjustTextareaHeight();
-  }, [prompt]);
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      adjustTextareaHeight();
+    }
+  }, []);
 
   const handleGenerateWithFlux = async () => {
     if (!prompt.trim()) {
@@ -95,23 +103,10 @@ export default function ImageGenerator() {
         <textarea
           ref={textareaRef}
           value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
+          onChange={handlePromptChange}
           placeholder="Enter your image prompt here..."
           className="prompt-textarea"
           rows={1}
-          style={{
-            width: '100%',
-            padding: '12px',
-            borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            background: 'rgba(30, 32, 40, 0.95)',
-            color: '#ffffff',
-            fontSize: '14px',
-            resize: 'none',
-            marginBottom: '16px',
-            overflowY: 'hidden',
-            minHeight: '44px'
-          }}
         />
 
         {error && <div className="error-message">{error}</div>}

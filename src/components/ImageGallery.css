@@ -445,6 +445,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
+    position: relative;
   }
 
   .modal-image-container {
@@ -468,23 +469,23 @@
     gap: 12px;
     flex-direction: column;
     align-items: flex-start;
-    margin: 16px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    margin-top: auto;
+    background: rgba(30, 32, 40, 0.95);
   }
 
   .modal-prompt-section {
     height: auto;
     max-height: none;
     width: 100%;
-    max-width: 100%;
     padding: 0 8px;
     margin: 0;
-    overflow: hidden;
     box-sizing: border-box;
+    overflow-y: auto;
+    flex: 1;
   }
 
   .image-prompt {
@@ -495,6 +496,7 @@
     overflow-wrap: break-word;
     padding: 0;
     margin: 0;
+    text-align: left;
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { useAuth } from './auth/AuthContext';
 import ImageGallery from './ImageGallery';
@@ -12,6 +12,7 @@ export default function ImageGenerator() {
   const [generatedImages, setGeneratedImages] = useState([]);
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [error, setError] = useState('');
+  const textareaRef = useRef(null);
 
   const aspectRatios = [
     { value: '1:1', label: 'Square (1:1)' },
@@ -20,6 +21,18 @@ export default function ImageGenerator() {
     { value: '4:3', label: 'Standard (4:3)' },
     { value: '3:4', label: 'Portrait (3:4)' }
   ];
+
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [prompt]);
 
   const handleGenerateWithFlux = async () => {
     if (!prompt.trim()) {
@@ -80,11 +93,12 @@ export default function ImageGenerator() {
 
       <div className="prompt-input-section">
         <textarea
+          ref={textareaRef}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Enter your image prompt here..."
           className="prompt-textarea"
-          rows={4}
+          rows={1}
           style={{
             width: '100%',
             padding: '12px',
@@ -93,8 +107,10 @@ export default function ImageGenerator() {
             background: 'rgba(30, 32, 40, 0.95)',
             color: '#ffffff',
             fontSize: '14px',
-            resize: 'vertical',
-            marginBottom: '16px'
+            resize: 'none',
+            marginBottom: '16px',
+            overflowY: 'hidden',
+            minHeight: '44px'
           }}
         />
 

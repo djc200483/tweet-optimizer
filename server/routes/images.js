@@ -30,7 +30,8 @@ router.get('/my-images', authMiddleware, async (req, res) => {
 router.get('/explore', authMiddleware, async (req, res) => {
   try {
     const result = await db.query(
-      `WITH ranked_images AS (
+      `SELECT SETSEED(EXTRACT(EPOCH FROM DATE_TRUNC('day', NOW()))::INTEGER / 86400.0);
+      WITH ranked_images AS (
         SELECT 
           gi.*,
           CASE 
@@ -42,9 +43,7 @@ router.get('/explore', authMiddleware, async (req, res) => {
         WHERE gi.is_private = false
       )
       SELECT * FROM ranked_images
-      ORDER BY 
-        SETSEED(EXTRACT(EPOCH FROM DATE_TRUNC('day', NOW()))::INTEGER / 86400.0),
-        RANDOM()
+      ORDER BY RANDOM()
       LIMIT 2000`,
       []
     );

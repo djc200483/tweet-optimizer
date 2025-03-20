@@ -36,15 +36,15 @@ router.get('/explore', authMiddleware, async (req, res) => {
           CASE 
             WHEN u.deleted_at IS NOT NULL THEN 'Deleted User'
             ELSE u.x_handle 
-          END as creator_handle,
-          ROW_NUMBER() OVER (PARTITION BY DATE_TRUNC('second', gi.created_at) ORDER BY gi.created_at) as rn
+          END as creator_handle
         FROM generated_images gi
         LEFT JOIN users u ON gi.user_id = u.id
         WHERE gi.is_private = false
       )
-      SELECT * FROM ranked_images 
-      WHERE rn = 1
-      ORDER BY created_at DESC
+      SELECT * FROM ranked_images
+      ORDER BY 
+        SETSEED(EXTRACT(EPOCH FROM DATE_TRUNC('day', NOW()))::INTEGER / 86400.0),
+        RANDOM()
       LIMIT 2000`,
       []
     );

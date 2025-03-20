@@ -16,9 +16,27 @@ export default function ImageGallery({ userId, onUsePrompt }) {
   const [isCopied, setIsCopied] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   
-  // Add state for caching explore images and tracking last fetch time
-  const [exploreImages, setExploreImages] = useState([]);
-  const [lastExploreFetch, setLastExploreFetch] = useState(null);
+  // Initialize state from localStorage if available
+  const [exploreImages, setExploreImages] = useState(() => {
+    const cached = localStorage.getItem('exploreImages');
+    return cached ? JSON.parse(cached) : [];
+  });
+  const [lastExploreFetch, setLastExploreFetch] = useState(() => {
+    return localStorage.getItem('lastExploreFetch') || null;
+  });
+
+  // Update localStorage when cache changes
+  useEffect(() => {
+    if (exploreImages.length > 0) {
+      localStorage.setItem('exploreImages', JSON.stringify(exploreImages));
+    }
+  }, [exploreImages]);
+
+  useEffect(() => {
+    if (lastExploreFetch) {
+      localStorage.setItem('lastExploreFetch', lastExploreFetch);
+    }
+  }, [lastExploreFetch]);
 
   const breakpointColumns = {
     default: 4,

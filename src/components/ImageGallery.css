@@ -39,13 +39,12 @@
 
 .masonry-grid {
   display: flex;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: auto;
+  margin-left: -16px; /* Adjust based on your gap preference */
 }
 
 .masonry-grid_column {
-  padding: 0 6px;
+  padding-left: 16px; /* Adjust based on your gap preference */
   background-clip: padding-box;
 }
 
@@ -623,4 +622,37 @@
 .use-prompt-button svg {
   width: 16px;
   height: 16px;
+}
+
+/* Preserve existing desktop styles */
+@media screen and (min-width: 769px) {
+  .masonry-grid {
+    margin-left: -16px;
+  }
+  
+  .masonry-grid_column {
+    padding-left: 16px;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media screen and (max-width: 768px) {
+  .masonry-grid {
+    margin-left: -8px; /* Smaller gap for mobile */
+  }
+  
+  .masonry-grid_column {
+    padding-left: 8px; /* Smaller gap for mobile */
+  }
+
+  .image-item {
+    margin-bottom: 8px; /* Smaller vertical gap for mobile */
+  }
+
+  /* Ensure images scale properly in the 2-column layout */
+  .image-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
 } 

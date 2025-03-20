@@ -24,7 +24,7 @@ export default function ImageGallery({ userId, onUsePrompt }) {
     default: 4,
     1200: 3,
     768: 2,
-    480: 1
+    500: 2
   };
 
   // Check if we need to fetch new explore images

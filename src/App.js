@@ -376,29 +376,6 @@ function AppContent() {
 
   const displayHandle = user?.x_handle?.replace(/^@@/, '@').replace(/^@/, '');
 
-  const renderContent = () => {
-    if (showAuth) {
-      return <Auth onClose={() => setShowAuth(false)} />;
-    }
-
-    return (
-      <div className="app-container">
-        <header className="header-content">
-          {!token && (
-            <button className="login-button" onClick={() => setShowAuth(true)}>
-              Login/Register
-            </button>
-          )}
-        </header>
-        {currentFeature ? (
-          renderFeature()
-        ) : (
-          <Home onFeatureSelect={handleFeatureSelect} />
-        )}
-      </div>
-    );
-  };
-
   return (
     <div className="App">
       {apiError && (
@@ -412,9 +389,40 @@ function AppContent() {
         </div>
       )}
       {isAuthLoading ? (
-        <LoadingSpinner />
+        <div className="auth-loading">
+          <LoadingSpinner />
+          <p>Loading...</p>
+        </div>
       ) : (
-        renderContent()
+        <div className="app-content">
+          {showAuth ? (
+            <Auth onClose={() => setShowAuth(false)} />
+          ) : user?.is_admin ? (
+            <div className="admin-container">
+              <button className="logout-button" onClick={logout}>Logout</button>
+              <Admin />
+            </div>
+          ) : (
+            <>
+              {user && token ? (
+                <div className="auth-header">
+                  <span className="user-handle">{displayHandle}</span>
+                  <button className="logout-button" onClick={logout}>
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  className="auth-toggle-button"
+                  onClick={() => setShowAuth(true)}
+                >
+                  Login/Register
+                </button>
+              )}
+              {renderFeature()}
+            </>
+          )}
+        </div>
       )}
     </div>
   );

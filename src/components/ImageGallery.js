@@ -158,8 +158,17 @@ export default function ImageGallery({ userId, onUsePrompt }) {
   const handleUsePrompt = (e, prompt) => {
     e.stopPropagation(); // Prevent opening the modal
     onUsePrompt(prompt);
-    // Optionally scroll to the top where the textarea is
+    // Scroll to the top where the textarea is
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Trigger the textarea resize after setting the prompt
+    setTimeout(() => {
+      const textarea = document.querySelector('.prompt-textarea');
+      if (textarea) {
+        // Trigger the input event to resize the textarea
+        const event = new Event('input', { bubbles: true });
+        textarea.dispatchEvent(event);
+      }
+    }, 0);
   };
 
   if (loading) {
@@ -207,7 +216,7 @@ export default function ImageGallery({ userId, onUsePrompt }) {
             >
               <img src={image.s3_url || image.image_url} alt={image.prompt} />
               <div className="hover-overlay">
-                <span className="creator-handle">@{image.creator_handle}</span>
+                <span className="creator-handle">{image.creator_handle}</span>
                 <button 
                   className="use-prompt-button"
                   onClick={(e) => handleUsePrompt(e, image.prompt)}

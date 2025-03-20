@@ -152,7 +152,7 @@ export default function ImageGenerator() {
       )}
 
       <div style={{ marginTop: '24px' }}>
-        <ImageGallery userId={user.id} />
+        <ImageGallery userId={user.id} onUsePrompt={setPrompt} />
       </div>
     </div>
   );

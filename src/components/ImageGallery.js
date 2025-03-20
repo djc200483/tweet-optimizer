@@ -6,7 +6,7 @@ import './ImageGallery.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-export default function ImageGallery() {
+export default function ImageGallery({ userId, onUsePrompt }) {
   const { token } = useAuth();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -155,6 +155,13 @@ export default function ImageGallery() {
     setSelectedImage(null);
   };
 
+  const handleUsePrompt = (e, prompt) => {
+    e.stopPropagation(); // Prevent opening the modal
+    onUsePrompt(prompt);
+    // Optionally scroll to the top where the textarea is
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (loading) {
     return <div className="loading-container"><LoadingSpinner /></div>;
   }
@@ -199,6 +206,27 @@ export default function ImageGallery() {
               onClick={() => handleOpenModal(image)}
             >
               <img src={image.s3_url || image.image_url} alt={image.prompt} />
+              <div className="hover-overlay">
+                <span className="creator-handle">@{image.creator_handle}</span>
+                <button 
+                  className="use-prompt-button"
+                  onClick={(e) => handleUsePrompt(e, image.prompt)}
+                  title="Use this prompt"
+                >
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2"
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                    <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+                  </svg>
+                  Use Prompt
+                </button>
+              </div>
             </div>
           ))}
         </Masonry>

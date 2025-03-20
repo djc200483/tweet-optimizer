@@ -93,6 +93,20 @@ export default function ImageGenerator() {
     }
   };
 
+  const handleKeyDown = (e) => {
+    // Prevent page scroll when using arrow keys in textarea
+    if (['ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) {
+      e.stopPropagation();
+    }
+  };
+
+  const handleWheel = (e) => {
+    // If the textarea can scroll (content height > visible height)
+    if (e.target.scrollHeight > e.target.clientHeight) {
+      e.stopPropagation();
+    }
+  };
+
   return (
     <div className="optimizer-container">
       <div className="sticky-toolbar">
@@ -102,6 +116,8 @@ export default function ImageGenerator() {
               ref={textareaRef}
               value={prompt}
               onChange={handlePromptChange}
+              onKeyDown={handleKeyDown}
+              onWheel={handleWheel}
               placeholder="Enter your image prompt here..."
               className="prompt-textarea"
               rows={1}

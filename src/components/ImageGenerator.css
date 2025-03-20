@@ -48,14 +48,15 @@
   box-sizing: border-box;
 }
 
-.image-grid {
+/* Make selectors specific to generated images section */
+.generated-images-container .image-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   width: 100%;
 }
 
-.image-item {
+.generated-images-container .image-item {
   position: relative;
   width: 100%;
   border-radius: 12px;
@@ -67,7 +68,7 @@
   aspect-ratio: 1;
 }
 
-.image-item img {
+.generated-images-container .image-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -110,7 +111,7 @@
     padding: 0 8px;
   }
 
-  .image-grid {
+  .generated-images-container .image-grid {
     gap: 8px;
   }
 }

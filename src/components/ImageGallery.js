@@ -217,25 +217,27 @@ export default function ImageGallery({ userId, onUsePrompt }) {
             >
               <img src={image.s3_url || image.image_url} alt={image.prompt} />
               <div className="hover-overlay">
-                <span className="creator-handle">{image.creator_handle}</span>
-                <button 
-                  className="use-prompt-button"
-                  onClick={(e) => handleUsePrompt(e, image.prompt)}
-                  title="Use this prompt"
-                >
-                  <svg 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2"
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
+                <div className="creator-info">
+                  <span className="creator-handle">{image.creator_handle}</span>
+                  <div 
+                    className="use-prompt-icon"
+                    onClick={(e) => handleUsePrompt(e, image.prompt)}
+                    title="Use this prompt"
                   >
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                    <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                  </svg>
-                  Use Prompt
-                </button>
+                    <svg 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2"
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    >
+                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                      <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+                    </svg>
+                    <span className="tooltip">Use Prompt</span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}

@@ -575,10 +575,6 @@
   color: white;
   opacity: 0;
   transition: opacity 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
 }
 
 /* Only show hover effects on devices that support hover */
@@ -595,33 +591,57 @@
   }
 }
 
+.creator-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .creator-handle {
   font-size: 14px;
   color: #ffffff;
 }
 
-.use-prompt-button {
-  background: rgba(255, 255, 255, 0.9);
-  color: #000;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
+.use-prompt-icon {
   cursor: pointer;
+  padding: 4px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  position: relative;
 }
 
-.use-prompt-button:hover {
-  background: #ffffff;
+.use-prompt-icon:hover {
   transform: translateY(-1px);
 }
 
-.use-prompt-button svg {
+.use-prompt-icon svg {
   width: 16px;
   height: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Tooltip styles */
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.use-prompt-icon:hover .tooltip {
+  opacity: 1;
 }
 
 /* Preserve existing desktop styles */

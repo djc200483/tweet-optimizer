@@ -15,6 +15,10 @@ export default function ImageGallery() {
   const [activeTab, setActiveTab] = useState('explore');
   const [isCopied, setIsCopied] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+  
+  // Add state for caching explore images and tracking last fetch time
+  const [exploreImages, setExploreImages] = useState([]);
+  const [lastExploreFetch, setLastExploreFetch] = useState(null);
 
   const breakpointColumns = {
     default: 4,
@@ -23,30 +27,86 @@ export default function ImageGallery() {
     480: 1
   };
 
+  // Check if we need to fetch new explore images
+  const shouldFetchExplore = () => {
+    if (!lastExploreFetch) return true;
+    
+    const now = new Date();
+    const lastFetch = new Date(lastExploreFetch);
+    
+    // Fetch if:
+    // 1. It's a new UTC day
+    // 2. Or it's been more than an hour (to catch new images)
+    return (
+      now.getUTCDate() !== lastFetch.getUTCDate() ||
+      now.getTime() - lastFetch.getTime() > 3600000 // 1 hour in milliseconds
+    );
+  };
+
   useEffect(() => {
-    fetchImages(activeTab);
+    const fetchData = async () => {
+      if (activeTab === 'explore') {
+        if (shouldFetchExplore()) {
+          await fetchExploreImages();
+        } else {
+          setImages(exploreImages);
+          setLoading(false);
+        }
+      } else {
+        await fetchMyImages();
+      }
+    };
+
+    fetchData();
   }, [token, activeTab]);
 
-  const fetchImages = async (tab) => {
+  const fetchExploreImages = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${API_URL}/api/images/${tab}`, {
+      const response = await fetch(`${API_URL}/api/images/explore`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch ${tab} images`);
+        throw new Error('Failed to fetch explore images');
+      }
+
+      const data = await response.json();
+      setExploreImages(data);
+      setImages(data);
+      setLastExploreFetch(new Date().toISOString());
+    } catch (err) {
+      console.error('Error fetching explore images:', err);
+      setError('Failed to load explore images. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMyImages = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`${API_URL}/api/images/my-images`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch my images');
       }
 
       const data = await response.json();
       setImages(data);
     } catch (err) {
-      console.error(`Error fetching ${tab} images:`, err);
-      setError(`Failed to load ${tab} images. Please try again later.`);
+      console.error('Error fetching my images:', err);
+      setError('Failed to load your images. Please try again later.');
     } finally {
       setLoading(false);
     }

@@ -43,31 +43,34 @@
 .generated-images-container {
   margin: 20px auto;
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 .image-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
-  justify-content: center;
-  width: 800px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .image-item {
-  flex: 1;
   position: relative;
+  width: 100%;
   border-radius: 12px;
   overflow: hidden;
   background: rgba(30, 32, 40, 0.95);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   cursor: pointer;
+  aspect-ratio: 1;
 }
 
 .image-item img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
@@ -101,6 +104,14 @@
   .generate-flux-button {
     width: 100%;
     margin-top: 8px;
+  }
+
+  .generated-images-container {
+    padding: 0 8px;
+  }
+
+  .image-grid {
+    gap: 8px;
   }
 }
 

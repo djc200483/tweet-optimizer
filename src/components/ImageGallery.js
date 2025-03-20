@@ -160,13 +160,14 @@ export default function ImageGallery({ userId, onUsePrompt }) {
     onUsePrompt(prompt);
     // Scroll to the top where the textarea is
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Trigger the textarea resize after setting the prompt
+    // Trigger the textarea resize
     setTimeout(() => {
       const textarea = document.querySelector('.prompt-textarea');
       if (textarea) {
-        // Trigger the input event to resize the textarea
-        const event = new Event('input', { bubbles: true });
-        textarea.dispatchEvent(event);
+        // Set height to auto first to get the correct scrollHeight
+        textarea.style.height = 'auto';
+        // Set the height to the scrollHeight
+        textarea.style.height = `${textarea.scrollHeight}px`;
       }
     }, 0);
   };

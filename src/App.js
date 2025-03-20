@@ -378,7 +378,23 @@ function AppContent() {
 
   const renderContent = () => {
     if (!token) {
-      return <Home onSelectFeature={handleFeatureSelect} isLoggedIn={false} />;
+      return (
+        <>
+          <header>
+            <div className="header-content">
+              <h1>EchoSphere</h1>
+              <button 
+                className="login-button"
+                onClick={() => setShowAuth(true)}
+              >
+                Login/Register
+              </button>
+            </div>
+          </header>
+          <Home onSelectFeature={handleFeatureSelect} isLoggedIn={false} />
+          {showAuth && <Auth onClose={() => setShowAuth(false)} />}
+        </>
+      );
     }
 
     if (activeTab === 'home') {

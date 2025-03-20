@@ -2254,27 +2254,27 @@ body {
 
 .header-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1rem 2rem;
   width: 100%;
 }
 
 .login-button {
-  background: linear-gradient(135deg, #2196f3, #673ab7);
+  background: linear-gradient(45deg, #2196F3, #6C63FF);
   color: white;
   border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .login-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }

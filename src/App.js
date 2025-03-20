@@ -377,45 +377,23 @@ function AppContent() {
   const displayHandle = user?.x_handle?.replace(/^@@/, '@').replace(/^@/, '');
 
   const renderContent = () => {
-    if (!token) {
-      return (
-        <>
-          <header>
-            <div className="header-content">
-              <h1>EchoSphere</h1>
-              <button 
-                className="login-button"
-                onClick={() => setShowAuth(true)}
-              >
-                Login/Register
-              </button>
-            </div>
-          </header>
-          <Home onSelectFeature={handleFeatureSelect} isLoggedIn={false} />
-          {showAuth && <Auth onClose={() => setShowAuth(false)} />}
-        </>
-      );
-    }
-
-    if (activeTab === 'home') {
-      return <Home onSelectFeature={handleFeatureSelect} isLoggedIn={true} />;
+    if (showAuth) {
+      return <Auth onClose={() => setShowAuth(false)} />;
     }
 
     return (
       <div className="app-container">
-        {isAuthLoading ? (
-          <div className="loading-container">
-            <LoadingSpinner />
-          </div>
+        <header className="header-content">
+          {!token && (
+            <button className="login-button" onClick={() => setShowAuth(true)}>
+              Login/Register
+            </button>
+          )}
+        </header>
+        {currentFeature ? (
+          renderFeature()
         ) : (
-          <>
-            <header>
-              <div className="header-content">
-                <h1>EchoSphere</h1>
-                {renderFeature()}
-              </div>
-            </header>
-          </>
+          <Home onFeatureSelect={handleFeatureSelect} />
         )}
       </div>
     );
@@ -433,7 +411,11 @@ function AppContent() {
           {authError}
         </div>
       )}
-      {renderContent()}
+      {isAuthLoading ? (
+        <LoadingSpinner />
+      ) : (
+        renderContent()
+      )}
     </div>
   );
 }

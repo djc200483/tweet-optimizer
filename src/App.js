@@ -200,17 +200,14 @@ function AppContent() {
     console.log('Current feature changed to:', currentFeature);
   }, [currentFeature]);
 
-  // Add useEffect to handle scroll reset
+  // Scroll reset effect
   useEffect(() => {
-    // Reset scroll position when tab changes
     window.scrollTo(0, 0);
-  }, [activeTab]);
+  }, [activeTab, currentFeature]); // Listen to both activeTab and currentFeature changes
 
   const handleFeatureSelect = (featureId) => {
     setActiveTab(featureId);
     setCurrentFeature(featureId);
-    // Reset scroll position when selecting a feature from home
-    window.scrollTo(0, 0);
   };
 
   const renderFeature = () => {
@@ -379,6 +376,64 @@ function AppContent() {
 
   const displayHandle = user?.x_handle?.replace(/^@@/, '@').replace(/^@/, '');
 
+  const renderContent = () => {
+    if (!token) {
+      return <Home onSelectFeature={handleFeatureSelect} isLoggedIn={false} />;
+    }
+
+    if (activeTab === 'home') {
+      return <Home onSelectFeature={handleFeatureSelect} isLoggedIn={true} />;
+    }
+
+    return (
+      <>
+        <div className="tab-navigation">
+          {activeTab !== 'home' && (
+            <>
+              <button 
+                className={`tab-button ${activeTab === 'optimize' ? 'active' : ''}`}
+                onClick={() => handleFeatureSelect('optimize')}
+              >
+                Post Optimiser
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'reverse' ? 'active' : ''}`}
+                onClick={() => handleFeatureSelect('reverse')}
+              >
+                Reverse Engineer
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'power' ? 'active' : ''}`}
+                onClick={() => handleFeatureSelect('power')}
+              >
+                Power Words
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
+                onClick={() => handleFeatureSelect('prompt')}
+              >
+                Prompt Assistant
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'imageGenerator' ? 'active' : ''}`}
+                onClick={() => handleFeatureSelect('imageGenerator')}
+              >
+                Image Generator
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'evergreen' ? 'active' : ''}`}
+                onClick={() => handleFeatureSelect('evergreen')}
+              >
+                Evergreen Content
+              </button>
+            </>
+          )}
+        </div>
+        {renderFeature()}
+      </>
+    );
+  };
+
   return (
     <div className="App">
       {apiError && (
@@ -426,50 +481,7 @@ function AppContent() {
               
               <h1>EchoSphere</h1>
               
-              <div className="tab-navigation">
-                {activeTab !== 'home' && (
-                  <>
-                    <button 
-                      className={`tab-button ${activeTab === 'optimize' ? 'active' : ''}`}
-                      onClick={() => handleFeatureSelect('optimize')}
-                    >
-                      Post Optimiser
-                    </button>
-                    <button 
-                      className={`tab-button ${activeTab === 'reverse' ? 'active' : ''}`}
-                      onClick={() => handleFeatureSelect('reverse')}
-                    >
-                      Reverse Engineer
-                    </button>
-                    <button 
-                      className={`tab-button ${activeTab === 'power' ? 'active' : ''}`}
-                      onClick={() => handleFeatureSelect('power')}
-                    >
-                      Power Words
-                    </button>
-                    <button 
-                      className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
-                      onClick={() => handleFeatureSelect('prompt')}
-                    >
-                      Prompt Assistant
-                    </button>
-                    <button 
-                      className={`tab-button ${activeTab === 'imageGenerator' ? 'active' : ''}`}
-                      onClick={() => handleFeatureSelect('imageGenerator')}
-                    >
-                      Image Generator
-                    </button>
-                    <button 
-                      className={`tab-button ${activeTab === 'evergreen' ? 'active' : ''}`}
-                      onClick={() => handleFeatureSelect('evergreen')}
-                    >
-                      Evergreen Content
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {renderFeature()}
+              {renderContent()}
             </>
           )}
         </div>

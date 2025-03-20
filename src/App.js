@@ -200,10 +200,10 @@ function AppContent() {
     console.log('Current feature changed to:', currentFeature);
   }, [currentFeature]);
 
-  // Scroll reset effect
+  // Reset scroll position when changing tabs
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [activeTab, currentFeature]); // Listen to both activeTab and currentFeature changes
+  }, [activeTab]);
 
   const handleFeatureSelect = (featureId) => {
     setActiveTab(featureId);
@@ -386,51 +386,22 @@ function AppContent() {
     }
 
     return (
-      <>
-        <div className="tab-navigation">
-          {activeTab !== 'home' && (
-            <>
-              <button 
-                className={`tab-button ${activeTab === 'optimize' ? 'active' : ''}`}
-                onClick={() => handleFeatureSelect('optimize')}
-              >
-                Post Optimiser
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'reverse' ? 'active' : ''}`}
-                onClick={() => handleFeatureSelect('reverse')}
-              >
-                Reverse Engineer
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'power' ? 'active' : ''}`}
-                onClick={() => handleFeatureSelect('power')}
-              >
-                Power Words
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
-                onClick={() => handleFeatureSelect('prompt')}
-              >
-                Prompt Assistant
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'imageGenerator' ? 'active' : ''}`}
-                onClick={() => handleFeatureSelect('imageGenerator')}
-              >
-                Image Generator
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'evergreen' ? 'active' : ''}`}
-                onClick={() => handleFeatureSelect('evergreen')}
-              >
-                Evergreen Content
-              </button>
-            </>
-          )}
-        </div>
-        {renderFeature()}
-      </>
+      <div className="app-container">
+        {isAuthLoading ? (
+          <div className="loading-container">
+            <LoadingSpinner />
+          </div>
+        ) : (
+          <>
+            <header>
+              <div className="header-content">
+                <h1>EchoSphere</h1>
+                {renderFeature()}
+              </div>
+            </header>
+          </>
+        )}
+      </div>
     );
   };
 
@@ -446,46 +417,7 @@ function AppContent() {
           {authError}
         </div>
       )}
-      {isAuthLoading ? (
-        <div className="auth-loading">
-          <LoadingSpinner />
-          <p>Loading...</p>
-        </div>
-      ) : (
-        <div className="app-content">
-          {showAuth ? (
-            <Auth onClose={() => setShowAuth(false)} />
-          ) : user?.is_admin ? (
-            <div className="admin-container">
-              <button className="logout-button" onClick={logout}>Logout</button>
-              <Admin />
-            </div>
-          ) : (
-            <>
-              {user && token && (
-                <div className="auth-header">
-                  <span className="user-handle">{displayHandle}</span>
-                  <button className="logout-button" onClick={logout}>
-                    Logout
-                  </button>
-                </div>
-              )}
-              {!user && (
-                <button 
-                  className="auth-toggle-button"
-                  onClick={() => setShowAuth(true)}
-                >
-                  Login/Register
-                </button>
-              )}
-              
-              <h1>EchoSphere</h1>
-              
-              {renderContent()}
-            </>
-          )}
-        </div>
-      )}
+      {renderContent()}
     </div>
   );
 }

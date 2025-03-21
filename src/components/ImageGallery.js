@@ -15,6 +15,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const [activeTab, setActiveTab] = useState('explore');
   const [isCopied, setIsCopied] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [visibleImages, setVisibleImages] = useState(new Set());
   
   // Initialize state from localStorage if available
   const [exploreImages, setExploreImages] = useState(() => {
@@ -190,6 +191,90 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     }
   }, [refreshTrigger, activeTab, fetchMyImages]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setVisibleImages(prev => new Set([...prev, entry.target.dataset.imageId]));
+          }
+        });
+      },
+      { rootMargin: '100px' }
+    );
+
+    document.querySelectorAll('.image-placeholder').forEach(img => {
+      observer.observe(img);
+    });
+
+    return () => observer.disconnect();
+  }, [images]);
+
+  const renderImage = (image) => {
+    const isVisible = visibleImages.has(image.id.toString());
+    
+    return (
+      <div 
+        key={image.id} 
+        className="image-item"
+        onClick={() => handleOpenModal(image)}
+      >
+        <div 
+          className="image-placeholder"
+          data-image-id={image.id}
+          style={{ 
+            width: '100%',
+            paddingBottom: '100%',
+            background: '#1e2028',
+            position: 'relative'
+          }}
+        >
+          {isVisible && (
+            <img 
+              src={image.s3_url || image.image_url} 
+              alt={image.prompt}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+              onLoad={(e) => {
+                e.target.style.opacity = 1;
+                console.log(`Image loaded: ${image.id}`);
+              }}
+            />
+          )}
+        </div>
+        <div className="hover-overlay">
+          <div className="creator-info">
+            <span className="creator-handle">{image.creator_handle}</span>
+            <div 
+              className="use-prompt-icon"
+              onClick={(e) => handleUsePrompt(e, image.prompt)}
+              title="Use this prompt"
+            >
+              <svg 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2"
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+              </svg>
+              <span className="tooltip">Use Prompt</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return <div className="loading-container"><LoadingSpinner /></div>;
   }
@@ -227,43 +312,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
           className="masonry-grid"
           columnClassName="masonry-grid_column"
         >
-          {images.map((image) => (
-            <div 
-              key={image.id} 
-              className="image-item"
-              onClick={() => handleOpenModal(image)}
-            >
-              <img 
-                src={image.s3_url || image.image_url} 
-                alt={image.prompt}
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="hover-overlay">
-                <div className="creator-info">
-                  <span className="creator-handle">{image.creator_handle}</span>
-                  <div 
-                    className="use-prompt-icon"
-                    onClick={(e) => handleUsePrompt(e, image.prompt)}
-                    title="Use this prompt"
-                  >
-                    <svg 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2"
-                      strokeLinecap="round" 
-                      strokeLinejoin="round"
-                    >
-                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                      <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                    </svg>
-                    <span className="tooltip">Use Prompt</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+          {images.map(renderImage)}
         </Masonry>
       )}
 

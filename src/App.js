@@ -403,25 +403,6 @@ function AppContent() {
         </div>
       ) : (
         <div className="app-content">
-          {!isImageGeneratorPage && user && (
-            <div className="auth-header">
-              <div className="header-content">
-                <span className="user-handle">@{displayHandle}</span>
-                <button onClick={handleLogout} className="logout-button">
-                  Logout
-                </button>
-              </div>
-            </div>
-          )}
-          {!user && !isImageGeneratorPage && (
-            <div className="auth-header">
-              <div className="header-content">
-                <button onClick={() => setShowAuth(true)} className="auth-toggle-button">
-                  Login / Register
-                </button>
-              </div>
-            </div>
-          )}
           {showAuth ? (
             <Auth onClose={() => setShowAuth(false)} />
           ) : user?.is_admin ? (
@@ -431,6 +412,21 @@ function AppContent() {
             </div>
           ) : (
             <>
+              {user && token ? (
+                <div className="auth-header">
+                  <span className="user-handle">{displayHandle}</span>
+                  <button className="logout-button" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  className="auth-toggle-button"
+                  onClick={() => setShowAuth(true)}
+                >
+                  Login/Register
+                </button>
+              )}
               {renderFeature()}
             </>
           )}

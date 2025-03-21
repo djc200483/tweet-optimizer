@@ -976,20 +976,24 @@ body {
 }
 
 .auth-toggle-button {
-  background: linear-gradient(135deg, rgb(0, 194, 255), rgb(168, 85, 247));
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 25px;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 12px;
-  font-size: 0.9rem;
+  border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
+  font-family: inherit;
+  font-size: 0.9rem;
 }
 
 .auth-toggle-button:hover {
+  opacity: 0.9;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
 }
 
 .auth-header {

@@ -13,7 +13,9 @@ export default function ImageGenerator() {
   const [generatedImages, setGeneratedImages] = useState([]);
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const textareaRef = useRef(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const aspectRatios = [
     { value: '1:1', label: 'Square (1:1)' },
@@ -85,6 +87,8 @@ export default function ImageGenerator() {
 
       // Use the images directly from the server response
       setGeneratedImages(data.images);
+      // Trigger a refresh of the gallery
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error('Error generating images:', err);
       setError('Failed to generate images. Please try again.');
@@ -167,8 +171,12 @@ export default function ImageGenerator() {
         </div>
       )}
 
-      <div style={{ marginTop: '24px' }}>
-        <ImageGallery userId={user.id} onUsePrompt={setPrompt} />
+      <div className="gallery-wrapper" style={{ width: '100%', marginTop: '24px' }}>
+        <ImageGallery 
+          userId={user.id} 
+          onUsePrompt={setPrompt} 
+          refreshTrigger={refreshTrigger}
+        />
       </div>
     </div>
   );

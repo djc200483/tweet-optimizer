@@ -6,7 +6,7 @@ import './ImageGallery.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-export default function ImageGallery({ userId, onUsePrompt }) {
+export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const { token } = useAuth();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,17 +48,10 @@ export default function ImageGallery({ userId, onUsePrompt }) {
   // Check if we need to fetch new explore images
   const shouldFetchExplore = () => {
     if (!lastExploreFetch) return true;
-    
     const now = new Date();
     const lastFetch = new Date(lastExploreFetch);
-    
-    // Fetch if:
-    // 1. It's a new UTC day
-    // 2. Or it's been more than an hour (to catch new images)
-    return (
-      now.getUTCDate() !== lastFetch.getUTCDate() ||
-      now.getTime() - lastFetch.getTime() > 3600000 // 1 hour in milliseconds
-    );
+    // Only fetch if it's a new UTC day
+    return now.getUTCDate() !== lastFetch.getUTCDate();
   };
 
   useEffect(() => {
@@ -71,6 +64,7 @@ export default function ImageGallery({ userId, onUsePrompt }) {
           setLoading(false);
         }
       } else {
+        // Always fetch fresh data when switching to My Images
         await fetchMyImages();
       }
     };
@@ -122,9 +116,14 @@ export default function ImageGallery({ userId, onUsePrompt }) {
 
       const data = await response.json();
       setImages(data);
+      setLastMyImagesFetch(new Date().toISOString());
     } catch (err) {
       console.error('Error fetching my images:', err);
       setError('Failed to load your images. Please try again later.');
+      // If fetch fails, use cached data if available
+      if (exploreImages.length > 0) {
+        setImages(exploreImages);
+      }
     } finally {
       setLoading(false);
     }
@@ -190,6 +189,13 @@ export default function ImageGallery({ userId, onUsePrompt }) {
     }, 0);
   };
 
+  // Add effect to refresh My Images when new images are generated
+  useEffect(() => {
+    if (activeTab === 'my-images') {
+      fetchMyImages();
+    }
+  }, [refreshTrigger]);
+
   if (loading) {
     return <div className="loading-container"><LoadingSpinner /></div>;
   }
@@ -233,7 +239,12 @@ export default function ImageGallery({ userId, onUsePrompt }) {
               className="image-item"
               onClick={() => handleOpenModal(image)}
             >
-              <img src={image.s3_url || image.image_url} alt={image.prompt} />
+              <img 
+                src={image.s3_url || image.image_url} 
+                alt={image.prompt}
+                loading="lazy"
+                decoding="async"
+              />
               <div className="hover-overlay">
                 <div className="creator-info">
                   <span className="creator-handle">{image.creator_handle}</span>

@@ -46,7 +46,7 @@ router.get('/explore', authMiddleware, async (req, res) => {
       )
       SELECT * FROM ranked_images
       ORDER BY RANDOM()
-      LIMIT 2000`,
+      LIMIT 300`,
       []
     );
     res.json(result.rows);

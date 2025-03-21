@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/auth/AuthContext';
 import Auth from './components/auth/Auth';
 import ResetPassword from './components/auth/ResetPassword';
@@ -20,6 +20,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 function AppContent() {
   const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
+  const location = useLocation();
   const [showAuth, setShowAuth] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [tweet, setTweet] = useState('');
@@ -376,6 +377,13 @@ function AppContent() {
 
   const displayHandle = user?.x_handle?.replace(/^@@/, '@').replace(/^@/, '');
 
+  const handleLogout = () => {
+    logout();
+    setCurrentFeature(null); // Return to home page
+  };
+
+  const isImageGeneratorPage = location.pathname === '/image-generator';
+
   return (
     <div className="App">
       {apiError && (
@@ -399,7 +407,7 @@ function AppContent() {
             <Auth onClose={() => setShowAuth(false)} />
           ) : user?.is_admin ? (
             <div className="admin-container">
-              <button className="logout-button" onClick={logout}>Logout</button>
+              <button className="logout-button" onClick={handleLogout}>Logout</button>
               <Admin />
             </div>
           ) : (
@@ -407,7 +415,7 @@ function AppContent() {
               {user && token ? (
                 <div className="auth-header">
                   <span className="user-handle">{displayHandle}</span>
-                  <button className="logout-button" onClick={logout}>
+                  <button className="logout-button" onClick={handleLogout}>
                     Logout
                   </button>
                 </div>

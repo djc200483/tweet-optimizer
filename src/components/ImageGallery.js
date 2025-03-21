@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './auth/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
 import Masonry from 'react-masonry-css';
@@ -6,7 +6,7 @@ import './ImageGallery.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-export default function ImageGallery({ userId, onUsePrompt }) {
+export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const { token } = useAuth();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +15,7 @@ export default function ImageGallery({ userId, onUsePrompt }) {
   const [activeTab, setActiveTab] = useState('explore');
   const [isCopied, setIsCopied] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [visibleImages, setVisibleImages] = useState(new Set());
   
   // Initialize state from localStorage if available
   const [exploreImages, setExploreImages] = useState(() => {
@@ -45,40 +46,15 @@ export default function ImageGallery({ userId, onUsePrompt }) {
     500: 2
   };
 
-  // Check if we need to fetch new explore images
-  const shouldFetchExplore = () => {
+  const shouldFetchExplore = useCallback(() => {
     if (!lastExploreFetch) return true;
-    
     const now = new Date();
     const lastFetch = new Date(lastExploreFetch);
-    
-    // Fetch if:
-    // 1. It's a new UTC day
-    // 2. Or it's been more than an hour (to catch new images)
-    return (
-      now.getUTCDate() !== lastFetch.getUTCDate() ||
-      now.getTime() - lastFetch.getTime() > 3600000 // 1 hour in milliseconds
-    );
-  };
+    // Only fetch if it's a new UTC day
+    return now.getUTCDate() !== lastFetch.getUTCDate();
+  }, [lastExploreFetch]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (activeTab === 'explore') {
-        if (shouldFetchExplore()) {
-          await fetchExploreImages();
-        } else {
-          setImages(exploreImages);
-          setLoading(false);
-        }
-      } else {
-        await fetchMyImages();
-      }
-    };
-
-    fetchData();
-  }, [token, activeTab]);
-
-  const fetchExploreImages = async () => {
+  const fetchExploreImages = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -103,9 +79,9 @@ export default function ImageGallery({ userId, onUsePrompt }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  const fetchMyImages = async () => {
+  const fetchMyImages = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -128,7 +104,26 @@ export default function ImageGallery({ userId, onUsePrompt }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (activeTab === 'explore') {
+        if (shouldFetchExplore()) {
+          await fetchExploreImages();
+        } else {
+          setImages(exploreImages);
+          setVisibleImages(new Set()); // Reset visible images when loading cached images
+          setLoading(false);
+        }
+      } else {
+        // Always fetch fresh data when switching to My Images
+        await fetchMyImages();
+      }
+    };
+
+    fetchData();
+  }, [token, activeTab, shouldFetchExplore, fetchExploreImages, fetchMyImages, exploreImages]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -143,6 +138,7 @@ export default function ImageGallery({ userId, onUsePrompt }) {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setSelectedImage(null);
+    setVisibleImages(new Set()); // Reset visible images when switching tabs
   };
 
   const handleCopyPrompt = async (prompt) => {
@@ -190,6 +186,126 @@ export default function ImageGallery({ userId, onUsePrompt }) {
     }, 0);
   };
 
+  // Add effect to refresh My Images when new images are generated
+  useEffect(() => {
+    if (activeTab === 'my-images') {
+      fetchMyImages();
+    }
+  }, [refreshTrigger, activeTab, fetchMyImages]);
+
+  useEffect(() => {
+    // Reset visible images when images array changes
+    setVisibleImages(new Set());
+    
+    const observerCallback = (entries) => {
+      entries.forEach(entry => {
+        const imageId = entry.target.dataset.imageId;
+        if (entry.isIntersecting) {
+          requestAnimationFrame(() => {
+            setVisibleImages(prev => {
+              const newSet = new Set(prev);
+              newSet.add(imageId);
+              return newSet;
+            });
+          });
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      root: null,
+      rootMargin: '200px 0px',
+      threshold: 0.01
+    });
+
+    // Wait for next frame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      const placeholders = document.querySelectorAll('.image-placeholder');
+      placeholders.forEach(placeholder => {
+        if (placeholder.dataset.imageId) {
+          observer.observe(placeholder);
+        }
+      });
+    });
+
+    return () => observer.disconnect();
+  }, [images]);
+
+  const renderImage = (image) => {
+    const isVisible = visibleImages.has(image.id.toString());
+    
+    return (
+      <div 
+        key={image.id} 
+        className="image-item"
+        onClick={() => handleOpenModal(image)}
+      >
+        <div 
+          className="image-placeholder"
+          data-image-id={image.id}
+          style={{ 
+            width: '100%',
+            backgroundColor: '#1e2028',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}
+        >
+          {isVisible ? (
+            <img 
+              src={image.s3_url || image.image_url}
+              alt={image.prompt}
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+                opacity: 0,
+                transition: 'opacity 0.3s ease-in-out'
+              }}
+              onLoad={(e) => {
+                e.target.style.opacity = 1;
+                console.log(`Image loaded: ${image.id}`);
+              }}
+            />
+          ) : (
+            <div 
+              style={{ 
+                width: '100%',
+                paddingBottom: image.aspect_ratio === '1:1' ? '100%' : 
+                             image.aspect_ratio === '4:3' ? '75%' : 
+                             image.aspect_ratio === '3:4' ? '133.33%' :
+                             image.aspect_ratio === '16:9' ? '56.25%' : '75%',
+                backgroundColor: '#1e2028'
+              }} 
+            />
+          )}
+        </div>
+        <div className="hover-overlay">
+          <div className="creator-info">
+            <span className="creator-handle">{image.creator_handle}</span>
+            <div 
+              className="use-prompt-icon"
+              onClick={(e) => handleUsePrompt(e, image.prompt)}
+              title="Use this prompt"
+            >
+              <svg 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2"
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+              </svg>
+              <span className="tooltip">Use Prompt</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return <div className="loading-container"><LoadingSpinner /></div>;
   }
@@ -227,38 +343,7 @@ export default function ImageGallery({ userId, onUsePrompt }) {
           className="masonry-grid"
           columnClassName="masonry-grid_column"
         >
-          {images.map((image) => (
-            <div 
-              key={image.id} 
-              className="image-item"
-              onClick={() => handleOpenModal(image)}
-            >
-              <img src={image.s3_url || image.image_url} alt={image.prompt} />
-              <div className="hover-overlay">
-                <div className="creator-info">
-                  <span className="creator-handle">{image.creator_handle}</span>
-                  <div 
-                    className="use-prompt-icon"
-                    onClick={(e) => handleUsePrompt(e, image.prompt)}
-                    title="Use this prompt"
-                  >
-                    <svg 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2"
-                      strokeLinecap="round" 
-                      strokeLinejoin="round"
-                    >
-                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                      <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                    </svg>
-                    <span className="tooltip">Use Prompt</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+          {images.map(renderImage)}
         </Masonry>
       )}
 

@@ -201,10 +201,12 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
       entries.forEach(entry => {
         const imageId = entry.target.dataset.imageId;
         if (entry.isIntersecting) {
-          setVisibleImages(prev => {
-            const newSet = new Set(prev);
-            newSet.add(imageId);
-            return newSet;
+          requestAnimationFrame(() => {
+            setVisibleImages(prev => {
+              const newSet = new Set(prev);
+              newSet.add(imageId);
+              return newSet;
+            });
           });
         }
       });
@@ -212,15 +214,18 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
 
     const observer = new IntersectionObserver(observerCallback, {
       root: null,
-      rootMargin: '100px 0px',
-      threshold: 0
+      rootMargin: '200px 0px',
+      threshold: 0.01
     });
 
-    const placeholders = document.querySelectorAll('.image-placeholder');
-    placeholders.forEach(placeholder => {
-      if (placeholder.dataset.imageId) {
-        observer.observe(placeholder);
-      }
+    // Wait for next frame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      const placeholders = document.querySelectorAll('.image-placeholder');
+      placeholders.forEach(placeholder => {
+        if (placeholder.dataset.imageId) {
+          observer.observe(placeholder);
+        }
+      });
     });
 
     return () => observer.disconnect();
@@ -238,43 +243,39 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
         <div 
           className="image-placeholder"
           data-image-id={image.id}
-          data-src={image.s3_url || image.image_url}
           style={{ 
             width: '100%',
-            position: 'relative',
-            backgroundColor: '#1e2028'
+            backgroundColor: '#1e2028',
+            borderRadius: '8px',
+            overflow: 'hidden'
           }}
         >
-          <div 
-            style={{ 
-              paddingBottom: '75%',
-              backgroundColor: '#1e2028',
-              borderRadius: '8px'
-            }} 
-          />
-          {isVisible && (
+          {isVisible ? (
             <img 
-              ref={el => {
-                if (el && !el.src) {
-                  el.src = el.parentElement.dataset.src;
-                }
-              }}
+              src={image.s3_url || image.image_url}
               alt={image.prompt}
               style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
                 width: '100%',
-                height: '100%',
+                height: 'auto',
+                display: 'block',
                 opacity: 0,
-                transition: 'opacity 0.3s ease-in-out',
-                objectFit: 'cover',
-                borderRadius: '8px'
+                transition: 'opacity 0.3s ease-in-out'
               }}
               onLoad={(e) => {
                 e.target.style.opacity = 1;
                 console.log(`Image loaded: ${image.id}`);
               }}
+            />
+          ) : (
+            <div 
+              style={{ 
+                width: '100%',
+                paddingBottom: image.aspect_ratio === '1:1' ? '100%' : 
+                             image.aspect_ratio === '4:3' ? '75%' : 
+                             image.aspect_ratio === '3:4' ? '133.33%' :
+                             image.aspect_ratio === '16:9' ? '56.25%' : '75%',
+                backgroundColor: '#1e2028'
+              }} 
             />
           )}
         </div>

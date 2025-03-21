@@ -192,23 +192,40 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   }, [refreshTrigger, activeTab, fetchMyImages]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setVisibleImages(prev => new Set([...prev, entry.target.dataset.imageId]));
-          }
-        });
-      },
-      { rootMargin: '100px' }
-    );
+    const observerCallback = (entries) => {
+      entries.forEach(entry => {
+        const imageId = entry.target.dataset.imageId;
+        if (entry.isIntersecting) {
+          setVisibleImages(prev => {
+            const newSet = new Set(prev);
+            newSet.add(imageId);
+            return newSet;
+          });
+        }
+      });
+    };
 
-    document.querySelectorAll('.image-placeholder').forEach(img => {
-      observer.observe(img);
+    const observer = new IntersectionObserver(observerCallback, {
+      root: null,
+      rootMargin: '50% 0px', // Load images when they're within 50% of the viewport
+      threshold: 0.1
     });
 
-    return () => observer.disconnect();
-  }, [images]);
+    // Disconnect any existing observers
+    observer.disconnect();
+
+    // Observe all image placeholders
+    const placeholders = document.querySelectorAll('.image-placeholder');
+    placeholders.forEach(placeholder => {
+      if (placeholder.dataset.imageId) {
+        observer.observe(placeholder);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [images]); // Re-run when images array changes
 
   const renderImage = (image) => {
     const isVisible = visibleImages.has(image.id.toString());
@@ -243,9 +260,10 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                 e.target.style.opacity = 1;
                 console.log(`Image loaded: ${image.id}`);
               }}
+              loading="lazy"
             />
           ) : (
-            <div style={{ paddingBottom: '75%' }} /> // Default aspect ratio placeholder
+            <div style={{ paddingBottom: '75%' }} />
           )}
         </div>
         <div className="hover-overlay">

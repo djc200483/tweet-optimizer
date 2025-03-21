@@ -210,28 +210,21 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
       });
     };
 
-    // Small delay to ensure DOM elements are ready
-    const timer = setTimeout(() => {
-      const observer = new IntersectionObserver(observerCallback, {
-        root: null,
-        rootMargin: '50% 0px',
-        threshold: 0.1
-      });
+    const observer = new IntersectionObserver(observerCallback, {
+      root: null,
+      rootMargin: '100px 0px',
+      threshold: 0
+    });
 
-      const placeholders = document.querySelectorAll('.image-placeholder');
-      placeholders.forEach(placeholder => {
-        if (placeholder.dataset.imageId) {
-          observer.observe(placeholder);
-        }
-      });
+    const placeholders = document.querySelectorAll('.image-placeholder');
+    placeholders.forEach(placeholder => {
+      if (placeholder.dataset.imageId) {
+        observer.observe(placeholder);
+      }
+    });
 
-      return () => {
-        observer.disconnect();
-        clearTimeout(timer);
-      };
-    }, 100);
-
-  }, [images]); // Re-run when images array changes
+    return () => observer.disconnect();
+  }, [images]);
 
   const renderImage = (image) => {
     const isVisible = visibleImages.has(image.id.toString());
@@ -245,31 +238,44 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
         <div 
           className="image-placeholder"
           data-image-id={image.id}
+          data-src={image.s3_url || image.image_url}
           style={{ 
             width: '100%',
             position: 'relative',
             backgroundColor: '#1e2028'
           }}
         >
-          {isVisible ? (
+          <div 
+            style={{ 
+              paddingBottom: '75%',
+              backgroundColor: '#1e2028',
+              borderRadius: '8px'
+            }} 
+          />
+          {isVisible && (
             <img 
-              src={image.s3_url || image.image_url} 
+              ref={el => {
+                if (el && !el.src) {
+                  el.src = el.parentElement.dataset.src;
+                }
+              }}
               alt={image.prompt}
               style={{
-                display: 'block',
+                position: 'absolute',
+                top: 0,
+                left: 0,
                 width: '100%',
-                height: 'auto',
+                height: '100%',
                 opacity: 0,
-                transition: 'opacity 0.3s ease-in-out'
+                transition: 'opacity 0.3s ease-in-out',
+                objectFit: 'cover',
+                borderRadius: '8px'
               }}
               onLoad={(e) => {
                 e.target.style.opacity = 1;
                 console.log(`Image loaded: ${image.id}`);
               }}
-              loading="lazy"
             />
-          ) : (
-            <div style={{ paddingBottom: '75%' }} />
           )}
         </div>
         <div className="hover-overlay">

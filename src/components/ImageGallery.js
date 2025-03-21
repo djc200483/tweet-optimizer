@@ -224,28 +224,28 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
           data-image-id={image.id}
           style={{ 
             width: '100%',
-            paddingBottom: '100%',
-            background: '#1e2028',
-            position: 'relative'
+            position: 'relative',
+            backgroundColor: '#1e2028'
           }}
         >
-          {isVisible && (
+          {isVisible ? (
             <img 
               src={image.s3_url || image.image_url} 
               alt={image.prompt}
               style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
+                display: 'block',
                 width: '100%',
-                height: '100%',
-                objectFit: 'cover'
+                height: 'auto',
+                opacity: 0,
+                transition: 'opacity 0.3s ease-in-out'
               }}
               onLoad={(e) => {
                 e.target.style.opacity = 1;
                 console.log(`Image loaded: ${image.id}`);
               }}
             />
+          ) : (
+            <div style={{ paddingBottom: '75%' }} /> // Default aspect ratio placeholder
           )}
         </div>
         <div className="hover-overlay">

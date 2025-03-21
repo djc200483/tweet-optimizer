@@ -416,7 +416,7 @@ function AppContent() {
           {!user && !isImageGeneratorPage && (
             <div className="auth-header">
               <div className="header-content">
-                <button onClick={() => setShowAuth(true)} className="login-button">
+                <button onClick={() => setShowAuth(true)} className="auth-toggle-button">
                   Login / Register
                 </button>
               </div>

@@ -1038,32 +1038,9 @@ body {
   width: 100%;
 }
 
-.auth-loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.9);
-  z-index: 1000;
-}
-
-.auth-error-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: #e0245e;
-  color: white;
-  padding: 20px;
-  text-align: center;
-  z-index: 2000;
-  font-size: 16px;
-  white-space: pre-wrap;
+/* Hide auth header on ImageGenerator page */
+.image-generator-page .auth-header {
+  display: none;
 }
 
 .admin-container {
@@ -2250,31 +2227,4 @@ body {
     flex-direction: column;
     gap: 15px;
   }
-}
-
-.header-content {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  width: 100%;
-}
-
-.login-button {
-  background: linear-gradient(45deg, #2196F3, #6C63FF);
-  color: white;
-  border: none;
-  padding: 0.5rem 1.5rem;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.login-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }

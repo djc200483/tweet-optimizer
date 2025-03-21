@@ -112,7 +112,7 @@ export default function ImageGenerator() {
   };
 
   return (
-    <div className="optimizer-container">
+    <div className="optimizer-container image-generator-page">
       <div className="sticky-toolbar">
         <div className="toolbar-content">
           <div className="prompt-input-container">

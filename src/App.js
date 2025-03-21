@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/auth/AuthContext';
 import Auth from './components/auth/Auth';
 import ResetPassword from './components/auth/ResetPassword';
@@ -20,6 +20,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 function AppContent() {
   const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
+  const location = useLocation();
   const [showAuth, setShowAuth] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [tweet, setTweet] = useState('');
@@ -381,6 +382,8 @@ function AppContent() {
     setCurrentFeature(null); // Return to home page
   };
 
+  const isImageGeneratorPage = location.pathname === '/image-generator';
+
   return (
     <div className="App">
       {apiError && (
@@ -400,6 +403,25 @@ function AppContent() {
         </div>
       ) : (
         <div className="app-content">
+          {!isImageGeneratorPage && user && (
+            <div className="auth-header">
+              <div className="header-content">
+                <span className="user-handle">@{displayHandle}</span>
+                <button onClick={handleLogout} className="logout-button">
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
+          {!user && !isImageGeneratorPage && (
+            <div className="auth-header">
+              <div className="header-content">
+                <button onClick={() => setShowAuth(true)} className="login-button">
+                  Login / Register
+                </button>
+              </div>
+            </div>
+          )}
           {showAuth ? (
             <Auth onClose={() => setShowAuth(false)} />
           ) : user?.is_admin ? (
@@ -409,21 +431,6 @@ function AppContent() {
             </div>
           ) : (
             <>
-              {currentFeature !== 'image-generator' && user && token ? (
-                <div className="auth-header">
-                  <span className="user-handle">{displayHandle}</span>
-                  <button className="logout-button" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </div>
-              ) : currentFeature !== 'image-generator' && !user && !token ? (
-                <button 
-                  className="auth-toggle-button"
-                  onClick={() => setShowAuth(true)}
-                >
-                  Login/Register
-                </button>
-              ) : null}
               {renderFeature()}
             </>
           )}

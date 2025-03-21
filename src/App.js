@@ -409,25 +409,21 @@ function AppContent() {
             </div>
           ) : (
             <>
-              {currentFeature !== 'image-generator' && (
+              {currentFeature !== 'image-generator' && user && token ? (
                 <div className="auth-header">
-                  {user && token ? (
-                    <>
-                      <span className="user-handle">{displayHandle}</span>
-                      <button className="logout-button" onClick={handleLogout}>
-                        Logout
-                      </button>
-                    </>
-                  ) : (
-                    <button 
-                      className="auth-toggle-button"
-                      onClick={() => setShowAuth(true)}
-                    >
-                      Login/Register
-                    </button>
-                  )}
+                  <span className="user-handle">{displayHandle}</span>
+                  <button className="logout-button" onClick={handleLogout}>
+                    Logout
+                  </button>
                 </div>
-              )}
+              ) : currentFeature !== 'image-generator' && !user && !token ? (
+                <button 
+                  className="auth-toggle-button"
+                  onClick={() => setShowAuth(true)}
+                >
+                  Login/Register
+                </button>
+              ) : null}
               {renderFeature()}
             </>
           )}

@@ -376,6 +376,11 @@ function AppContent() {
 
   const displayHandle = user?.x_handle?.replace(/^@@/, '@').replace(/^@/, '');
 
+  const handleLogout = () => {
+    logout();
+    setCurrentFeature(null); // Return to home page
+  };
+
   return (
     <div className="App">
       {apiError && (
@@ -399,31 +404,29 @@ function AppContent() {
             <Auth onClose={() => setShowAuth(false)} />
           ) : user?.is_admin ? (
             <div className="admin-container">
-              <button className="logout-button" onClick={logout}>Logout</button>
+              <button className="logout-button" onClick={handleLogout}>Logout</button>
               <Admin />
             </div>
           ) : (
             <>
-              {user && token ? (
+              {currentFeature !== 'image-generator' && (
                 <div className="auth-header">
-                  {currentFeature !== 'image-generator' && (
+                  {user && token ? (
                     <>
                       <span className="user-handle">{displayHandle}</span>
-                      <button className="logout-button" onClick={logout}>
+                      <button className="logout-button" onClick={handleLogout}>
                         Logout
                       </button>
                     </>
+                  ) : (
+                    <button 
+                      className="auth-toggle-button"
+                      onClick={() => setShowAuth(true)}
+                    >
+                      Login/Register
+                    </button>
                   )}
                 </div>
-              ) : (
-                currentFeature !== 'image-generator' && (
-                  <button 
-                    className="auth-toggle-button"
-                    onClick={() => setShowAuth(true)}
-                  >
-                    Login/Register
-                  </button>
-                )
               )}
               {renderFeature()}
             </>

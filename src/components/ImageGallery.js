@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './auth/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
 import Masonry from 'react-masonry-css';
@@ -45,34 +45,15 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     500: 2
   };
 
-  // Check if we need to fetch new explore images
-  const shouldFetchExplore = () => {
+  const shouldFetchExplore = useCallback(() => {
     if (!lastExploreFetch) return true;
     const now = new Date();
     const lastFetch = new Date(lastExploreFetch);
     // Only fetch if it's a new UTC day
     return now.getUTCDate() !== lastFetch.getUTCDate();
-  };
+  }, [lastExploreFetch]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (activeTab === 'explore') {
-        if (shouldFetchExplore()) {
-          await fetchExploreImages();
-        } else {
-          setImages(exploreImages);
-          setLoading(false);
-        }
-      } else {
-        // Always fetch fresh data when switching to My Images
-        await fetchMyImages();
-      }
-    };
-
-    fetchData();
-  }, [token, activeTab]);
-
-  const fetchExploreImages = async () => {
+  const fetchExploreImages = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -97,9 +78,9 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  const fetchMyImages = async () => {
+  const fetchMyImages = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -116,18 +97,31 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
 
       const data = await response.json();
       setImages(data);
-      setLastMyImagesFetch(new Date().toISOString());
     } catch (err) {
       console.error('Error fetching my images:', err);
       setError('Failed to load your images. Please try again later.');
-      // If fetch fails, use cached data if available
-      if (exploreImages.length > 0) {
-        setImages(exploreImages);
-      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (activeTab === 'explore') {
+        if (shouldFetchExplore()) {
+          await fetchExploreImages();
+        } else {
+          setImages(exploreImages);
+          setLoading(false);
+        }
+      } else {
+        // Always fetch fresh data when switching to My Images
+        await fetchMyImages();
+      }
+    };
+
+    fetchData();
+  }, [token, activeTab, shouldFetchExplore, fetchExploreImages, fetchMyImages, exploreImages]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -194,7 +188,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     if (activeTab === 'my-images') {
       fetchMyImages();
     }
-  }, [refreshTrigger]);
+  }, [refreshTrigger, activeTab, fetchMyImages]);
 
   if (loading) {
     return <div className="loading-container"><LoadingSpinner /></div>;

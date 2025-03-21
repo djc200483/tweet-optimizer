@@ -113,6 +113,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
           await fetchExploreImages();
         } else {
           setImages(exploreImages);
+          setVisibleImages(new Set()); // Reset visible images when loading cached images
           setLoading(false);
         }
       } else {
@@ -137,6 +138,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setSelectedImage(null);
+    setVisibleImages(new Set()); // Reset visible images when switching tabs
   };
 
   const handleCopyPrompt = async (prompt) => {
@@ -192,6 +194,9 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   }, [refreshTrigger, activeTab, fetchMyImages]);
 
   useEffect(() => {
+    // Reset visible images when images array changes
+    setVisibleImages(new Set());
+    
     const observerCallback = (entries) => {
       entries.forEach(entry => {
         const imageId = entry.target.dataset.imageId;
@@ -205,26 +210,27 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
       });
     };
 
-    const observer = new IntersectionObserver(observerCallback, {
-      root: null,
-      rootMargin: '50% 0px', // Load images when they're within 50% of the viewport
-      threshold: 0.1
-    });
+    // Small delay to ensure DOM elements are ready
+    const timer = setTimeout(() => {
+      const observer = new IntersectionObserver(observerCallback, {
+        root: null,
+        rootMargin: '50% 0px',
+        threshold: 0.1
+      });
 
-    // Disconnect any existing observers
-    observer.disconnect();
+      const placeholders = document.querySelectorAll('.image-placeholder');
+      placeholders.forEach(placeholder => {
+        if (placeholder.dataset.imageId) {
+          observer.observe(placeholder);
+        }
+      });
 
-    // Observe all image placeholders
-    const placeholders = document.querySelectorAll('.image-placeholder');
-    placeholders.forEach(placeholder => {
-      if (placeholder.dataset.imageId) {
-        observer.observe(placeholder);
-      }
-    });
+      return () => {
+        observer.disconnect();
+        clearTimeout(timer);
+      };
+    }, 100);
 
-    return () => {
-      observer.disconnect();
-    };
   }, [images]); // Re-run when images array changes
 
   const renderImage = (image) => {

@@ -21,47 +21,43 @@ console.log('S3 Configuration:', {
 
 // Upload image to S3
 async function uploadImageToS3(imageUrl, key) {
-    console.log('Starting S3 upload process:', { imageUrl, key });
     try {
-        // Download image from URL
-        console.log('Downloading image from URL...');
-        const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+        // Download image from URL with streaming
+        const response = await axios({
+            method: 'get',
+            url: imageUrl,
+            responseType: 'arraybuffer',
+            // Add timeout and better error handling
+            timeout: 10000,
+            maxContentLength: 10 * 1024 * 1024 // 10MB max
+        });
+
         const imageBuffer = Buffer.from(response.data);
-        console.log('Image downloaded successfully, size:', imageBuffer.length, 'bytes');
 
         // Upload to S3
         const command = new PutObjectCommand({
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: key,
             Body: imageBuffer,
-            ContentType: response.headers['content-type']
+            ContentType: response.headers['content-type'],
+            // Add caching headers
+            CacheControl: 'public, max-age=31536000' // 1 year
         });
 
-        console.log('Uploading to S3 bucket:', process.env.AWS_BUCKET_NAME);
         await s3Client.send(command);
-        console.log('Upload to S3 successful');
-
-        // Generate signed URL for immediate access
-        const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-        console.log('Generated signed URL');
-
+        
         const s3Url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-        console.log('S3 URL generated:', s3Url);
-
+        
         return {
             success: true,
-            s3Url: s3Url,
-            signedUrl
+            s3Url: s3Url
         };
     } catch (error) {
         console.error('Error in uploadImageToS3:', {
             message: error.message,
             code: error.code,
-            stack: error.stack,
             imageUrl,
-            key,
-            bucket: process.env.AWS_BUCKET_NAME,
-            region: process.env.AWS_REGION
+            key
         });
         return {
             success: false,

@@ -757,18 +757,17 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
 
     // Process each image: upload to S3 and save to database
     console.log('=== Starting image processing ===');
+    
+    // Process all images in parallel
     const processedImages = await Promise.all(validUrls.map(async (imageUrl, index) => {
-      console.log(`Processing image ${index + 1}/${validUrls.length}`);
+      console.log(`Starting processing for image ${index + 1}/${validUrls.length}`);
       
       // Generate a unique key for S3
       const timestamp = new Date().getTime();
       const key = `images/${userId}/${timestamp}-${index}.png`;
-      console.log('Generated S3 key:', key);
-
-      // Upload to S3
-      console.log('Initiating S3 upload:', { key, imageUrl });
+      
+      // Start S3 upload immediately
       const s3Result = await uploadImageToS3(imageUrl, key);
-      console.log('S3 upload result:', s3Result);
       
       if (!s3Result.success) {
         console.error('Failed to upload to S3:', s3Result.error);
@@ -779,36 +778,20 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
         };
       }
 
-      // Save to database
+      // Save to database in parallel with other operations
       try {
-        console.log('Saving to database:', {
-          userId,
-          prompt,
-          imageUrl,
-          s3Url: s3Result.s3Url,
-          aspectRatio
-        });
-        
         const result = await db.query(
           'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
           [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio]
         );
         
-        console.log('Database save successful:', result.rows[0]);
         return {
           originalUrl: imageUrl,
           s3Url: s3Result.s3Url,
           id: result.rows[0].id
         };
       } catch (dbError) {
-        console.error('Database error:', {
-          error: dbError,
-          message: dbError.message,
-          code: dbError.code,
-          detail: dbError.detail,
-          hint: dbError.hint,
-          where: dbError.where
-        });
+        console.error('Database error:', dbError);
         return {
           originalUrl: imageUrl,
           s3Url: s3Result.s3Url,

@@ -20,16 +20,19 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Only cache S3 image requests from the explore tab
-  if (event.request.url.includes('.s3.') && 
-      event.request.method === 'GET' && 
-      event.request.referrer.includes('/explore')) {
+  // Only handle S3 image requests
+  if (event.request.url.includes('.s3.') && event.request.method === 'GET') {
+    const timestamp = new Date().getTime();
+    const urlPath = new URL(event.request.url).pathname;
+    
+    // Check if this is a newly generated image (contains timestamp close to now)
+    const isNewlyGenerated = urlPath.includes(`/${timestamp.toString().slice(0, -3)}`);
     
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
         return cache.match(event.request).then((response) => {
-          if (response) {
-            // Check if cache is expired
+          if (response && !isNewlyGenerated) {
+            // For cached responses, check if they're expired
             const headers = new Headers(response.headers);
             const cachedTime = headers.get('cached-time');
             if (cachedTime && Date.now() - Number(cachedTime) < CACHE_EXPIRATION) {
@@ -37,15 +40,16 @@ self.addEventListener('fetch', (event) => {
             }
           }
           
-          // If no cache or expired, fetch from network
+          // For new images or expired cache, fetch from network
           return fetch(event.request).then((networkResponse) => {
-            // Only cache successful responses
             if (networkResponse.ok) {
-              const clonedResponse = networkResponse.clone();
-              const headers = new Headers(clonedResponse.headers);
-              headers.append('cached-time', Date.now().toString());
-              
-              cache.put(event.request, clonedResponse);
+              // Don't cache newly generated images immediately
+              if (!isNewlyGenerated) {
+                const clonedResponse = networkResponse.clone();
+                const headers = new Headers(clonedResponse.headers);
+                headers.append('cached-time', Date.now().toString());
+                cache.put(event.request, clonedResponse);
+              }
             }
             return networkResponse;
           });

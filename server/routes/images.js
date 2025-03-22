@@ -49,6 +49,14 @@ router.get('/explore', authMiddleware, async (req, res) => {
       LIMIT 300`,
       []
     );
+
+    // Add cache headers
+    res.set({
+      'Cache-Control': 'public, max-age=86400', // 24 hours
+      'Expires': new Date(Date.now() + 86400000).toUTCString(),
+      'Vary': 'Accept-Encoding'
+    });
+    
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching explore images:', error);

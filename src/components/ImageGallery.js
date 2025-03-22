@@ -6,6 +6,44 @@ import './ImageGallery.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
+const CACHE_KEY = 'explore_images_cache';
+const CACHE_TIMESTAMP_KEY = 'explore_images_cache_timestamp';
+
+// Helper function to check if cache is from same UTC day
+const isSameUtcDay = (timestamp) => {
+  if (!timestamp) return false;
+  const cachedDate = new Date(timestamp);
+  const now = new Date();
+  return cachedDate.getUTCDate() === now.getUTCDate() &&
+         cachedDate.getUTCMonth() === now.getUTCMonth() &&
+         cachedDate.getUTCFullYear() === now.getUTCFullYear();
+};
+
+// Helper to get cached data with metadata
+const getCachedData = () => {
+  try {
+    const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
+    if (!isSameUtcDay(timestamp)) {
+      return null;
+    }
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    return cachedData ? JSON.parse(cachedData) : null;
+  } catch (error) {
+    console.error('Cache retrieval error:', error);
+    return null;
+  }
+};
+
+// Helper to set cache with metadata
+const setCacheData = (data) => {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+    localStorage.setItem(CACHE_TIMESTAMP_KEY, new Date().toISOString());
+  } catch (error) {
+    console.error('Cache setting error:', error);
+  }
+};
+
 export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const { token } = useAuth();
   const [images, setImages] = useState([]);
@@ -59,6 +97,15 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
       setLoading(true);
       setError(null);
 
+      // Check for cached data first
+      const cachedData = getCachedData();
+      if (cachedData) {
+        setExploreImages(cachedData);
+        setImages(cachedData);
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(`${API_URL}/api/images/explore`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -72,6 +119,8 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
       const data = await response.json();
       setExploreImages(data);
       setImages(data);
+      // Cache the new data
+      setCacheData(data);
       setLastExploreFetch(new Date().toISOString());
     } catch (err) {
       console.error('Error fetching explore images:', err);

@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
-import { Link } from 'react-router-dom';
 import LoadingSpinner from '../LoadingSpinner';
 
-export default function Login({ onToggleForm, email, setEmail, password, setPassword, onSubmit, error }) {
+export default function Login({ onToggleForm }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { clearAuthError } = useAuth();
-
-  // Check if this is admin login attempt
-  const isAdminEmail = process.env.REACT_APP_ADMIN_EMAIL && 
-    email.toLowerCase() === process.env.REACT_APP_ADMIN_EMAIL.toLowerCase();
+  const { login, clearAuthError } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     setIsLoading(true);
 
     try {
-      console.log('Login attempt:', { email, isAdmin: isAdminEmail });
-      await onSubmit(e);
+      const result = await login(email, password);
+      if (!result.success) {
+        setError(result.error || 'Login failed');
+      }
     } catch (err) {
       console.error('Login error:', err);
+      setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -68,20 +70,10 @@ export default function Login({ onToggleForm, email, setEmail, password, setPass
         </button>
       </form>
 
-      <p className="auth-links">
-        <button 
-          onClick={() => onToggleForm('forgot')} 
-          className="auth-switch-button"
-          disabled={isLoading}
-        >
-          Forgot Password?
-        </button>
-      </p>
-
       <p className="auth-switch">
         Don't have an account?{' '}
         <button 
-          onClick={() => onToggleForm('register')}
+          onClick={onToggleForm}
           className="auth-switch-button"
           disabled={isLoading}
         >

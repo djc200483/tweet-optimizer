@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useAuth } from './auth/AuthContext';
+import Login from './auth/Login';
+import Register from './auth/Register';
 
 export default function Home({ onSelectFeature, isLoggedIn }) {
+  const [showAuthForm, setShowAuthForm] = useState(false);
+  const [currentForm, setCurrentForm] = useState('login');
+  const { login, register } = useAuth();
+
   const features = [
     {
       title: 'Post Optimiser',
@@ -47,8 +54,14 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
   ];
 
   const handleFeatureClick = (featureId) => {
-    console.log('Feature clicked:', featureId);
-    onSelectFeature(featureId);
+    if (isLoggedIn) {
+      console.log('Feature clicked:', featureId);
+      onSelectFeature(featureId);
+    }
+  };
+
+  const handleFormToggle = (formType) => {
+    setCurrentForm(formType);
   };
 
   return (
@@ -57,6 +70,25 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
         <h2>Welcome to EchoSphere</h2>
         <p>Your AI-powered platform for crafting engaging and impactful posts and prompts.</p>
       </div>
+      
+      {!isLoggedIn && (
+        <div className="auth-section">
+          <button 
+            className="auth-toggle-button"
+            onClick={() => setShowAuthForm(!showAuthForm)}
+          >
+            {showAuthForm ? 'Hide' : 'Login / Register'}
+          </button>
+
+          <div className={`auth-forms ${showAuthForm ? 'visible' : ''}`}>
+            {currentForm === 'login' ? (
+              <Login onToggleForm={() => handleFormToggle('register')} />
+            ) : (
+              <Register onToggleForm={() => handleFormToggle('login')} />
+            )}
+          </div>
+        </div>
+      )}
       
       <div className="feature-cards">
         {features.map(feature => (

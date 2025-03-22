@@ -530,6 +530,7 @@ body {
   grid-template-columns: repeat(4, 1fr);
   gap: 35px;
   margin-bottom: 35px;
+  transition: transform 0.3s ease-in-out;
 }
 
 .feature-cards > :nth-last-child(1):nth-child(4n + 1) {
@@ -2244,4 +2245,38 @@ body {
 .login-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.auth-section {
+  width: 95%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.auth-toggle-button {
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.auth-toggle-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
+}
+
+.auth-forms {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.auth-forms.visible {
+  max-height: 600px;
 }

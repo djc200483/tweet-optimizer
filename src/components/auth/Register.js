@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import LoadingSpinner from '../LoadingSpinner';
 
@@ -10,20 +10,12 @@ export default function Register({ onToggleForm }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { register, clearAuthError } = useAuth();
-
-  // Clear any auth errors when component mounts or unmounts
-  useEffect(() => {
-    clearAuthError();
-    return () => clearAuthError();
-  }, [clearAuthError]);
+  const { register } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-
-    console.log('Register form submitted:', { email, xHandle });
 
     // Validation
     if (!email.includes('@')) {
@@ -51,27 +43,23 @@ export default function Register({ onToggleForm }) {
     setIsLoading(true);
 
     try {
-      console.log('Attempting registration...');
       const result = await register(
         email,
         password,
         xHandle.startsWith('@') ? xHandle : `@${xHandle}`
       );
 
-      console.log('Registration result:', result);
       if (!result.success) {
         setError(result.error || 'Registration failed');
       } else {
-        console.log('Registration successful');
         setSuccess('Registration successful! Redirecting to login...');
-        // Wait 2 seconds before redirecting to login
         setTimeout(() => {
-          onToggleForm('login');
+          onToggleForm();
         }, 2000);
       }
     } catch (err) {
       console.error('Registration error:', err);
-      setError('Registration error');
+      setError('Registration failed');
     } finally {
       setIsLoading(false);
     }
@@ -146,7 +134,7 @@ export default function Register({ onToggleForm }) {
       <p className="auth-switch">
         Already have an account?{' '}
         <button 
-          onClick={() => onToggleForm('login')} 
+          onClick={onToggleForm}
           className="auth-switch-button"
           disabled={isLoading}
         >

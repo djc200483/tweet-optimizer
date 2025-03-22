@@ -1,4 +1,5 @@
 require('dotenv').config();  // Move this to very top
+require('./cron'); // Add this line near the top with other imports
 
 // Add debug logging for environment variables
 console.log('Environment variables loaded:', {

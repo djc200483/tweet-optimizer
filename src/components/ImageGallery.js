@@ -427,7 +427,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                       <path d="M11 5.5V3.5C11 2.67157 10.3284 2 9.5 2H3.5C2.67157 2 2 2.67157 2 3.5V9.5C2 10.3284 2.67157 11 3.5 11H5.5" strokeLinejoin="round"/>
                     </svg>
                   </button>
-                  <button className="close-modal" onClick={handleCloseModal}>├ù</button>
+                  <button className="close-modal" onClick={handleCloseModal}>×</button>
                 </div>
               </div>
               

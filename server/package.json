@@ -21,6 +21,7 @@
     "express": "^4.18.3",
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^3.0.3",
+    "openai": "^4.24.1",
     "pg": "^8.11.3",
     "replicate": "^0.28.1",
     "resend": "^4.1.2"

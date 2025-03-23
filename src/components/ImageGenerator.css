@@ -112,6 +112,10 @@
   .generated-images-container .image-grid {
     gap: 8px;
   }
+
+  .optimizer-container.image-generator-page {
+    padding-top: 50px;
+  }
 }
 
 .prompt-textarea {

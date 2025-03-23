@@ -267,6 +267,7 @@
     margin-left: auto;
     margin-right: 20px;
     max-width: none;
+    padding-top: 50px;
   }
 
   .sticky-toolbar {

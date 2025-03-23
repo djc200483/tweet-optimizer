@@ -249,19 +249,30 @@
 /* Desktop-only changes (screens larger than 768px) */
 @media screen and (min-width: 769px) {
   .optimizer-container.image-generator-page {
-    margin-left: auto;  /* Keep original auto margin */
-    margin-right: 20px;  /* Small right margin */
-    width: 95%;  /* Keep original width */
-    max-width: calc(95% + 200px);  /* Extend max-width to the right */
+    width: 95%;
+    margin-left: auto;
+    margin-right: 20px;
+    max-width: none;
+  }
+
+  .toolbar-content {
+    margin: 0 auto;
+    max-width: 800px;
+  }
+
+  .generated-images-container {
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 0 16px;
   }
 
   .generated-images-container .image-grid {
-    grid-template-columns: repeat(5, 1fr);  /* 5 columns */
+    grid-template-columns: repeat(5, 1fr);
     gap: 16px;
   }
 
   .gallery-wrapper .masonry-grid {
-    grid-template-columns: repeat(5, 1fr);  /* 5 columns */
+    grid-template-columns: repeat(5, 1fr);
     gap: 16px;
   }
 } 

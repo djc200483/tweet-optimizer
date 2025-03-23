@@ -249,32 +249,19 @@
 /* Desktop-only changes (screens larger than 768px) */
 @media screen and (min-width: 769px) {
   .optimizer-container.image-generator-page {
-    width: calc(95% + 200px);  /* Extends the container width to the right */
-    margin-left: auto;
-    margin-right: 0;  /* Removes right margin to allow extension */
-  }
-
-  .toolbar-content {
-    max-width: 100%;  /* Allow toolbar to use full container width */
-  }
-
-  .generated-images-container {
-    max-width: 100%;  /* Allow container to use full width */
+    margin-left: auto;  /* Keep original auto margin */
+    margin-right: 20px;  /* Small right margin */
+    width: 95%;  /* Keep original width */
+    max-width: calc(95% + 200px);  /* Extend max-width to the right */
   }
 
   .generated-images-container .image-grid {
-    grid-template-columns: repeat(5, 1fr);  /* Change to 5 columns */
+    grid-template-columns: repeat(5, 1fr);  /* 5 columns */
     gap: 16px;
   }
 
-  .gallery-wrapper {
-    max-width: 100%;  /* Allow gallery to use full width */
-  }
-
-  /* Ensure masonry grid in gallery also uses 5 columns */
   .gallery-wrapper .masonry-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr);  /* 5 columns */
     gap: 16px;
   }
 } 

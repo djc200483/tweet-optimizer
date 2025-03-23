@@ -269,9 +269,31 @@
     max-width: none;
   }
 
+  .sticky-toolbar {
+    width: 95%;
+    margin-left: auto;
+    margin-right: 20px;
+  }
+
   .toolbar-content {
-    margin: 0 auto;
-    max-width: 800px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .prompt-input-container {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .toolbar-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
   }
 
   .generated-images-container {

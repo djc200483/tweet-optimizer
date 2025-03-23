@@ -1,7 +1,8 @@
 ﻿.image-gallery {
   padding: 0;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 .gallery-tabs {
@@ -660,6 +661,7 @@
 @media screen and (min-width: 769px) {
   .masonry-grid {
     margin-left: -16px;
+    width: 100%;
   }
   
   .masonry-grid_column {

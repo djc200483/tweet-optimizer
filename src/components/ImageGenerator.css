@@ -244,4 +244,21 @@
     width: 100%;
     margin: 0;
   }
-} 
+}
+
+/* Desktop-only changes (screens larger than 768px) */
+@media screen and (min-width: 769px) {
+  .toolbar-content {
+    max-width: 90%;
+  }
+
+  .generated-images-container {
+    max-width: 90%;
+  }
+
+  .gallery-wrapper {
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

@@ -285,7 +285,11 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   // Update effect to track new images
   useEffect(() => {
     if (activeTab === 'explore' && refreshTrigger) {
-      setNewImagesCount(prev => prev + 2); // Assuming 2 images are generated each time
+      const lastRefreshTrigger = localStorage.getItem('lastRefreshTrigger');
+      if (lastRefreshTrigger !== refreshTrigger.toString()) {
+        setNewImagesCount(prev => prev + 2);
+        localStorage.setItem('lastRefreshTrigger', refreshTrigger.toString());
+      }
     }
   }, [refreshTrigger, activeTab]);
 

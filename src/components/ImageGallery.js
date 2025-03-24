@@ -187,9 +187,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    if (tab === 'my-images') {
-      setNewImagesCount(0); // Reset counter when switching to My Images
-    }
+    setNewImagesCount(0); // Reset counter when switching to any tab
     setSelectedImage(null);
     setVisibleImages(new Set());
   };

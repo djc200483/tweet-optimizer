@@ -52,7 +52,6 @@ export default function ImageGenerator() {
 
     try {
       setIsGenerateLoading(true);
-      setGeneratedImages([]);
       setError('');
       
       console.log('Sending prompt to generate images:', prompt);
@@ -85,8 +84,6 @@ export default function ImageGenerator() {
         throw new Error('Invalid response format from server');
       }
 
-      // Use the images directly from the server response
-      setGeneratedImages(data.images);
       // Trigger a refresh of the gallery
       setRefreshTrigger(prev => prev + 1);
     } catch (err) {

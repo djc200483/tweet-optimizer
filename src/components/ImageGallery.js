@@ -186,6 +186,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   };
 
   const handleTabChange = (tab) => {
+    if (tab === activeTab) return; // Don't do anything if clicking the same tab
     setActiveTab(tab);
     setNewImagesCount(0); // Reset counter when switching to any tab
     setSelectedImage(null);

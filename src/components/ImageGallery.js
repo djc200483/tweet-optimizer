@@ -244,6 +244,17 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     }
   }, [refreshTrigger, activeTab, fetchMyImages]);
 
+  // Effect to handle new images counter
+  useEffect(() => {
+    if (activeTab === 'explore' && refreshTrigger) {
+      const lastRefreshTrigger = localStorage.getItem('lastRefreshTrigger');
+      if (lastRefreshTrigger !== refreshTrigger.toString()) {
+        setNewImagesCount(prev => prev + 2);
+        localStorage.setItem('lastRefreshTrigger', refreshTrigger.toString());
+      }
+    }
+  }, [refreshTrigger, activeTab]);
+
   useEffect(() => {
     // Reset visible images when images array changes
     setVisibleImages(new Set());
@@ -281,17 +292,6 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
 
     return () => observer.disconnect();
   }, [images]);
-
-  // Update effect to track new images
-  useEffect(() => {
-    if (activeTab === 'explore' && refreshTrigger) {
-      const lastRefreshTrigger = localStorage.getItem('lastRefreshTrigger');
-      if (lastRefreshTrigger !== refreshTrigger.toString()) {
-        setNewImagesCount(prev => prev + 2);
-        localStorage.setItem('lastRefreshTrigger', refreshTrigger.toString());
-      }
-    }
-  }, [refreshTrigger, activeTab]);
 
   const renderImage = (image) => {
     const isVisible = visibleImages.has(image.id.toString());

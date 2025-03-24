@@ -158,19 +158,6 @@ export default function ImageGenerator() {
 
       {error && <div className="error-message">{error}</div>}
 
-      {generatedImages.length > 0 && (
-        <div className="generated-images-container">
-          <h3>Generated Images</h3>
-          <div className="image-grid">
-            {generatedImages.map((image, index) => (
-              <div key={index} className="image-item">
-                <img src={image.originalUrl} alt={`Generated ${index + 1}`} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       <div className="gallery-wrapper" style={{ width: '100%', marginTop: '24px' }}>
         <ImageGallery 
           userId={user.id} 

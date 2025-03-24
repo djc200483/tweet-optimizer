@@ -54,6 +54,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const [isCopied, setIsCopied] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [visibleImages, setVisibleImages] = useState(new Set());
+  const [newImagesCount, setNewImagesCount] = useState(0);
   
   // Initialize state from localStorage if available
   const [exploreImages, setExploreImages] = useState(() => {
@@ -186,8 +187,11 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+    if (tab === 'my-images') {
+      setNewImagesCount(0); // Reset counter when switching to My Images
+    }
     setSelectedImage(null);
-    setVisibleImages(new Set()); // Reset visible images when switching tabs
+    setVisibleImages(new Set());
   };
 
   const handleCopyPrompt = async (prompt) => {
@@ -279,6 +283,13 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
 
     return () => observer.disconnect();
   }, [images]);
+
+  // Update effect to track new images
+  useEffect(() => {
+    if (activeTab === 'explore' && refreshTrigger) {
+      setNewImagesCount(prev => prev + 2); // Assuming 2 images are generated each time
+    }
+  }, [refreshTrigger, activeTab]);
 
   const renderImage = (image) => {
     const isVisible = visibleImages.has(image.id.toString());
@@ -377,6 +388,11 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
           onClick={() => handleTabChange('my-images')}
         >
           My Images
+          {newImagesCount > 0 && (
+            <span className="new-images-badge">
+              +{newImagesCount}
+            </span>
+          )}
         </button>
       </div>
 

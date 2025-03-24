@@ -13,7 +13,9 @@
 }
 
 .choose-image-button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #00c2ff, #a855f7);
   color: white;
   padding: 12px 24px;
@@ -24,7 +26,7 @@
   border: none;
   box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
   min-width: 120px;
-  text-align: center;
+  position: relative;
 }
 
 .choose-image-button:hover {
@@ -36,6 +38,30 @@
   background: linear-gradient(135deg, #00c2ff, #a855f7);
   box-shadow: 0 6px 20px rgba(0, 194, 255, 0.4);
   transform: translateY(-2px);
+}
+
+.new-images-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  margin-left: 8px;
+  min-width: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .masonry-grid {
@@ -371,6 +397,18 @@
 
   .image-metadata {
     font-size: 12px;
+  }
+
+  .choose-image-button {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .new-images-badge {
+    margin-left: 6px;
+    padding: 1px 4px;
+    font-size: 0.7rem;
   }
 }
 

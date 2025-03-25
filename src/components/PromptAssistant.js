@@ -26,7 +26,10 @@ export default function PromptAssistant() {
       main: '',
       sub: ''
     },
-    extraDetails: ''
+    extraDetails: {
+      main: '',
+      sub: ''
+    }
   });
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [superchargedPrompt, setSuperchargedPrompt] = useState('');
@@ -1051,12 +1054,6 @@ export default function PromptAssistant() {
       ]
     },
     extraDetails: {
-      title: 'Extra Details & Enhancements',
-      options: ['Hyper-detailed Textures', 'Ethereal Effects', 'Magical Effects', 
-                'Realistic Weather Elements', 'Rain', 'Snow', 'Mist', 'Motion Blur', 
-                'Action Streaks', 'Fire', 'Smoke', 'Explosions', 'Light Rays', 'God Rays']
-    },
-    dynamicEffects: {
       main: [
         'Weather Effects',
         'Magical Effects',
@@ -1201,6 +1198,16 @@ export default function PromptAssistant() {
     }));
   };
 
+  const handleExtraDetailsChange = (type, value) => {
+    setSelectedOptions(prev => ({
+      ...prev,
+      extraDetails: {
+        ...prev.extraDetails,
+        [type]: value
+      }
+    }));
+  };
+
   const generatePrompt = () => {
     let prompt = '';
     
@@ -1249,17 +1256,12 @@ export default function PromptAssistant() {
       }
     }
 
-    // Add dynamic effects
-    if (dynamicEffects.main) {
-      prompt += `, ${dynamicEffects.main}`;
-      if (dynamicEffects.sub) {
-        prompt += `, ${dynamicEffects.sub}`;
-      }
-    }
-
     // Add extra details
-    if (selectedOptions.extraDetails) {
-      prompt += `, ${selectedOptions.extraDetails}`;
+    if (selectedOptions.extraDetails.main) {
+      prompt += `, ${selectedOptions.extraDetails.main}`;
+      if (selectedOptions.extraDetails.sub) {
+        prompt += `, ${selectedOptions.extraDetails.sub}`;
+      }
     }
 
     return prompt.trim();
@@ -1623,13 +1625,13 @@ export default function PromptAssistant() {
                     </select>
                   )}
                 </div>
-              ) : key === 'dynamicEffects' ? (
+              ) : key === 'extraDetails' ? (
                 <div className="style-selector">
                   <select
-                    value={dynamicEffects.main}
-                    onChange={(e) => handleDynamicEffectsChange('main', e.target.value)}
+                    value={selectedOptions.extraDetails.main}
+                    onChange={(e) => handleExtraDetailsChange('main', e.target.value)}
                   >
-                    <option value="">Select Dynamic Effect</option>
+                    <option value="">Select Extra Details & Enhancements</option>
                     {category.main.map((option) => (
                       <option key={option} value={option}>
                         {option}
@@ -1637,13 +1639,13 @@ export default function PromptAssistant() {
                     ))}
                   </select>
                   <select
-                    value={dynamicEffects.sub}
-                    onChange={(e) => handleDynamicEffectsChange('sub', e.target.value)}
-                    disabled={!dynamicEffects.main}
+                    value={selectedOptions.extraDetails.sub}
+                    onChange={(e) => handleExtraDetailsChange('sub', e.target.value)}
+                    disabled={!selectedOptions.extraDetails.main}
                   >
-                    <option value="">Select Specific Effect</option>
-                    {dynamicEffects.main &&
-                      category.sub[dynamicEffects.main].map((option) => (
+                    <option value="">Select Specific Enhancement</option>
+                    {selectedOptions.extraDetails.main &&
+                      category.sub[selectedOptions.extraDetails.main].map((option) => (
                         <option key={option} value={option}>
                           {option}
                         </option>

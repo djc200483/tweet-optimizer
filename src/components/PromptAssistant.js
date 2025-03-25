@@ -6,7 +6,10 @@ export default function PromptAssistant() {
   const [selectedOptions, setSelectedOptions] = useState({
     subject: '',
     resolution: '',
-    style: '',
+    style: {
+      main: '',
+      sub: ''
+    },
     emotion: '',
     lighting: '',
     composition: '',
@@ -50,10 +53,218 @@ export default function PromptAssistant() {
     },
     style: {
       title: 'Style & Medium',
-      options: ['Photorealistic', 'Digital Painting', 'Sketch', 'Line Art', 'Watercolor', 
-                'Oil Painting', '3D Rendered', 'Cyberpunk', 'Futuristic', 'Vintage', 'Retro', 
-                'Surreal', 'Dreamlike', 'Noir', 'Dark Aesthetic', 'Pixel Art', '8-bit', 
-                'Ukiyo-e', 'Traditional Asian Art', 'Impressionist', 'Classical Painting']
+      options: [
+        {
+          main: 'Photorealistic',
+          subcategories: [
+            'Hyperrealism',
+            'Realistic Portraits',
+            'Nature Realism',
+            'Urban Realism',
+            'Macro Photography Style'
+          ]
+        },
+        {
+          main: 'Digital Painting',
+          subcategories: [
+            'Matte Painting',
+            'Concept Art',
+            'Fantasy Digital Landscapes',
+            'Character Design',
+            'Abstract Digital Art'
+          ]
+        },
+        {
+          main: 'Sketch',
+          subcategories: [
+            'Pencil Sketch',
+            'Charcoal Style',
+            'Rough Line Work',
+            'Inked Illustrations',
+            'Minimalist Sketches'
+          ]
+        },
+        {
+          main: 'Line Art',
+          subcategories: [
+            'Clean Contour Lines',
+            'Abstract Geometric Shapes',
+            'Intricate Mandalas',
+            'Cartoon Outlines',
+            'Architectural Drafts'
+          ]
+        },
+        {
+          main: 'Watercolor',
+          subcategories: [
+            'Abstract Watercolor Blends',
+            'Soft Pastel Landscapes',
+            'Splatter Effects',
+            'Gradient Washes',
+            'Detailed Botanical Art'
+          ]
+        },
+        {
+          main: 'Oil Painting',
+          subcategories: [
+            'Renaissance-Style Portraits',
+            'Baroque Techniques',
+            'Impasto Textures',
+            'Still Life Scenes',
+            'Dramatic Landscapes'
+          ]
+        },
+        {
+          main: '3D Rendered',
+          subcategories: [
+            'Cinematic 3D Scenes',
+            'Game-Ready Assets',
+            'Realistic 3D Models',
+            'Sci-Fi Worlds',
+            'Architectural Visualizations'
+          ]
+        },
+        {
+          main: 'Cyberpunk',
+          subcategories: [
+            'Neon Streets',
+            'High-Tech Dystopia',
+            'Cybernetic Enhancements',
+            'Futuristic Urban Landscapes',
+            'Virtual Reality Worlds'
+          ]
+        },
+        {
+          main: 'Futuristic',
+          subcategories: [
+            'Space Exploration',
+            'Advanced Robotics',
+            'Megacities of the Future',
+            'Sci-Fi Vehicles',
+            'Futuristic Wearable Tech'
+          ]
+        },
+        {
+          main: 'Vintage',
+          subcategories: [
+            '1920s Art Deco',
+            'Victorian-Era Style',
+            'Mid-Century Modern',
+            'Rustic Charm',
+            'Classic Advertisements'
+          ]
+        },
+        {
+          main: 'Retro',
+          subcategories: [
+            '1980s Neon Vibes',
+            '70s Psychedelic Colors',
+            'Vintage Gaming Style',
+            'Old-School Pop Art',
+            'Retro Futurism'
+          ]
+        },
+        {
+          main: 'Surreal',
+          subcategories: [
+            'Dreamlike Landscapes',
+            'Floating Objects',
+            'Melting Forms',
+            'Abstract Surrealism',
+            'Impossible Perspectives'
+          ]
+        },
+        {
+          main: 'Dreamlike',
+          subcategories: [
+            'Soft, Ethereal Colors',
+            'Magical Night Skies',
+            'Fantasy Creatures',
+            'Glowing Forests',
+            'Gentle, Wavy Motions'
+          ]
+        },
+        {
+          main: 'Noir',
+          subcategories: [
+            'High-Contrast Shadows',
+            'Foggy Streets',
+            'Vintage Detective Scenes',
+            'Monochrome Mystery',
+            'Smoky Nightclubs'
+          ]
+        },
+        {
+          main: 'Dark Aesthetic',
+          subcategories: [
+            'Gothic Architecture',
+            'Shadowy Figures',
+            'Eerie Atmospheres',
+            'Mythical Creatures in Darkness',
+            'Mist and Fog'
+          ]
+        },
+        {
+          main: 'Pixel Art',
+          subcategories: [
+            'Retro Gaming Characters',
+            'Isometric Pixel Cities',
+            'Pixelated Landscapes',
+            '8-Bit Animals',
+            'Nostalgic Game Worlds'
+          ]
+        },
+        {
+          main: '8-bit',
+          subcategories: [
+            'Blocky Pixel Graphics',
+            'Simplistic Character Sprites',
+            'Classic Arcade Game Scenes',
+            'Bright Pixel Animations',
+            'Minimalist Retro Style'
+          ]
+        },
+        {
+          main: 'Ukiyo-e',
+          subcategories: [
+            'Nature Landscapes',
+            'Kabuki Performers',
+            'Mythological Scenes',
+            'Everyday Edo Life',
+            'Woodblock Printing Texture'
+          ]
+        },
+        {
+          main: 'Traditional Asian Art',
+          subcategories: [
+            'Brush Ink Calligraphy',
+            'Paper Folding Techniques',
+            'Lotus and Bamboo Motifs',
+            'Vibrant Cultural Patterns',
+            'Dragon and Phoenix Imagery'
+          ]
+        },
+        {
+          main: 'Impressionist',
+          subcategories: [
+            'Light and Color Play',
+            'Nature-Inspired Scenes',
+            'Loose, Visible Brushstrokes',
+            'Cityscapes in Motion',
+            'Focus on Light and Atmosphere'
+          ]
+        },
+        {
+          main: 'Classical Painting',
+          subcategories: [
+            'Renaissance Masterpieces',
+            'Baroque Dramatic Themes',
+            'Greek Mythology Depictions',
+            'Historical Portraiture',
+            'Lavish Still Life Compositions'
+          ]
+        }
+      ]
     },
     emotion: {
       title: 'Emotion & Mood',
@@ -97,7 +308,18 @@ export default function PromptAssistant() {
     { value: '3:4', label: 'Portrait (3:4)' }
   ];
 
+  const handleStyleChange = (mainStyle, subStyle = '') => {
+    setSelectedOptions(prevOptions => ({
+      ...prevOptions,
+      style: {
+        main: mainStyle,
+        sub: subStyle
+      }
+    }));
+  };
+
   const handleOptionChange = (category, value) => {
+    if (category === 'style') return; // Style is handled by handleStyleChange
     setSelectedOptions(prevOptions => ({
       ...prevOptions,
       [category]: value
@@ -109,7 +331,12 @@ export default function PromptAssistant() {
     
     if (selectedOptions.subject) parts.push(selectedOptions.subject);
     if (selectedOptions.resolution) parts.push(`in ${selectedOptions.resolution}`);
-    if (selectedOptions.style) parts.push(`in ${selectedOptions.style} style`);
+    if (selectedOptions.style.main) {
+      const styleText = selectedOptions.style.sub 
+        ? `in ${selectedOptions.style.sub} ${selectedOptions.style.main.toLowerCase()} style`
+        : `in ${selectedOptions.style.main} style`;
+      parts.push(styleText);
+    }
     if (selectedOptions.emotion) parts.push(`with a ${selectedOptions.emotion.toLowerCase()} mood`);
     if (selectedOptions.lighting) parts.push(`featuring ${selectedOptions.lighting.toLowerCase()} lighting`);
     if (selectedOptions.composition) parts.push(`from a ${selectedOptions.composition.toLowerCase()} perspective`);
@@ -239,18 +466,58 @@ export default function PromptAssistant() {
           {Object.entries(categories).map(([key, category]) => (
             <div key={key} className="category-section">
               <h3>{category.title}</h3>
-              <select
-                value={selectedOptions[key]}
-                onChange={(e) => handleOptionChange(key, e.target.value)}
-                disabled={isSuperchargeLoading || isGenerateLoading}
-              >
-                <option value="">Select {category.title}</option>
-                {category.options.map(option => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              {key === 'style' ? (
+                <div className="style-selector">
+                  <select
+                    value={selectedOptions.style.main}
+                    onChange={(e) => {
+                      const selectedMain = e.target.value;
+                      handleStyleChange(selectedMain, '');
+                    }}
+                    disabled={isSuperchargeLoading || isGenerateLoading}
+                  >
+                    <option value="">Select Style & Medium</option>
+                    {category.options.map(style => (
+                      <option key={style.main} value={style.main}>
+                        {style.main}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {selectedOptions.style.main && (
+                    <select
+                      value={selectedOptions.style.sub}
+                      onChange={(e) => {
+                        handleStyleChange(selectedOptions.style.main, e.target.value);
+                      }}
+                      disabled={isSuperchargeLoading || isGenerateLoading}
+                      className="subcategory-select"
+                    >
+                      <option value="">Select {selectedOptions.style.main} Style</option>
+                      {category.options
+                        .find(style => style.main === selectedOptions.style.main)
+                        ?.subcategories.map(sub => (
+                          <option key={sub} value={sub}>
+                            {sub}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </div>
+              ) : (
+                <select
+                  value={selectedOptions[key]}
+                  onChange={(e) => handleOptionChange(key, e.target.value)}
+                  disabled={isSuperchargeLoading || isGenerateLoading}
+                >
+                  <option value="">Select {category.title}</option>
+                  {category.options.map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
           ))}
         </div>
@@ -531,6 +798,32 @@ const styles = `
     .generated-images-container {
       padding: 15px;
       margin: 15px 0;
+    }
+  }
+
+  .style-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .style-selector select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 14px;
+  }
+
+  .subcategory-select {
+    margin-top: 5px;
+    background-color: #f8f9fa !important;
+  }
+
+  @media (max-width: 768px) {
+    .style-selector {
+      gap: 8px;
     }
   }
 `;

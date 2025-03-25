@@ -18,7 +18,10 @@ export default function PromptAssistant() {
       main: '',
       sub: ''
     },
-    composition: '',
+    composition: {
+      main: '',
+      sub: ''
+    },
     timePeriod: '',
     extraDetails: ''
   });
@@ -684,10 +687,208 @@ export default function PromptAssistant() {
     },
     composition: {
       title: 'Composition & Perspective',
-      options: ['Close-up', 'Macro Shot', 'Wide-angle View', 'Landscape View', 
-                'First-person Perspective', 'Over-the-shoulder View', 'Dramatic Low Angle', 
-                'Bird\'s-eye View', 'Symmetrical Composition', 'Chaotic Composition', 
-                'Abstract Composition']
+      options: [
+        {
+          main: 'Close-Up',
+          subcategories: [
+            'Extreme Close-Up',
+            'Portrait Focus',
+            'Detailed Object View',
+            'Intimate Face Shot',
+            'Texture Emphasis'
+          ]
+        },
+        {
+          main: 'Macro Shot',
+          subcategories: [
+            'Tiny Details Magnified',
+            'Insect Perspectives',
+            'Flower Petal Close-Up',
+            'Dew Drop Magnification',
+            'Small Worlds in Focus'
+          ]
+        },
+        {
+          main: 'Wide-Angle View',
+          subcategories: [
+            'Expansive Landscapes',
+            'Cityscape Horizons',
+            'Group Scene in Context',
+            'Large-Scale Architecture',
+            'Atmospheric Space Views'
+          ]
+        },
+        {
+          main: 'Landscape View',
+          subcategories: [
+            'Panoramic Mountains',
+            'Rolling Hills',
+            'Oceanic Horizons',
+            'Desert Expanses',
+            'Dense Forests'
+          ]
+        },
+        {
+          main: 'First-Person Perspective',
+          subcategories: [
+            'View Through Hands',
+            'Looking Down Paths',
+            'Immersive Player View',
+            'Through Glass or Goggles',
+            'Over-the-Shoulder Actions'
+          ]
+        },
+        {
+          main: 'Over-the-Shoulder View',
+          subcategories: [
+            'Intimate Conversations',
+            'Suspenseful Observations',
+            'Following a Character',
+            'Action Scene Focus',
+            'Exploring Surroundings'
+          ]
+        },
+        {
+          main: 'Dramatic Low Angle',
+          subcategories: [
+            'Heroic Perspective',
+            'Towering Buildings',
+            'Dramatic Characters',
+            'Exaggerated Power Stances',
+            'Sky as a Backdrop'
+          ]
+        },
+        {
+          main: "Bird's-Eye View",
+          subcategories: [
+            'Top-Down Cityscapes',
+            'Aerial Forest Views',
+            'Overlooking Battles',
+            'Natural Formations',
+            'Geometric Layouts'
+          ]
+        },
+        {
+          main: 'Symmetrical Composition',
+          subcategories: [
+            'Perfectly Balanced Frames',
+            'Mirrored Landscapes',
+            'Centered Subjects',
+            'Geometric Patterns',
+            'Reflections and Duality'
+          ]
+        },
+        {
+          main: 'Chaotic Composition',
+          subcategories: [
+            'Intentionally Disordered Frames',
+            'Busy Urban Crowds',
+            'Overlapping Subjects',
+            'Explosive Action Scenes',
+            'Cluttered and Dynamic Energy'
+          ]
+        },
+        {
+          main: 'Abstract Composition',
+          subcategories: [
+            'Experimental Angles',
+            'Fragmented Shapes',
+            'Color-Driven Forms',
+            'Unique Patterns',
+            'Distorted Views'
+          ]
+        },
+        {
+          main: 'Focus and Depth of Field',
+          subcategories: [
+            'Shallow Depth Focus',
+            'Blurred Backgrounds',
+            'Bokeh Effects',
+            'Foreground Isolation',
+            'Layered Storytelling'
+          ]
+        },
+        {
+          main: 'Rule of Thirds',
+          subcategories: [
+            'Center Focus Adjustments',
+            'Balanced Asymmetry',
+            'Framing for Tension',
+            'Horizon Line Placement',
+            'Grid-Based Alignments'
+          ]
+        },
+        {
+          main: 'Golden Ratio',
+          subcategories: [
+            'Natural Flowing Spirals',
+            'Balanced Proportions',
+            'Perfectly Framed Scenes',
+            'Elegant Subject Placement',
+            'Harmonic Visuals'
+          ]
+        },
+        {
+          main: 'Vanishing Point Perspective',
+          subcategories: [
+            'Infinite Hallways',
+            'Endless Roads',
+            'City Streets Fading Out',
+            'Rail Tracks and Convergence',
+            'Depth-Focused Views'
+          ]
+        },
+        {
+          main: 'Framing Within Frames',
+          subcategories: [
+            'Windows and Doors',
+            'Natural Archways',
+            'Overhanging Branches',
+            'Circular Vignettes',
+            'Layered Compositions'
+          ]
+        },
+        {
+          main: 'Dynamic Angles',
+          subcategories: [
+            'Tilting Horizons',
+            'Extreme Diagonals',
+            'Action-Oriented Motion',
+            'Warped Viewpoints',
+            'Spiraling Focus'
+          ]
+        },
+        {
+          main: 'Negative Space',
+          subcategories: [
+            'Subject Isolation',
+            'Open Minimalism',
+            'Breathing Room',
+            'Vast Sky Backdrops',
+            'Intentional Emptiness'
+          ]
+        },
+        {
+          main: 'Mirror Reflection Shots',
+          subcategories: [
+            'Reflective Surfaces',
+            'Symmetry in Mirrors',
+            'Double Subject Views',
+            'Mirror Worlds',
+            'Illusionary Compositions'
+          ]
+        },
+        {
+          main: 'Layered Foreground and Background',
+          subcategories: [
+            'Overlapping Subjects',
+            'Scene Depths',
+            'Framing with Context',
+            'Characters in Environment',
+            'Multi-Plane Views'
+          ]
+        }
+      ]
     },
     timePeriod: {
       title: 'Time Period & Setting',
@@ -752,7 +953,12 @@ export default function PromptAssistant() {
         : `featuring ${selectedOptions.lighting.main.toLowerCase()}`;
       parts.push(lightingText);
     }
-    if (selectedOptions.composition) parts.push(`from a ${selectedOptions.composition.toLowerCase()} perspective`);
+    if (selectedOptions.composition.main) {
+      const compositionText = selectedOptions.composition.sub
+        ? `from a ${selectedOptions.composition.sub} ${selectedOptions.composition.main.toLowerCase()} perspective`
+        : `from a ${selectedOptions.composition.main.toLowerCase()} perspective`;
+      parts.push(compositionText);
+    }
     if (selectedOptions.timePeriod) parts.push(`set in ${selectedOptions.timePeriod}`);
     if (selectedOptions.extraDetails) parts.push(`with ${selectedOptions.extraDetails.toLowerCase()} effects`);
     
@@ -1009,6 +1215,56 @@ export default function PromptAssistant() {
                       <option value="">Select {selectedOptions.lighting.main} Effect</option>
                       {category.options
                         .find(lighting => lighting.main === selectedOptions.lighting.main)
+                        ?.subcategories.map(sub => (
+                          <option key={sub} value={sub}>
+                            {sub}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </div>
+              ) : key === 'composition' ? (
+                <div className="style-selector">
+                  <select
+                    value={selectedOptions.composition.main}
+                    onChange={(e) => {
+                      const selectedMain = e.target.value;
+                      setSelectedOptions(prev => ({
+                        ...prev,
+                        composition: {
+                          main: selectedMain,
+                          sub: ''
+                        }
+                      }));
+                    }}
+                    disabled={isSuperchargeLoading || isGenerateLoading}
+                  >
+                    <option value="">Select Composition & Perspective</option>
+                    {category.options.map(composition => (
+                      <option key={composition.main} value={composition.main}>
+                        {composition.main}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {selectedOptions.composition.main && (
+                    <select
+                      value={selectedOptions.composition.sub}
+                      onChange={(e) => {
+                        setSelectedOptions(prev => ({
+                          ...prev,
+                          composition: {
+                            ...prev.composition,
+                            sub: e.target.value
+                          }
+                        }));
+                      }}
+                      disabled={isSuperchargeLoading || isGenerateLoading}
+                      className="subcategory-select"
+                    >
+                      <option value="">Select {selectedOptions.composition.main} Type</option>
+                      {category.options
+                        .find(composition => composition.main === selectedOptions.composition.main)
                         ?.subcategories.map(sub => (
                           <option key={sub} value={sub}>
                             {sub}

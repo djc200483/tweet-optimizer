@@ -10,7 +10,10 @@ export default function PromptAssistant() {
       main: '',
       sub: ''
     },
-    emotion: '',
+    emotion: {
+      main: '',
+      sub: ''
+    },
     lighting: '',
     composition: '',
     timePeriod: '',
@@ -268,9 +271,208 @@ export default function PromptAssistant() {
     },
     emotion: {
       title: 'Emotion & Mood',
-      options: ['Happy', 'Joyful', 'Mysterious', 'Intriguing', 'Dark', 'Ominous', 'Epic', 
-                'Grand', 'Melancholic', 'Sad', 'Inspirational', 'Uplifting', 'Peaceful', 
-                'Serene', 'Eerie', 'Uncanny', 'Action-Packed', 'Intense']
+      options: [
+        {
+          main: 'Happy',
+          subcategories: [
+            'Joyful Celebration',
+            'Laughter and Smiles',
+            'Radiant Sunshine',
+            'Festive Atmosphere',
+            'Playful Interaction'
+          ]
+        },
+        {
+          main: 'Joyful',
+          subcategories: [
+            'Bursting with Energy',
+            'Pure Bliss',
+            'Ecstatic Moments',
+            'Carefree Vibes',
+            'Warm Embrace'
+          ]
+        },
+        {
+          main: 'Mysterious',
+          subcategories: [
+            'Foggy Pathways',
+            'Hidden Figures',
+            'Cryptic Symbols',
+            'Shadowy Corners',
+            'Eerie Silence'
+          ]
+        },
+        {
+          main: 'Intriguing',
+          subcategories: [
+            'Puzzling Expressions',
+            'Unexpected Twists',
+            'Enigmatic Artifacts',
+            'Clues in Plain Sight',
+            'Layers of Meaning'
+          ]
+        },
+        {
+          main: 'Dark',
+          subcategories: [
+            'Sinister Shadows',
+            'Ominous Clouds',
+            'Foreboding Atmosphere',
+            'Silent Danger',
+            'Brooding Figures'
+          ]
+        },
+        {
+          main: 'Ominous',
+          subcategories: [
+            'Approaching Storm',
+            'Creeping Threat',
+            'Tension in the Air',
+            'Haunting Landscapes',
+            'Eyes Watching from Afar'
+          ]
+        },
+        {
+          main: 'Epic',
+          subcategories: [
+            'Heroic Adventures',
+            'Monumental Achievements',
+            'Vast Open Worlds',
+            'Intense Battle Scenes',
+            'Towering Mountains'
+          ]
+        },
+        {
+          main: 'Grand',
+          subcategories: [
+            'Majestic Palaces',
+            'Sweeping Landscapes',
+            'Glorious Sunsets',
+            'Regal Portraits',
+            'Awe-Inspiring Scale'
+          ]
+        },
+        {
+          main: 'Melancholic',
+          subcategories: [
+            'Tear-Streaked Faces',
+            'Lonely Streets',
+            'Faded Memories',
+            'Quiet Reflection',
+            'Soft Rainfall'
+          ]
+        },
+        {
+          main: 'Sad',
+          subcategories: [
+            'Weeping Willows',
+            'Broken Hearts',
+            'Empty Chairs',
+            'Heavy Gray Skies',
+            'Silent Farewells'
+          ]
+        },
+        {
+          main: 'Inspirational',
+          subcategories: [
+            'Rising Above Challenges',
+            'Triumph Against Odds',
+            'Motivational Gestures',
+            'Rays of Hope',
+            'Victory March'
+          ]
+        },
+        {
+          main: 'Uplifting',
+          subcategories: [
+            'Positive Energy',
+            'Bright Smiles',
+            'Overcoming Adversity',
+            'Encouraging Words',
+            'Warm Connections'
+          ]
+        },
+        {
+          main: 'Peaceful',
+          subcategories: [
+            'Calm Waters',
+            'Gentle Breezes',
+            'Meditative Serenity',
+            'Quiet Forests',
+            'Starlit Skies'
+          ]
+        },
+        {
+          main: 'Serene',
+          subcategories: [
+            'Tranquil Lakes',
+            'Blossoming Gardens',
+            'Soft Glow of Lanterns',
+            'Harmonious Balance',
+            'Restful Sleep'
+          ]
+        },
+        {
+          main: 'Eerie',
+          subcategories: [
+            'Whispers in the Dark',
+            'Shadows Moving',
+            'Ghostly Figures',
+            'Abandoned Buildings',
+            'Chilling Wind'
+          ]
+        },
+        {
+          main: 'Uncanny',
+          subcategories: [
+            'Slightly Off-Balance Scenes',
+            'Familiar but Strange',
+            'Doppelgangers',
+            'Twisted Realities',
+            'Objects Out of Place'
+          ]
+        },
+        {
+          main: 'Action-Packed',
+          subcategories: [
+            'Intense Movement',
+            'Explosive Energy',
+            'High-Stakes Drama',
+            'Dynamic Poses',
+            'Thrilling Chase Scenes'
+          ]
+        },
+        {
+          main: 'Intense',
+          subcategories: [
+            'Grit and Determination',
+            'High-Energy Moments',
+            'Fierce Expressions',
+            'Clashing Forces',
+            'Suspenseful Tension'
+          ]
+        },
+        {
+          main: 'Calm',
+          subcategories: [
+            'Relaxing Beaches',
+            'Quiet Sunsets',
+            'Slow Breathing Moments',
+            'Gentle Ripples',
+            'Cloud Watching'
+          ]
+        },
+        {
+          main: 'Nostalgic',
+          subcategories: [
+            'Childhood Memories',
+            'Vintage Objects',
+            'Old Photographs',
+            'Familiar Scents',
+            'Long-Lost Places'
+          ]
+        }
+      ]
     },
     lighting: {
       title: 'Lighting & Atmosphere',
@@ -337,7 +539,12 @@ export default function PromptAssistant() {
         : `in ${selectedOptions.style.main} style`;
       parts.push(styleText);
     }
-    if (selectedOptions.emotion) parts.push(`with a ${selectedOptions.emotion.toLowerCase()} mood`);
+    if (selectedOptions.emotion.main) {
+      const emotionText = selectedOptions.emotion.sub
+        ? `with a ${selectedOptions.emotion.sub} ${selectedOptions.emotion.main.toLowerCase()} mood`
+        : `with a ${selectedOptions.emotion.main.toLowerCase()} mood`;
+      parts.push(emotionText);
+    }
     if (selectedOptions.lighting) parts.push(`featuring ${selectedOptions.lighting.toLowerCase()} lighting`);
     if (selectedOptions.composition) parts.push(`from a ${selectedOptions.composition.toLowerCase()} perspective`);
     if (selectedOptions.timePeriod) parts.push(`set in ${selectedOptions.timePeriod}`);
@@ -496,6 +703,56 @@ export default function PromptAssistant() {
                       <option value="">Select {selectedOptions.style.main} Style</option>
                       {category.options
                         .find(style => style.main === selectedOptions.style.main)
+                        ?.subcategories.map(sub => (
+                          <option key={sub} value={sub}>
+                            {sub}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </div>
+              ) : key === 'emotion' ? (
+                <div className="style-selector">
+                  <select
+                    value={selectedOptions.emotion.main}
+                    onChange={(e) => {
+                      const selectedMain = e.target.value;
+                      setSelectedOptions(prev => ({
+                        ...prev,
+                        emotion: {
+                          main: selectedMain,
+                          sub: ''
+                        }
+                      }));
+                    }}
+                    disabled={isSuperchargeLoading || isGenerateLoading}
+                  >
+                    <option value="">Select Emotion & Mood</option>
+                    {category.options.map(emotion => (
+                      <option key={emotion.main} value={emotion.main}>
+                        {emotion.main}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {selectedOptions.emotion.main && (
+                    <select
+                      value={selectedOptions.emotion.sub}
+                      onChange={(e) => {
+                        setSelectedOptions(prev => ({
+                          ...prev,
+                          emotion: {
+                            ...prev.emotion,
+                            sub: e.target.value
+                          }
+                        }));
+                      }}
+                      disabled={isSuperchargeLoading || isGenerateLoading}
+                      className="subcategory-select"
+                    >
+                      <option value="">Select {selectedOptions.emotion.main} Mood</option>
+                      {category.options
+                        .find(emotion => emotion.main === selectedOptions.emotion.main)
                         ?.subcategories.map(sub => (
                           <option key={sub} value={sub}>
                             {sub}

@@ -14,7 +14,10 @@ export default function PromptAssistant() {
       main: '',
       sub: ''
     },
-    lighting: '',
+    lighting: {
+      main: '',
+      sub: ''
+    },
     composition: '',
     timePeriod: '',
     extraDetails: ''
@@ -476,10 +479,208 @@ export default function PromptAssistant() {
     },
     lighting: {
       title: 'Lighting & Atmosphere',
-      options: ['Warm Golden Hour', 'Cold Lighting', 'Moody Lighting', 'High Contrast', 
-                'Dramatic Lighting', 'Soft Glow', 'Ethereal Glow', 'Foggy', 'Hazy', 
-                'Cyberpunk Neon Glow', 'Vintage Film Grain', 'Harsh Shadows', 'Noir Style', 
-                'Dreamlike Filters', 'Surreal Filters']
+      options: [
+        {
+          main: 'Warm Lighting',
+          subcategories: [
+            'Golden Hour Glow',
+            'Soft Morning Light',
+            'Warm Indoor Lamp',
+            'Candlelit Ambiance',
+            'Sunset Hues'
+          ]
+        },
+        {
+          main: 'Cold Lighting',
+          subcategories: [
+            'Cool Moonlight',
+            'Icy Blue Glimmer',
+            'Overcast Day',
+            'Frosty Twilight',
+            'LED Fluorescent Glow'
+          ]
+        },
+        {
+          main: 'Moody Lighting',
+          subcategories: [
+            'Low-Key Shadows',
+            'Subtle Highlights',
+            'Dimly Lit Spaces',
+            'Cozy Fireplace Glow',
+            'Gentle Ambient Light'
+          ]
+        },
+        {
+          main: 'High Contrast',
+          subcategories: [
+            'Chiaroscuro Effect',
+            'Bold Shadow Play',
+            'Stark Opposites',
+            'Silhouetted Figures',
+            'Dramatic Edge Lighting'
+          ]
+        },
+        {
+          main: 'Dramatic Lighting',
+          subcategories: [
+            'Sharp Spotlights',
+            'Ray Burst Effects',
+            'Focused Illumination',
+            'Bold Shadows',
+            'Cinematic Key Lights'
+          ]
+        },
+        {
+          main: 'Ethereal Glow',
+          subcategories: [
+            'Angelic Light Beams',
+            'Mystic Auras',
+            'Magical Backdrops',
+            'Diffused Soft Glow',
+            'Heavenly Radiance'
+          ]
+        },
+        {
+          main: 'Foggy and Hazy',
+          subcategories: [
+            'Misty Morning Scenes',
+            'Smoky Battlefield',
+            'Heavy Fog Shrouding Objects',
+            'Rainy Atmospheres',
+            'Low Visibility'
+          ]
+        },
+        {
+          main: 'Cyberpunk Neon',
+          subcategories: [
+            'Neon Signs Reflections',
+            'Vibrant Street Colors',
+            'Electric Blue and Pink Hues',
+            'Urban Nightlife Glow',
+            'Rain-Slicked Streets with Neon Lights'
+          ]
+        },
+        {
+          main: 'Vintage Film Grain',
+          subcategories: [
+            'Faded Sepia Filters',
+            'Dust and Scratches Effect',
+            'Washed-Out Colors',
+            'Retro Movie Frame',
+            '20th Century Film Look'
+          ]
+        },
+        {
+          main: 'Surreal and Dreamlike',
+          subcategories: [
+            'Floating Particles',
+            'Glowing Clouds',
+            'Unnatural Colors',
+            'Twilight Magic',
+            'Soft Blurred Edges'
+          ]
+        },
+        {
+          main: 'Harsh Shadows',
+          subcategories: [
+            'Strong Overhead Light',
+            'Sharp Black Silhouettes',
+            'Clear Divisions Between Light and Dark',
+            'Intense Sunlight Angles',
+            'Streetlight Isolation'
+          ]
+        },
+        {
+          main: 'Noir Style',
+          subcategories: [
+            'Black-and-White Tones',
+            'Dimly Lit Streets',
+            'Flickering Lights',
+            'Rainy Nights',
+            'Mystery Fog'
+          ]
+        },
+        {
+          main: 'Soft Glow',
+          subcategories: [
+            'Gentle Candlelight',
+            'Moonlit Nights',
+            'Sunset Reflection',
+            'Early Morning Light',
+            'Subtle Night Glow'
+          ]
+        },
+        {
+          main: 'Natural Light',
+          subcategories: [
+            'Sunbeams Through Trees',
+            'Open Sky Illumination',
+            'Clear Daylight',
+            'Forest Canopies',
+            'Ocean Horizon Light'
+          ]
+        },
+        {
+          main: 'Stormy Atmosphere',
+          subcategories: [
+            'Lightning Flashes',
+            'Dark, Rolling Clouds',
+            'Rainy Skylines',
+            'Thunderstorm Backdrops',
+            'Heavy Overcast Gloom'
+          ]
+        },
+        {
+          main: 'Magical Effects',
+          subcategories: [
+            'Sparkling Particles',
+            'Glowing Magical Circles',
+            'Shimmering Energy Fields',
+            'Luminescent Glows',
+            'Aura-like Lighting'
+          ]
+        },
+        {
+          main: 'Urban Nightlife',
+          subcategories: [
+            'City Skylines at Night',
+            'Traffic Light Reflections',
+            'Bustling Streets with Lanterns',
+            'Vibrant Rooftop Views',
+            'Lit Windows of Skyscrapers'
+          ]
+        },
+        {
+          main: 'Fire and Heat',
+          subcategories: [
+            'Blazing Flames',
+            'Campfire Sparks',
+            'Smoky Orange Hues',
+            'Smoldering Glow',
+            'Intense Heat Waves'
+          ]
+        },
+        {
+          main: 'Snowy and Wintery',
+          subcategories: [
+            'Crisp White Illumination',
+            'Reflections on Ice',
+            'Frost-Covered Windows',
+            'Pale Blue Hues',
+            'Falling Snow Lit by Lamps'
+          ]
+        },
+        {
+          main: 'Underwater Glow',
+          subcategories: [
+            'Shimmering Aquatic Ripples',
+            'Submarine Light Shafts',
+            'Bioluminescent Glow',
+            'Ocean Depth Shadows',
+            'Ethereal Blue-Green Light'
+          ]
+        }
+      ]
     },
     composition: {
       title: 'Composition & Perspective',
@@ -545,7 +746,12 @@ export default function PromptAssistant() {
         : `with a ${selectedOptions.emotion.main.toLowerCase()} mood`;
       parts.push(emotionText);
     }
-    if (selectedOptions.lighting) parts.push(`featuring ${selectedOptions.lighting.toLowerCase()} lighting`);
+    if (selectedOptions.lighting.main) {
+      const lightingText = selectedOptions.lighting.sub
+        ? `featuring ${selectedOptions.lighting.sub} ${selectedOptions.lighting.main.toLowerCase()}`
+        : `featuring ${selectedOptions.lighting.main.toLowerCase()}`;
+      parts.push(lightingText);
+    }
     if (selectedOptions.composition) parts.push(`from a ${selectedOptions.composition.toLowerCase()} perspective`);
     if (selectedOptions.timePeriod) parts.push(`set in ${selectedOptions.timePeriod}`);
     if (selectedOptions.extraDetails) parts.push(`with ${selectedOptions.extraDetails.toLowerCase()} effects`);
@@ -753,6 +959,56 @@ export default function PromptAssistant() {
                       <option value="">Select {selectedOptions.emotion.main} Mood</option>
                       {category.options
                         .find(emotion => emotion.main === selectedOptions.emotion.main)
+                        ?.subcategories.map(sub => (
+                          <option key={sub} value={sub}>
+                            {sub}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </div>
+              ) : key === 'lighting' ? (
+                <div className="style-selector">
+                  <select
+                    value={selectedOptions.lighting.main}
+                    onChange={(e) => {
+                      const selectedMain = e.target.value;
+                      setSelectedOptions(prev => ({
+                        ...prev,
+                        lighting: {
+                          main: selectedMain,
+                          sub: ''
+                        }
+                      }));
+                    }}
+                    disabled={isSuperchargeLoading || isGenerateLoading}
+                  >
+                    <option value="">Select Lighting & Atmosphere</option>
+                    {category.options.map(lighting => (
+                      <option key={lighting.main} value={lighting.main}>
+                        {lighting.main}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {selectedOptions.lighting.main && (
+                    <select
+                      value={selectedOptions.lighting.sub}
+                      onChange={(e) => {
+                        setSelectedOptions(prev => ({
+                          ...prev,
+                          lighting: {
+                            ...prev.lighting,
+                            sub: e.target.value
+                          }
+                        }));
+                      }}
+                      disabled={isSuperchargeLoading || isGenerateLoading}
+                      className="subcategory-select"
+                    >
+                      <option value="">Select {selectedOptions.lighting.main} Effect</option>
+                      {category.options
+                        .find(lighting => lighting.main === selectedOptions.lighting.main)
                         ?.subcategories.map(sub => (
                           <option key={sub} value={sub}>
                             {sub}

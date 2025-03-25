@@ -810,13 +810,14 @@ const styles = `
 
   .style-selector select {
     width: 100%;
-    padding: 8px 12px;
+    background: #23242b;
+    color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    background-color: #1a1b26;
-    color: #fff;
-    font-size: 14px;
+    border-radius: 12px;
+    padding: 8px 15px;
+    font-size: 0.9rem;
     cursor: pointer;
+    transition: all 0.3s ease;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -827,20 +828,25 @@ const styles = `
     padding-right: 32px;
   }
 
+  .style-selector select:focus {
+    outline: none;
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+  }
+
   .style-selector select:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
   .style-selector select option {
-    background-color: #1a1b26;
+    background-color: #23242b;
     color: #fff;
     padding: 8px;
   }
 
   .style-selector .subcategory-select {
     margin-top: 5px;
-    background-color: #1a1b26;
   }
 
   @media (max-width: 768px) {

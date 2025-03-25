@@ -38,6 +38,8 @@ export default function PromptAssistant() {
   const [showImageGrid, setShowImageGrid] = useState(false);
   const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
   const [superchargedAspectRatio, setSuperchargedAspectRatio] = useState('1:1');
+  const [timePeriod, setTimePeriod] = useState({ main: '', sub: '' });
+  const [dynamicEffects, setDynamicEffects] = useState({ main: '', sub: '' });
 
   // Add useEffect to update prompt whenever selectedOptions changes
   useEffect(() => {
@@ -1053,6 +1055,116 @@ export default function PromptAssistant() {
       options: ['Hyper-detailed Textures', 'Ethereal Effects', 'Magical Effects', 
                 'Realistic Weather Elements', 'Rain', 'Snow', 'Mist', 'Motion Blur', 
                 'Action Streaks', 'Fire', 'Smoke', 'Explosions', 'Light Rays', 'God Rays']
+    },
+    dynamicEffects: {
+      main: [
+        'Weather Effects',
+        'Magical Effects',
+        'Fire and Explosion Effects',
+        'Light and Glow Effects',
+        'Motion and Speed Effects',
+        'Particle Effects',
+        'Environmental Effects',
+        'Energy Effects'
+      ],
+      sub: {
+        'Weather Effects': [
+          'Heavy Rainfall',
+          'Snowstorms',
+          'Thunderstorms with Lightning',
+          'Sunny with Clouds',
+          'Fog and Mist',
+          'Realistic Weather Elements',
+          'Rain',
+          'Snow',
+          'Wind',
+          'Hailstorms'
+        ],
+        'Magical Effects': [
+          'Glowing Runes',
+          'Magic Sparks',
+          'Energy Orbs',
+          'Floating Particles',
+          'Mystic Auras',
+          'Ethereal Effects',
+          'Magical Glows',
+          'Mystical Light Trails',
+          'Enchanted Water',
+          'Teleportation'
+        ],
+        'Fire and Explosion Effects': [
+          'Fireball Explosions',
+          'Volcanic Eruptions',
+          'Exploding Buildings',
+          'Flaming Arrows',
+          'Spontaneous Combustion',
+          'Fire Tornadoes',
+          'Sparks and Flames',
+          'Smoke Trails',
+          'Molotov Cocktail Explosions',
+          'Fireworks Displays'
+        ],
+        'Light and Glow Effects': [
+          'Glowing Lines',
+          'Radiant Beams of Light',
+          'God Rays',
+          'Neon Glows',
+          'Light Trails',
+          'Laser Beams',
+          'Luminescent Patterns',
+          'Aurora Borealis',
+          'Dazzling Reflections',
+          'Glowing Water'
+        ],
+        'Motion and Speed Effects': [
+          'Motion Blur',
+          'Action Streaks',
+          'Speed Lines',
+          'Dynamic Movement Trails',
+          'Zoom Blur',
+          'Bullet Trails',
+          'Running Shadows',
+          'Rapid Object Movement',
+          'Velocity Blur',
+          'Time-Lapse Effects'
+        ],
+        'Particle Effects': [
+          'Sparkle Trails',
+          'Dust Particles',
+          'Floating Dust Motions',
+          'Glitter Effects',
+          'Ember Sparks',
+          'Water Droplets',
+          'Snowflakes',
+          'Fizzling Bubbles',
+          'Mist Clouds',
+          'Explosive Smoke'
+        ],
+        'Environmental Effects': [
+          'Sandstorms',
+          'Tornadoes',
+          'Earthquakes',
+          'Flooding',
+          'Hurricanes',
+          'Tidal Waves',
+          'Wildfires',
+          'Lava Flow',
+          'Landslides',
+          'Dust Clouds'
+        ],
+        'Energy Effects': [
+          'Lightning Strikes',
+          'Plasma Balls',
+          'Energy Surges',
+          'Electrical Sparks',
+          'Magnetic Fields',
+          'Laser Beams',
+          'Radiant Explosions',
+          'Shockwaves',
+          'Power Surges',
+          'Solar Flares'
+        ]
+      }
     }
   };
 
@@ -1082,44 +1194,75 @@ export default function PromptAssistant() {
     }));
   };
 
+  const handleDynamicEffectsChange = (type, value) => {
+    setDynamicEffects(prev => ({
+      ...prev,
+      [type]: value
+    }));
+  };
+
   const generatePrompt = () => {
-    const parts = [];
+    let prompt = '';
     
-    if (selectedOptions.subject) parts.push(selectedOptions.subject);
-    if (selectedOptions.resolution) parts.push(`in ${selectedOptions.resolution}`);
+    // Add main subject
+    if (selectedOptions.subject) {
+      prompt += selectedOptions.subject;
+    }
+
+    // Add style and medium
     if (selectedOptions.style.main) {
-      const styleText = selectedOptions.style.sub 
-        ? `in ${selectedOptions.style.sub} ${selectedOptions.style.main.toLowerCase()} style`
-        : `in ${selectedOptions.style.main} style`;
-      parts.push(styleText);
+      prompt += `, ${selectedOptions.style.main}`;
+      if (selectedOptions.style.sub) {
+        prompt += `, ${selectedOptions.style.sub}`;
+      }
     }
+
+    // Add emotion and mood
     if (selectedOptions.emotion.main) {
-      const emotionText = selectedOptions.emotion.sub
-        ? `with a ${selectedOptions.emotion.sub} ${selectedOptions.emotion.main.toLowerCase()} mood`
-        : `with a ${selectedOptions.emotion.main.toLowerCase()} mood`;
-      parts.push(emotionText);
+      prompt += `, ${selectedOptions.emotion.main}`;
+      if (selectedOptions.emotion.sub) {
+        prompt += `, ${selectedOptions.emotion.sub}`;
+      }
     }
+
+    // Add lighting and atmosphere
     if (selectedOptions.lighting.main) {
-      const lightingText = selectedOptions.lighting.sub
-        ? `featuring ${selectedOptions.lighting.sub} ${selectedOptions.lighting.main.toLowerCase()}`
-        : `featuring ${selectedOptions.lighting.main.toLowerCase()}`;
-      parts.push(lightingText);
+      prompt += `, ${selectedOptions.lighting.main}`;
+      if (selectedOptions.lighting.sub) {
+        prompt += `, ${selectedOptions.lighting.sub}`;
+      }
     }
+
+    // Add composition and perspective
     if (selectedOptions.composition.main) {
-      const compositionText = selectedOptions.composition.sub
-        ? `from a ${selectedOptions.composition.sub} ${selectedOptions.composition.main.toLowerCase()} perspective`
-        : `from a ${selectedOptions.composition.main.toLowerCase()} perspective`;
-      parts.push(compositionText);
+      prompt += `, ${selectedOptions.composition.main}`;
+      if (selectedOptions.composition.sub) {
+        prompt += `, ${selectedOptions.composition.sub}`;
+      }
     }
+
+    // Add time period and setting
     if (selectedOptions.timePeriod.main) {
-      const timePeriodText = selectedOptions.timePeriod.sub
-        ? `set in ${selectedOptions.timePeriod.sub} ${selectedOptions.timePeriod.main.toLowerCase()}`
-        : `set in ${selectedOptions.timePeriod.main.toLowerCase()}`;
-      parts.push(timePeriodText);
+      prompt += `, ${selectedOptions.timePeriod.main}`;
+      if (selectedOptions.timePeriod.sub) {
+        prompt += `, ${selectedOptions.timePeriod.sub}`;
+      }
     }
-    if (selectedOptions.extraDetails) parts.push(`with ${selectedOptions.extraDetails.toLowerCase()} effects`);
-    
-    return parts.join(', ');
+
+    // Add dynamic effects
+    if (dynamicEffects.main) {
+      prompt += `, ${dynamicEffects.main}`;
+      if (dynamicEffects.sub) {
+        prompt += `, ${dynamicEffects.sub}`;
+      }
+    }
+
+    // Add extra details
+    if (selectedOptions.extraDetails) {
+      prompt += `, ${selectedOptions.extraDetails}`;
+    }
+
+    return prompt.trim();
   };
 
   const handleSupercharge = async () => {
@@ -1479,6 +1622,33 @@ export default function PromptAssistant() {
                         ))}
                     </select>
                   )}
+                </div>
+              ) : key === 'dynamicEffects' ? (
+                <div className="style-selector">
+                  <select
+                    value={dynamicEffects.main}
+                    onChange={(e) => handleDynamicEffectsChange('main', e.target.value)}
+                  >
+                    <option value="">Select Dynamic Effect</option>
+                    {category.main.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={dynamicEffects.sub}
+                    onChange={(e) => handleDynamicEffectsChange('sub', e.target.value)}
+                    disabled={!dynamicEffects.main}
+                  >
+                    <option value="">Select Specific Effect</option>
+                    {dynamicEffects.main &&
+                      category.sub[dynamicEffects.main].map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                  </select>
                 </div>
               ) : (
                 <select

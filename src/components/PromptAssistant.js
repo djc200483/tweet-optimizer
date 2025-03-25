@@ -22,7 +22,10 @@ export default function PromptAssistant() {
       main: '',
       sub: ''
     },
-    timePeriod: '',
+    timePeriod: {
+      main: '',
+      sub: ''
+    },
     extraDetails: ''
   });
   const [generatedPrompt, setGeneratedPrompt] = useState('');
@@ -892,9 +895,158 @@ export default function PromptAssistant() {
     },
     timePeriod: {
       title: 'Time Period & Setting',
-      options: ['Ancient History', 'Roman Empire', 'Medieval', 'Renaissance', 'Futuristic', 
-                'Sci-Fi', 'Modern-Day', 'Present', 'Alternative History', 'Steampunk 1800s', 
-                'Fantasy World', 'Mythological Setting', 'Post-Apocalyptic', 'Ruined World']
+      options: [
+        {
+          main: 'Prehistoric Era',
+          subcategories: [
+            'Dinosaur Age',
+            'Early Human Tribes',
+            'Ice Age Landscapes',
+            'Cave Paintings',
+            'Megafauna Scenes'
+          ]
+        },
+        {
+          main: 'Ancient History',
+          subcategories: [
+            'Ancient Egypt',
+            'Mesopotamia',
+            'Indus Valley Civilization',
+            'Pre-Columbian Americas',
+            'Classical Greece'
+          ]
+        },
+        {
+          main: 'Roman Empire',
+          subcategories: [
+            'Roman Coliseum',
+            'Roman Battles',
+            'Everyday Roman Life',
+            'Roman Architecture',
+            'Gladiators in Combat'
+          ]
+        },
+        {
+          main: 'Medieval Period',
+          subcategories: [
+            'Knights and Castles',
+            'Feudal Japan',
+            'Viking Settlements',
+            'Medieval Festivals',
+            'Crusader Marches'
+          ]
+        },
+        {
+          main: 'Renaissance',
+          subcategories: [
+            'Italian Art Studios',
+            'Scientific Discoveries',
+            'Courtly Life',
+            'Shakespearean Theatre',
+            'Renaissance Fairs'
+          ]
+        },
+        {
+          main: '18th & 19th Century',
+          subcategories: [
+            'American Revolution',
+            'Victorian London',
+            'Steam-Powered Inventions',
+            'French Revolution',
+            'Colonial Trade Routes'
+          ]
+        },
+        {
+          main: '20th Century',
+          subcategories: [
+            'World War I Trenches',
+            'Roaring Twenties',
+            'World War II Europe',
+            'Post-War Suburbs',
+            'Space Race Era'
+          ]
+        },
+        {
+          main: 'Futuristic Themes',
+          subcategories: [
+            'Space Colonies',
+            'Cyberpunk Metropolises',
+            'AI-Dominated Cities',
+            'Futuristic Warfare',
+            'Climate-Controlled Domes'
+          ]
+        },
+        {
+          main: 'Post-Apocalyptic',
+          subcategories: [
+            'Ruined Cities',
+            'Wasteland Survivors',
+            'Overgrown Urban Areas',
+            'Fallout Shelters',
+            'Scavenger Camps'
+          ]
+        },
+        {
+          main: 'Fantasy & Mythological Worlds',
+          subcategories: [
+            'Elven Forests',
+            'Dwarven Mines',
+            'Dragons in Flight',
+            'Olympian Gods\' Temples',
+            'Fairy Tale Villages'
+          ]
+        },
+        {
+          main: 'Steampunk 1800s',
+          subcategories: [
+            'Airship Battles',
+            'Clockwork Cities',
+            'Victorian Science Labs',
+            'Steam-Powered Automata',
+            'Industrial Revolution Twists'
+          ]
+        },
+        {
+          main: 'Alternative History',
+          subcategories: [
+            'Dinosaurs in Modern Cities',
+            'Steam-Powered Computers',
+            'Rewritten Historical Wars',
+            'Lost Civilizations Thriving',
+            'Mythical Beasts in History'
+          ]
+        },
+        {
+          main: 'Modern-Day',
+          subcategories: [
+            'Urban Cityscapes',
+            'Rural Countrysides',
+            'Bustling Metropolises',
+            'Modern Technology Scenes',
+            'Everyday Human Life'
+          ]
+        },
+        {
+          main: 'Fantasy Settings',
+          subcategories: [
+            'Floating Islands',
+            'Crystal-Powered Cities',
+            'Portal Worlds',
+            'Underwater Kingdoms',
+            'Magical Castles'
+          ]
+        },
+        {
+          main: 'Mythological Settings',
+          subcategories: [
+            'Norse Realms (Asgard, Midgard)',
+            'Ancient Indian Epics (Ramayana, Mahabharata)',
+            'Greek Underworld',
+            'Celtic Folklore',
+            'Egyptian Afterlife'
+          ]
+        }
+      ]
     },
     extraDetails: {
       title: 'Extra Details & Enhancements',
@@ -959,7 +1111,12 @@ export default function PromptAssistant() {
         : `from a ${selectedOptions.composition.main.toLowerCase()} perspective`;
       parts.push(compositionText);
     }
-    if (selectedOptions.timePeriod) parts.push(`set in ${selectedOptions.timePeriod}`);
+    if (selectedOptions.timePeriod.main) {
+      const timePeriodText = selectedOptions.timePeriod.sub
+        ? `set in ${selectedOptions.timePeriod.sub} ${selectedOptions.timePeriod.main.toLowerCase()}`
+        : `set in ${selectedOptions.timePeriod.main.toLowerCase()}`;
+      parts.push(timePeriodText);
+    }
     if (selectedOptions.extraDetails) parts.push(`with ${selectedOptions.extraDetails.toLowerCase()} effects`);
     
     return parts.join(', ');
@@ -1265,6 +1422,56 @@ export default function PromptAssistant() {
                       <option value="">Select {selectedOptions.composition.main} Type</option>
                       {category.options
                         .find(composition => composition.main === selectedOptions.composition.main)
+                        ?.subcategories.map(sub => (
+                          <option key={sub} value={sub}>
+                            {sub}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </div>
+              ) : key === 'timePeriod' ? (
+                <div className="style-selector">
+                  <select
+                    value={selectedOptions.timePeriod.main}
+                    onChange={(e) => {
+                      const selectedMain = e.target.value;
+                      setSelectedOptions(prev => ({
+                        ...prev,
+                        timePeriod: {
+                          main: selectedMain,
+                          sub: ''
+                        }
+                      }));
+                    }}
+                    disabled={isSuperchargeLoading || isGenerateLoading}
+                  >
+                    <option value="">Select Time Period & Setting</option>
+                    {category.options.map(timePeriod => (
+                      <option key={timePeriod.main} value={timePeriod.main}>
+                        {timePeriod.main}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {selectedOptions.timePeriod.main && (
+                    <select
+                      value={selectedOptions.timePeriod.sub}
+                      onChange={(e) => {
+                        setSelectedOptions(prev => ({
+                          ...prev,
+                          timePeriod: {
+                            ...prev.timePeriod,
+                            sub: e.target.value
+                          }
+                        }));
+                      }}
+                      disabled={isSuperchargeLoading || isGenerateLoading}
+                      className="subcategory-select"
+                    >
+                      <option value="">Select {selectedOptions.timePeriod.main} Setting</option>
+                      {category.options
+                        .find(timePeriod => timePeriod.main === selectedOptions.timePeriod.main)
                         ?.subcategories.map(sub => (
                           <option key={sub} value={sub}>
                             {sub}

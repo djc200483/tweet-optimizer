@@ -1054,6 +1054,7 @@ export default function PromptAssistant() {
       ]
     },
     extraDetails: {
+      title: 'Extra Details & Enhancements',
       main: [
         'Weather Effects',
         'Magical Effects',

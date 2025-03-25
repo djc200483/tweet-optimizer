@@ -805,20 +805,32 @@ const styles = `
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
-
-  .style-selector select {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    font-size: 14px;
-  }
 
-  .subcategory-select {
-    margin-top: 5px;
-    background-color: #f8f9fa !important;
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      background-color: #1a1b26;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      option {
+        background-color: #1a1b26;
+        color: #fff;
+      }
+    }
+
+    .subcategory-select {
+      margin-top: 5px;
+    }
   }
 
   @media (max-width: 768px) {

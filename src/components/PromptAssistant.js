@@ -806,31 +806,41 @@ const styles = `
     flex-direction: column;
     gap: 10px;
     width: 100%;
+  }
 
-    select {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      background-color: #1a1b26;
-      color: #fff;
-      font-size: 14px;
-      cursor: pointer;
+  .style-selector select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background-color: #1a1b26;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    padding-right: 32px;
+  }
 
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
+  .style-selector select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
-      option {
-        background-color: #1a1b26;
-        color: #fff;
-      }
-    }
+  .style-selector select option {
+    background-color: #1a1b26;
+    color: #fff;
+    padding: 8px;
+  }
 
-    .subcategory-select {
-      margin-top: 5px;
-    }
+  .style-selector .subcategory-select {
+    margin-top: 5px;
+    background-color: #1a1b26;
   }
 
   @media (max-width: 768px) {

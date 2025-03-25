@@ -1200,13 +1200,23 @@ export default function PromptAssistant() {
   };
 
   const handleExtraDetailsChange = (type, value) => {
-    setSelectedOptions(prev => ({
-      ...prev,
-      extraDetails: {
-        ...prev.extraDetails,
-        [type]: value
-      }
-    }));
+    if (type === 'main') {
+      setSelectedOptions(prev => ({
+        ...prev,
+        extraDetails: {
+          main: value,
+          sub: '' // Reset sub-selection when main category changes
+        }
+      }));
+    } else {
+      setSelectedOptions(prev => ({
+        ...prev,
+        extraDetails: {
+          ...prev.extraDetails,
+          sub: value
+        }
+      }));
+    }
   };
 
   const generatePrompt = () => {
@@ -1639,19 +1649,19 @@ export default function PromptAssistant() {
                       </option>
                     ))}
                   </select>
-                  <select
-                    value={selectedOptions.extraDetails.sub}
-                    onChange={(e) => handleExtraDetailsChange('sub', e.target.value)}
-                    disabled={!selectedOptions.extraDetails.main}
-                  >
-                    <option value="">Select Specific Enhancement</option>
-                    {selectedOptions.extraDetails.main &&
-                      category.sub[selectedOptions.extraDetails.main].map((option) => (
+                  {selectedOptions.extraDetails.main && (
+                    <select
+                      value={selectedOptions.extraDetails.sub}
+                      onChange={(e) => handleExtraDetailsChange('sub', e.target.value)}
+                    >
+                      <option value="">Select Specific Enhancement</option>
+                      {category.sub[selectedOptions.extraDetails.main].map((option) => (
                         <option key={option} value={option}>
                           {option}
                         </option>
                       ))}
-                  </select>
+                    </select>
+                  )}
                 </div>
               ) : (
                 <select

@@ -1374,7 +1374,12 @@ export default function PromptAssistant() {
       }
     }
 
-    // Add style and medium
+    // Add resolution
+    if (selectedOptions.resolution) {
+      prompt += `, ${selectedOptions.resolution}`;
+    }
+
+    // Add style
     if (selectedOptions.style.main) {
       prompt += `, ${selectedOptions.style.main}`;
       if (selectedOptions.style.sub) {
@@ -1382,7 +1387,7 @@ export default function PromptAssistant() {
       }
     }
 
-    // Add emotion and mood
+    // Add emotion
     if (selectedOptions.emotion.main) {
       prompt += `, ${selectedOptions.emotion.main}`;
       if (selectedOptions.emotion.sub) {
@@ -1390,7 +1395,7 @@ export default function PromptAssistant() {
       }
     }
 
-    // Add lighting and atmosphere
+    // Add lighting
     if (selectedOptions.lighting.main) {
       prompt += `, ${selectedOptions.lighting.main}`;
       if (selectedOptions.lighting.sub) {
@@ -1398,7 +1403,7 @@ export default function PromptAssistant() {
       }
     }
 
-    // Add composition and perspective
+    // Add composition
     if (selectedOptions.composition.main) {
       prompt += `, ${selectedOptions.composition.main}`;
       if (selectedOptions.composition.sub) {
@@ -1406,7 +1411,7 @@ export default function PromptAssistant() {
       }
     }
 
-    // Add time period and setting
+    // Add time period
     if (selectedOptions.timePeriod.main) {
       prompt += `, ${selectedOptions.timePeriod.main}`;
       if (selectedOptions.timePeriod.sub) {

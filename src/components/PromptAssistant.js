@@ -4,7 +4,10 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function PromptAssistant() {
   const [selectedOptions, setSelectedOptions] = useState({
-    subject: '',
+    subject: {
+      main: '',
+      sub: ''
+    },
     resolution: '',
     style: {
       main: '',
@@ -53,9 +56,150 @@ export default function PromptAssistant() {
   const categories = {
     subject: {
       title: 'Subject Matter',
-      options: ['Person/Character', 'Object', 'Scene', 'Landscape', 'Animal', 'Abstract Concept', 
-                'Historical Event', 'Futuristic Theme', 'Sci-Fi Theme', 'Mythological Theme', 
-                'Fantasy Theme', 'Pop Culture Inspired', 'Artistic Interpretation of a Phrase']
+      main: [
+        'Nature',
+        'Animals',
+        'People',
+        'Architecture',
+        'Technology',
+        'History',
+        'Fantasy',
+        'Mythology',
+        'Horror',
+        'Abstract'
+      ],
+      sub: {
+        'Nature': [
+          'Forests and Woodlands',
+          'Oceanic Landscapes',
+          'Mountain Ranges',
+          'Deserts and Sand Dunes',
+          'Waterfalls and Rivers',
+          'Flower Fields',
+          'Tropical Rainforests',
+          'Autumn Leaves',
+          'Snowy Landscapes',
+          'Night Skies'
+        ],
+        'Animals': [
+          'Wild Mammals',
+          'Birds in Flight',
+          'Marine Life',
+          'Reptiles and Amphibians',
+          'Insects and Butterflies',
+          'Pets and Domesticated Animals',
+          'Predators in the Wild',
+          'Endangered Species',
+          'Wildlife in Action',
+          'Animal Behavior'
+        ],
+        'People': [
+          'Portraits of Individuals',
+          'Group Gatherings',
+          'Historical Figures',
+          'Everyday Life',
+          'Mythical Creatures and Gods',
+          'Human Emotions and Expressions',
+          'Fashion and Clothing',
+          'Cultural Traditions',
+          'Vintage and Retro People',
+          'Social Interaction',
+          'Men in Historical Costumes',
+          'Modern Men in Action',
+          'Old-School Masculine Fashion',
+          'Everyday Men Portraits',
+          'Warriors and Soldiers',
+          'Women in Traditional Attire',
+          'Modern Women in Action',
+          'Vintage Women\'s Fashion',
+          'Everyday Women Portraits',
+          'Queens and Royalty'
+        ],
+        'Architecture': [
+          'Ancient Ruins',
+          'Modern Cityscapes',
+          'Gothic Cathedrals',
+          'Futuristic Buildings',
+          'Traditional Houses and Villages',
+          'Ancient Temples and Pyramids',
+          'Castles and Fortresses',
+          'City Skylines',
+          'Urban Streetscapes',
+          'Rural Architecture'
+        ],
+        'Technology': [
+          'Robots and AI',
+          'Space Exploration',
+          'Futuristic Gadgets',
+          'Virtual Reality Landscapes',
+          'Machines in Motion',
+          'Cybernetic Augmentation',
+          'Electric Vehicles',
+          'Drones and Aerial Devices',
+          'Nanotechnology',
+          'Smart Cities'
+        ],
+        'History': [
+          'Ancient Civilizations',
+          'Wars and Conflicts',
+          'Cultural Evolution',
+          'Historical Reenactments',
+          'Industrial Revolution',
+          'Victorian Era',
+          'Medieval Times',
+          '20th Century History',
+          'The Renaissance',
+          'Colonial Times'
+        ],
+        'Fantasy': [
+          'Magical Realms',
+          'Dragons and Mythical Beasts',
+          'Elven Forests',
+          'Enchanted Castles',
+          'Wizards and Sorcery',
+          'Fairy Tales',
+          'Fantasy Creatures',
+          'Magic in Everyday Life',
+          'Mythical Heroes and Legends',
+          'Magical Artifacts'
+        ],
+        'Mythology': [
+          'Greek Gods and Heroes',
+          'Norse Myths and Legends',
+          'Egyptian Deities and Pharaohs',
+          'Celtic Folk Tales',
+          'Native American Spirits',
+          'African Folklore',
+          'South American Legends',
+          'Polynesian Mythology',
+          'Asian Deities and Spirits',
+          'Aboriginal Mythology'
+        ],
+        'Horror': [
+          'Haunted Houses',
+          'Monsters and Creatures',
+          'Supernatural Entities',
+          'Dark Forests and Swamps',
+          'Paranormal Events',
+          'Ghosts and Spirits',
+          'Creepy Dolls and Objects',
+          'Occult Rituals',
+          'Witches and Magic',
+          'Psychological Horror'
+        ],
+        'Abstract': [
+          'Geometric Shapes and Patterns',
+          'Color Theory Experiments',
+          'Surreal Dreamscapes',
+          'Non-representational Forms',
+          'Emotional Expression through Art',
+          'Organic and Fluid Forms',
+          'Minimalist Designs',
+          'Conceptual Art',
+          'Movement and Motion in Art',
+          'Abstract Faces and Figures'
+        ]
+      }
     },
     resolution: {
       title: 'Resolution',
@@ -1223,8 +1367,11 @@ export default function PromptAssistant() {
     let prompt = '';
     
     // Add main subject
-    if (selectedOptions.subject) {
-      prompt += selectedOptions.subject;
+    if (selectedOptions.subject.main) {
+      prompt += selectedOptions.subject.main;
+      if (selectedOptions.subject.sub) {
+        prompt += `, ${selectedOptions.subject.sub}`;
+      }
     }
 
     // Add style and medium
@@ -1387,6 +1534,16 @@ export default function PromptAssistant() {
     }
   };
 
+  const handleSubjectChange = (type, value) => {
+    setSelectedOptions(prev => ({
+      ...prev,
+      subject: {
+        ...prev.subject,
+        [type]: value
+      }
+    }));
+  };
+
   return (
     <div className="tab-content">
       <div className="input-container">
@@ -1398,7 +1555,34 @@ export default function PromptAssistant() {
           {Object.entries(categories).map(([key, category]) => (
             <div key={key} className="category-section">
               <h3>{category.title}</h3>
-              {key === 'style' ? (
+              {key === 'subject' ? (
+                <div className="style-selector">
+                  <select
+                    value={selectedOptions.subject.main}
+                    onChange={(e) => handleSubjectChange('main', e.target.value)}
+                  >
+                    <option value="">Select Subject Matter</option>
+                    {category.main.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                  {selectedOptions.subject.main && (
+                    <select
+                      value={selectedOptions.subject.sub}
+                      onChange={(e) => handleSubjectChange('sub', e.target.value)}
+                    >
+                      <option value="">Select Specific Subject</option>
+                      {category.sub[selectedOptions.subject.main].map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              ) : key === 'style' ? (
                 <div className="style-selector">
                   <select
                     value={selectedOptions.style.main}

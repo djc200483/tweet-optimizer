@@ -204,12 +204,12 @@ export default function PromptAssistant() {
     resolution: {
       title: 'Resolution',
       options: [
-        'Low Resolution (480p)',
-        'Standard HD (720p)',
-        'Full HD (1080p)',
+        'Low Resolution',
+        'Standard HD',
+        'Full HD',
         '2K Resolution',
-        '4K Ultra HD',
-        '8K Ultra HD'
+        '4K Resolution',
+        '8K Resolution'
       ]
     },
     style: {

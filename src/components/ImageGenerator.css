@@ -83,13 +83,15 @@
   font-size: 14px;
   resize: none;
   margin-bottom: 16px;
-  overflow-y: hidden;
+  overflow-y: auto;
   min-height: 42px;
+  max-height: 200px;
   height: 42px;
   line-height: 1.5;
   display: block;
   box-sizing: border-box;
   transition: height 0.1s ease;
+  -webkit-overflow-scrolling: touch;
 }
 
 .prompt-textarea::placeholder {
@@ -166,6 +168,9 @@
 @media (max-width: 768px) {
   .sticky-toolbar {
     padding: 8px;
+    background: rgba(26, 27, 31, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   .toolbar-content {
@@ -175,12 +180,17 @@
 
   .prompt-input-container {
     width: 100%;
+    position: relative;
   }
 
   .prompt-textarea {
     width: 100%;
     min-width: 100%;
     margin-right: 0;
+    font-size: 16px;
+    padding: 12px;
+    min-height: 42px;
+    max-height: 150px;
   }
 
   .toolbar-controls {

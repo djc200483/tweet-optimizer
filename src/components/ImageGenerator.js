@@ -108,6 +108,26 @@ export default function ImageGenerator() {
     }
   };
 
+  const handleTouchStart = (e) => {
+    // Store the initial touch position
+    e.target.dataset.touchStartY = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    const textarea = e.target;
+    const touchStartY = parseFloat(textarea.dataset.touchStartY);
+    const touchEndY = e.touches[0].clientY;
+    const deltaY = touchStartY - touchEndY;
+
+    // If the textarea has scrollable content
+    if (textarea.scrollHeight > textarea.clientHeight) {
+      // If we're scrolling within the textarea
+      if (textarea.scrollTop > 0 || deltaY < 0) {
+        e.stopPropagation();
+      }
+    }
+  };
+
   return (
     <div className="optimizer-container image-generator-page">
       <div className="sticky-toolbar">
@@ -119,6 +139,8 @@ export default function ImageGenerator() {
               onChange={handlePromptChange}
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
               placeholder="Enter your image prompt here..."
               className="prompt-textarea"
               rows={1}

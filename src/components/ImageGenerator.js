@@ -109,8 +109,9 @@ export default function ImageGenerator() {
   };
 
   const handleTouchStart = (e) => {
-    // Store the initial touch position
+    // Store the initial touch position and scroll position
     e.target.dataset.touchStartY = e.touches[0].clientY;
+    e.target.dataset.scrollTop = e.target.scrollTop;
   };
 
   const handleTouchMove = (e) => {
@@ -118,13 +119,18 @@ export default function ImageGenerator() {
     const touchStartY = parseFloat(textarea.dataset.touchStartY);
     const touchEndY = e.touches[0].clientY;
     const deltaY = touchStartY - touchEndY;
+    const scrollTop = parseFloat(textarea.dataset.scrollTop);
 
     // If the textarea has scrollable content
     if (textarea.scrollHeight > textarea.clientHeight) {
-      // If we're scrolling within the textarea
-      if (textarea.scrollTop > 0 || deltaY < 0) {
-        e.stopPropagation();
+      // If we're at the top and trying to scroll up, or at the bottom and trying to scroll down
+      if ((textarea.scrollTop <= 0 && deltaY < 0) || 
+          (textarea.scrollTop >= textarea.scrollHeight - textarea.clientHeight && deltaY > 0)) {
+        // Let the page scroll
+        return;
       }
+      // Otherwise, prevent page scroll and let the textarea scroll
+      e.stopPropagation();
     }
   };
 

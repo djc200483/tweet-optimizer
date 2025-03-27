@@ -92,6 +92,7 @@
   box-sizing: border-box;
   transition: height 0.1s ease;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y pinch-zoom;
 }
 
 .prompt-textarea::placeholder {
@@ -142,29 +143,6 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.prompt-textarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(30, 32, 40, 0.95);
-  color: #ffffff;
-  font-size: 14px;
-  resize: none;
-  overflow-y: hidden;
-  min-height: 42px;
-  height: 42px;
-  line-height: 1.5;
-  display: block;
-  box-sizing: border-box;
-  transition: height 0.1s ease;
-  margin: 0;
-}
-
-.prompt-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
 @media (max-width: 768px) {
   .sticky-toolbar {
     padding: 8px;
@@ -191,6 +169,9 @@
     padding: 12px;
     min-height: 42px;
     max-height: 150px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y pinch-zoom;
   }
 
   .toolbar-controls {

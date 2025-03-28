@@ -79,8 +79,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   }, [lastExploreFetch]);
 
   const breakpointColumns = {
-    default: 6,
-    1400: 5,
+    default: 5,
     1200: 4,
     768: 2,
     500: 2

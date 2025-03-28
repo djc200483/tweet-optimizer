@@ -702,29 +702,6 @@
   opacity: 1;
 }
 
-/* Preserve existing desktop styles */
-@media screen and (min-width: 769px) {
-  .masonry-grid {
-    margin-left: -4px;
-  }
-  
-  .masonry-grid_column {
-    padding-left: 4px;
-    width: calc(20% - 4px); /* For 5 columns with 4px gap */
-  }
-
-  .image-item {
-    margin-bottom: 4px;
-  }
-}
-
-/* Tablet breakpoint */
-@media screen and (max-width: 1200px) {
-  .masonry-grid_column {
-    width: calc(25% - 4px); /* For 4 columns with 4px gap */
-  }
-}
-
 /* Mobile-specific adjustments */
 @media screen and (max-width: 768px) {
   .masonry-grid {
@@ -740,14 +717,7 @@
   }
 }
 
-/* Small mobile breakpoint */
-@media screen and (max-width: 500px) {
-  .masonry-grid_column {
-    width: calc(50% - 8px); /* Maintain 2 columns with 8px gap */
-  }
-}
-
-/* Desktop-only sidebar and layout (screens larger than 768px) */
+/* Remove the conflicting desktop styles at the bottom */
 @media screen and (min-width: 769px) {
   .image-gallery {
     display: flex;
@@ -780,16 +750,14 @@
   /* Maintain masonry grid layout */
   .masonry-grid {
     flex: 1;
-    margin-left: 0;
+    margin-left: -4px;
   }
 
   .masonry-grid_column {
-    padding-left: 16px;
+    padding-left: 4px;
   }
 
-  /* Ensure image containers maintain aspect ratio */
   .image-item {
-    margin-bottom: 16px;
-    width: 100%;
+    margin-bottom: 4px;
   }
 } 

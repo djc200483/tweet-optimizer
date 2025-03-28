@@ -67,11 +67,11 @@
 .masonry-grid {
   display: flex;
   width: 100%;
-  margin-left: -16px;
+  margin-left: -4px;
 }
 
 .masonry-grid_column {
-  padding-left: 16px;
+  padding-left: 4px;
   background-clip: padding-box;
 }
 
@@ -704,27 +704,30 @@
 /* Preserve existing desktop styles */
 @media screen and (min-width: 769px) {
   .masonry-grid {
-    margin-left: -16px;
-    width: 100%;
+    margin-left: -4px;
   }
   
   .masonry-grid_column {
-    padding-left: 16px;
+    padding-left: 4px;
+  }
+
+  .image-item {
+    margin-bottom: 4px;
   }
 }
 
 /* Mobile-specific adjustments */
 @media screen and (max-width: 768px) {
   .masonry-grid {
-    margin-left: -8px; /* Smaller gap for mobile */
+    margin-left: -8px;
   }
   
   .masonry-grid_column {
-    padding-left: 8px; /* Smaller gap for mobile */
+    padding-left: 8px;
   }
 
   .image-item {
-    margin-bottom: 8px; /* Smaller vertical gap for mobile */
+    margin-bottom: 8px;
   }
 
   /* Ensure images scale properly in the 2-column layout */

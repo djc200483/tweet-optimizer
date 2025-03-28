@@ -101,6 +101,7 @@
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 0;
 }
 
 .image-item img {
@@ -563,6 +564,10 @@
 
   .image-item {
     margin-bottom: 8px;
+    border-radius: 8px;
+  }
+
+  .image-placeholder img {
     border-radius: 8px;
   }
 }

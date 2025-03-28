@@ -67,16 +67,16 @@
 .masonry-grid {
   display: flex;
   width: auto;
-  margin-left: -4px;
+  margin-left: -1px;
 }
 
 .masonry-grid_column {
-  padding-left: 4px;
+  padding-left: 1px;
   background-clip: padding-box;
 }
 
 .image-item {
-  margin-bottom: 4px;
+  margin-bottom: 1px;
   break-inside: avoid;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -750,14 +750,14 @@
   /* Maintain masonry grid layout */
   .masonry-grid {
     flex: 1;
-    margin-left: -4px;
+    margin-left: -1px;
   }
 
   .masonry-grid_column {
-    padding-left: 4px;
+    padding-left: 1px;
   }
 
   .image-item {
-    margin-bottom: 4px;
+    margin-bottom: 1px;
   }
 } 

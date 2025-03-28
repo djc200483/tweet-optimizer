@@ -66,7 +66,7 @@
 
 .masonry-grid {
   display: flex;
-  width: 100%;
+  width: auto;
   margin-left: -4px;
 }
 
@@ -83,6 +83,7 @@
   background-color: #1e2028;
   border-radius: 8px;
   overflow: hidden;
+  width: 100%;
 }
 
 .image-item:hover {

@@ -66,7 +66,6 @@
 
 .masonry-grid {
   display: flex;
-  width: auto;
   margin-left: -1px;
 }
 
@@ -81,7 +80,7 @@
   cursor: pointer;
   transition: transform 0.2s ease;
   background-color: #1e2028;
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -563,6 +562,7 @@
 
   .image-item {
     margin-bottom: 8px;
+    border-radius: 8px;
   }
 }
 

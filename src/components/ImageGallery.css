@@ -68,22 +68,25 @@
   display: flex;
   width: auto;
   margin-left: -1px;
+  gap: 1px;
 }
 
 .masonry-grid_column {
   padding-left: 1px;
   background-clip: padding-box;
+  gap: 1px;
 }
 
 .image-item {
   margin-bottom: 1px;
+  margin-right: 1px;
   break-inside: avoid;
   cursor: pointer;
   transition: transform 0.2s ease;
   background-color: #1e2028;
   border-radius: 8px;
   overflow: hidden;
-  width: 100%;
+  width: calc(100% - 1px);
 }
 
 .image-item:hover {
@@ -553,6 +556,22 @@
     font-size: 0.7rem;
     margin-left: 6px;
   }
+
+  .masonry-grid {
+    margin-left: -8px;
+    gap: 8px;
+  }
+  
+  .masonry-grid_column {
+    padding-left: 8px;
+    gap: 8px;
+  }
+
+  .image-item {
+    margin-bottom: 8px;
+    margin-right: 8px;
+    width: calc(100% - 8px);
+  }
 }
 
 /* Ensure modal takes full screen on very small devices */
@@ -702,22 +721,7 @@
   opacity: 1;
 }
 
-/* Mobile-specific adjustments */
-@media screen and (max-width: 768px) {
-  .masonry-grid {
-    margin-left: -8px;
-  }
-  
-  .masonry-grid_column {
-    padding-left: 8px;
-  }
-
-  .image-item {
-    margin-bottom: 8px;
-  }
-}
-
-/* Remove the conflicting desktop styles at the bottom */
+/* Desktop styles */
 @media screen and (min-width: 769px) {
   .image-gallery {
     display: flex;
@@ -747,17 +751,20 @@
     margin-left: 8px;
   }
 
-  /* Maintain masonry grid layout */
   .masonry-grid {
     flex: 1;
     margin-left: -1px;
+    gap: 1px;
   }
 
   .masonry-grid_column {
     padding-left: 1px;
+    gap: 1px;
   }
 
   .image-item {
     margin-bottom: 1px;
+    margin-right: 1px;
+    width: calc(100% - 1px);
   }
 } 

@@ -94,6 +94,7 @@
 .image-placeholder {
   width: 100%;
   background-color: #1e2028;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -109,6 +110,7 @@
   height: auto;
   display: block;
   object-fit: contain;
+  border-radius: 0;
 }
 
 .image-modal {
@@ -170,7 +172,7 @@
   max-height: 100%;
   object-fit: contain;
   display: block;
-  border-radius: 8px;
+  border-radius: 0;
 }
 
 .modal-info::-webkit-scrollbar {
@@ -568,6 +570,14 @@
   }
 
   .image-placeholder img {
+    border-radius: 8px;
+  }
+
+  .image-item img {
+    border-radius: 8px;
+  }
+
+  .modal-content img {
     border-radius: 8px;
   }
 }

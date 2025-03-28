@@ -410,7 +410,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
           breakpointCols={breakpointColumns}
           className="masonry-grid"
           columnClassName="masonry-grid_column"
-          style={{ gap: 0 }}
+          style={{ gap: '2px' }}
         >
           {images.map(renderImage)}
         </Masonry>

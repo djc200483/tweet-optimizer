@@ -66,10 +66,16 @@
 
 .masonry-grid {
   display: flex;
+  margin-left: -2px;
+}
+
+.masonry-grid_column {
+  padding-left: 2px;
 }
 
 .masonry-grid_column > * {
   display: block;
+  margin-bottom: 2px;
 }
 
 .image-item {

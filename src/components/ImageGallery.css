@@ -66,16 +66,13 @@
 
 .masonry-grid {
   display: flex;
-  margin-left: -1px;
 }
 
-.masonry-grid_column {
-  padding-left: 1px;
-  background-clip: padding-box;
+.masonry-grid_column > * {
+  display: block;
 }
 
 .image-item {
-  margin-bottom: 1px;
   break-inside: avoid;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -91,7 +88,6 @@
 .image-placeholder {
   width: 100%;
   background-color: #1e2028;
-  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -99,7 +95,6 @@
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 8px;
 }
 
 .image-item img {

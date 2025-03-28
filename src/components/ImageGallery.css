@@ -73,11 +73,10 @@
 .masonry-grid_column {
   padding-left: 4px;
   background-clip: padding-box;
-  width: calc(20% - 4px); /* For 5 columns with 4px gap */
 }
 
 .image-item {
-  margin-bottom: 16px;
+  margin-bottom: 4px;
   break-inside: avoid;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -733,7 +732,6 @@
   
   .masonry-grid_column {
     padding-left: 8px;
-    width: calc(50% - 8px); /* For 2 columns with 8px gap */
   }
 
   .image-item {

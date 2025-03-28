@@ -73,6 +73,7 @@
 .masonry-grid_column {
   padding-left: 4px;
   background-clip: padding-box;
+  width: calc(20% - 4px); /* For 5 columns with 4px gap */
 }
 
 .image-item {
@@ -709,10 +710,18 @@
   
   .masonry-grid_column {
     padding-left: 4px;
+    width: calc(20% - 4px); /* For 5 columns with 4px gap */
   }
 
   .image-item {
     margin-bottom: 4px;
+  }
+}
+
+/* Tablet breakpoint */
+@media screen and (max-width: 1200px) {
+  .masonry-grid_column {
+    width: calc(25% - 4px); /* For 4 columns with 4px gap */
   }
 }
 
@@ -724,17 +733,18 @@
   
   .masonry-grid_column {
     padding-left: 8px;
+    width: calc(50% - 8px); /* For 2 columns with 8px gap */
   }
 
   .image-item {
     margin-bottom: 8px;
   }
+}
 
-  /* Ensure images scale properly in the 2-column layout */
-  .image-item img {
-    width: 100%;
-    height: auto;
-    display: block;
+/* Small mobile breakpoint */
+@media screen and (max-width: 500px) {
+  .masonry-grid_column {
+    width: calc(50% - 8px); /* Maintain 2 columns with 8px gap */
   }
 }
 

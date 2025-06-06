@@ -2,30 +2,30 @@ import React from 'react';
 
 export default function Home({ onSelectFeature, isLoggedIn }) {
   const features = [
-    // {
-    //   title: 'Post Optimiser',
-    //   description: 'Transform your posts with AI-powered optimisation.',
-    //   icon: '🎯',
-    //   id: 'optimize'
-    // },
-    // {
-    //   title: 'Reverse Engineer',
-    //   description: 'Analyse successful posts to understand what makes them effective.',
-    //   icon: '🔍',
-    //   id: 'reverse'
-    // },
-    // {
-    //   title: 'Power Words',
-    //   description: 'Enhance your posts with impactful and engaging word choices.',
-    //   icon: '💬',
-    //   id: 'power'
-    // },
-    // {
-    //   title: 'Evergreen Content',
-    //   description: 'Generate timeless content tailored to your niche with AI-powered insights.',
-    //   icon: '🌱',
-    //   id: 'evergreen'
-    // },
+    {
+      title: 'Post Optimiser',
+      description: 'Transform your posts with AI-powered optimisation.',
+      icon: '🎯',
+      id: 'optimize'
+    },
+    {
+      title: 'Reverse Engineer',
+      description: 'Analyse successful posts to understand what makes them effective.',
+      icon: '🔍',
+      id: 'reverse'
+    },
+    {
+      title: 'Power Words',
+      description: 'Enhance your posts with impactful and engaging word choices.',
+      icon: '💬',
+      id: 'power'
+    },
+    {
+      title: 'Evergreen Content',
+      description: 'Generate timeless content tailored to your niche with AI-powered insights.',
+      icon: '🌱',
+      id: 'evergreen'
+    },
     {
       title: 'Prompt Assistant',
       description: 'Generate structured prompts for AI image generation tools.',
@@ -40,8 +40,9 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     },
     {
       title: 'Image Generator',
-      id: 'imageGenerator',
-      image: 'https://echosphere-images.s3.eu-north-1.amazonaws.com/image-generator-feature.jpg'
+      description: 'Create AI-generated images from your text prompts.',
+      icon: '🖼️',
+      id: 'imageGenerator'
     }
   ];
 

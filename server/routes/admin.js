@@ -73,7 +73,10 @@ router.get('/allowed-users', async (req, res) => {
   try {
     console.log('Fetching allowed users...');
     const result = await db.query(
-      'SELECT * FROM allowed_users ORDER BY added_at DESC'
+      `SELECT au.*, u.id as user_id
+       FROM allowed_users au
+       LEFT JOIN users u ON au.x_handle = u.x_handle
+       ORDER BY au.added_at DESC`
     );
     console.log('Found users:', result.rows.length);
     res.json(result.rows);

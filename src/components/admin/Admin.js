@@ -236,12 +236,14 @@ export default function Admin() {
                     >
                       Delete
                     </button>
-                    <button
-                      className="delete-all-images-button"
-                      onClick={() => handleDeleteAllImages(user.id)}
-                    >
-                      Delete All Images
-                    </button>
+                    {user.user_id && (
+                      <button
+                        className="delete-all-images-button"
+                        onClick={() => handleDeleteAllImages(user.user_id)}
+                      >
+                        Delete All Images
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -285,12 +287,14 @@ export default function Admin() {
                     >
                       Delete
                     </button>
-                    <button
-                      className="delete-all-images-button"
-                      onClick={() => handleDeleteAllImages(user.id)}
-                    >
-                      Delete All Images
-                    </button>
+                    {user.user_id && (
+                      <button
+                        className="delete-all-images-button"
+                        onClick={() => handleDeleteAllImages(user.user_id)}
+                      >
+                        Delete All Images
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

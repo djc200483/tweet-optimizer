@@ -158,6 +158,27 @@ export default function Admin() {
     }
   };
 
+  const handleDeleteAllImagesByHandle = async (x_handle) => {
+    if (!window.confirm('Are you sure you want to delete ALL images for this user? This cannot be undone.')) return;
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/delete-user-images-by-handle/${encodeURIComponent(x_handle)}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Deleted ${data.count} images for user ${x_handle}`);
+      } else {
+        alert('Error: ' + (data.error || 'Failed to delete images'));
+      }
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
   const sortedUsers = useMemo(() => {
     const activeUsers = allowedUsers
       .filter(user => user.is_active)
@@ -236,14 +257,12 @@ export default function Admin() {
                     >
                       Delete
                     </button>
-                    {user.user_id && (
-                      <button
-                        className="delete-all-images-button"
-                        onClick={() => handleDeleteAllImages(user.user_id)}
-                      >
-                        Delete All Images
-                      </button>
-                    )}
+                    <button
+                      className="delete-all-images-button"
+                      onClick={() => handleDeleteAllImagesByHandle(user.x_handle)}
+                    >
+                      Delete All Images
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -287,14 +306,12 @@ export default function Admin() {
                     >
                       Delete
                     </button>
-                    {user.user_id && (
-                      <button
-                        className="delete-all-images-button"
-                        onClick={() => handleDeleteAllImages(user.user_id)}
-                      >
-                        Delete All Images
-                      </button>
-                    )}
+                    <button
+                      className="delete-all-images-button"
+                      onClick={() => handleDeleteAllImagesByHandle(user.x_handle)}
+                    >
+                      Delete All Images
+                    </button>
                   </td>
                 </tr>
               ))}

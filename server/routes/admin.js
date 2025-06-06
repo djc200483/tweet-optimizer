@@ -139,4 +139,19 @@ router.delete('/delete-user-images/:userId', authMiddleware, async (req, res) =>
     }
 });
 
+router.delete('/delete-user-images-by-handle/:x_handle', authMiddleware, async (req, res) => {
+    try {
+        const { x_handle } = req.params;
+        const userResult = await db.query('SELECT id FROM users WHERE x_handle = $1', [x_handle]);
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const userId = userResult.rows[0].id;
+        const result = await deleteImagesByUser(userId);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router; 

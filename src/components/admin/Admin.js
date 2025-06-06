@@ -179,6 +179,12 @@ export default function Admin() {
     }
   };
 
+  const handleRefreshExploreCache = () => {
+    localStorage.removeItem('exploreImages');
+    localStorage.removeItem('lastExploreFetch');
+    alert('Explore cache cleared! The next visit to Explore will fetch fresh images.');
+  };
+
   const sortedUsers = useMemo(() => {
     const activeUsers = allowedUsers
       .filter(user => user.is_active)
@@ -199,6 +205,23 @@ export default function Admin() {
 
   return (
     <div className="admin-container">
+      <button
+        className="refresh-explore-cache-button"
+        onClick={handleRefreshExploreCache}
+        style={{
+          background: 'linear-gradient(135deg, #00c2ff, #a855f7)',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          borderRadius: '12px',
+          fontSize: '1rem',
+          cursor: 'pointer',
+          marginBottom: '20px',
+          boxShadow: '0 4px 15px rgba(0, 194, 255, 0.3)'
+        }}
+      >
+        Refresh Explore Cache
+      </button>
       <h2>Manage Allowed Users</h2>
       
       {error && <div className="admin-error">{error}</div>}

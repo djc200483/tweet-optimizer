@@ -40,9 +40,8 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     },
     {
       title: 'Image Generator',
-      description: 'Create AI-generated images from your text prompts.',
-      icon: '🖼️',
-      id: 'imageGenerator'
+      id: 'imageGenerator',
+      image: '/image-generator-feature.jpg'
     }
   ];
 
@@ -61,9 +60,17 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       <div className="feature-cards">
         {features.map(feature => (
           <div key={feature.id} className="feature-card">
-            <div className="feature-icon">{feature.icon}</div>
+            {feature.image ? (
+              <img 
+                src={feature.image} 
+                alt={feature.title} 
+                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px', marginBottom: '12px' }}
+              />
+            ) : (
+              <div className="feature-icon">{feature.icon}</div>
+            )}
             <h3>{feature.title}</h3>
-            <p>{feature.description}</p>
+            {feature.description && <p>{feature.description}</p>}
             <button
               className="feature-button"
               disabled={!isLoggedIn}

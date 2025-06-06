@@ -137,6 +137,27 @@ export default function Admin() {
     }
   };
 
+  const handleDeleteAllImages = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete ALL images for this user? This cannot be undone.')) return;
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/delete-user-images/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Deleted ${data.count} images for user ${userId}`);
+      } else {
+        alert('Error: ' + (data.error || 'Failed to delete images'));
+      }
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
   const sortedUsers = useMemo(() => {
     const activeUsers = allowedUsers
       .filter(user => user.is_active)
@@ -215,6 +236,12 @@ export default function Admin() {
                     >
                       Delete
                     </button>
+                    <button
+                      className="delete-all-images-button"
+                      onClick={() => handleDeleteAllImages(user.id)}
+                    >
+                      Delete All Images
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -257,6 +284,12 @@ export default function Admin() {
                       className="delete-button"
                     >
                       Delete
+                    </button>
+                    <button
+                      className="delete-all-images-button"
+                      onClick={() => handleDeleteAllImages(user.id)}
+                    >
+                      Delete All Images
                     </button>
                   </td>
                 </tr>

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const jwt = require('jsonwebtoken');
+const { deleteImagesByUser } = require('../services/cleanupService');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -120,6 +121,19 @@ router.get('/list-users', async (req, res) => {
     console.error('Error listing users:', error);
     res.status(500).json({ error: 'Error listing users' });
   }
+});
+
+router.delete('/delete-user-images/:userId', authMiddleware, async (req, res) => {
+    try {
+        const userId = parseInt(req.params.userId, 10);
+        if (isNaN(userId)) {
+            return res.status(400).json({ error: 'Invalid user ID' });
+        }
+        const result = await deleteImagesByUser(userId);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 module.exports = router; 

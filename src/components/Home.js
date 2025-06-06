@@ -41,7 +41,7 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     {
       title: 'Image Generator',
       id: 'imageGenerator',
-      image: '/image-generator-feature.jpg'
+      image: 'https://echosphere-images.s3.eu-north-1.amazonaws.com/image-generator-feature.jpg'
     }
   ];
 

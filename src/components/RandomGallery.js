@@ -1,5 +1,6 @@
 // Trigger redeploy
 import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from './auth/AuthContext';
 import Masonry from 'react-masonry-css';
 import './ImageGallery.css';
 
@@ -31,6 +32,7 @@ function isSameUtcDay(timestamp) {
 }
 
 export default function RandomGallery() {
+  const { token } = useAuth();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,7 +50,12 @@ export default function RandomGallery() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/api/images/explore`);
+      const response = await fetch(`${API_URL}/api/images/explore`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch images');
       const allImages = await response.json();
       const randomImages = getRandomSample(allImages, IMAGE_LIMIT);
@@ -60,7 +67,7 @@ export default function RandomGallery() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);

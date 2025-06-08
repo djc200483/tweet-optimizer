@@ -921,12 +921,20 @@ app.post('/generate-video', authMiddleware, async (req, res) => {
       throw new Error('Invalid response format from video generation API');
     }
 
-    const validUrls = finalPrediction.output.filter(url => typeof url === 'string' && url);
-    if (validUrls.length === 0) {
+    // Handle output as string or array
+    let urls = [];
+    if (typeof finalPrediction.output === 'string') {
+      urls = [finalPrediction.output];
+    } else if (Array.isArray(finalPrediction.output)) {
+      urls = finalPrediction.output.filter(url => typeof url === 'string' && url);
+    }
+
+    if (urls.length === 0) {
+      console.error('Invalid prediction output:', finalPrediction);
       throw new Error('No valid video URLs were generated');
     }
 
-    res.json({ videos: validUrls });
+    res.json({ videos: urls });
   } catch (error) {
     console.error('Error in video generation:', {
       message: error.message,

@@ -505,6 +505,7 @@ body {
   max-width: 1200px;
   margin: 40px auto;
   padding: 0 20px;
+  overflow-x: hidden;
 }
 
 .home-description {
@@ -2438,7 +2439,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 64px;
+  gap: 52px;
 }
 
 @media (max-width: 768px) {

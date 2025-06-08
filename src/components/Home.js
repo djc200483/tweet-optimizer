@@ -9,25 +9,21 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     {
       title: 'Post Optimiser',
       description: 'Transform your posts with AI-powered optimisation.',
-      icon: '🎯',
       id: 'optimize'
     },
     {
       title: 'Reverse Engineer',
       description: 'Analyse successful posts to understand what makes them effective.',
-      icon: '🔍',
       id: 'reverse'
     },
     {
       title: 'Power Words',
       description: 'Enhance your posts with impactful and engaging word choices.',
-      icon: '💬',
       id: 'power'
     },
     {
       title: 'Evergreen Content',
       description: 'Generate timeless content tailored to your niche with AI-powered insights.',
-      icon: '🌱',
       id: 'evergreen'
     }
   ];
@@ -36,19 +32,16 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     {
       title: 'Image Generator',
       description: 'Create AI-generated images from your text prompts.',
-      icon: '🖼️',
       id: 'imageGenerator'
     },
     {
       title: 'Image to Prompt',
       description: 'Convert images into detailed AI-ready prompts.',
-      icon: '🎨',
       id: 'imageToPrompt'
     },
     {
       title: 'Prompt Assistant',
       description: 'Generate structured prompts for AI image generation tools.',
-      icon: '🤖',
       id: 'prompt'
     }
   ];
@@ -71,7 +64,6 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
           onClick={() => isCollapsible && handleCardClick(feature.id)}
         >
           <div className="feature-card-header">
-            <div className="feature-icon">{feature.icon}</div>
             <h3>{feature.title}</h3>
             {isCollapsible && (
               <span className="expand-icon">{expandedCard === feature.id ? '−' : '+'}</span>

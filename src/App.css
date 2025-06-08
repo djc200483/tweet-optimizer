@@ -2423,7 +2423,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 32px;
+  gap: 64px;
 }
 
 @media (max-width: 768px) {

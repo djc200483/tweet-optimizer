@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import RandomGallery from './RandomGallery';
 
 export default function Home({ onSelectFeature, isLoggedIn }) {
-  const features = [
+  const [activeTab, setActiveTab] = useState('imagery');
+  const [expandedCard, setExpandedCard] = useState(null);
+
+  const writtenFeatures = [
     {
       title: 'Post Optimiser',
       description: 'Transform your posts with AI-powered optimisation.',
@@ -25,12 +29,15 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       description: 'Generate timeless content tailored to your niche with AI-powered insights.',
       icon: '🌱',
       id: 'evergreen'
-    },
+    }
+  ];
+
+  const imageryFeatures = [
     {
-      title: 'Prompt Assistant',
-      description: 'Generate structured prompts for AI image generation tools.',
-      icon: '🤖',
-      id: 'prompt'
+      title: 'Image Generator',
+      description: 'Create AI-generated images from your text prompts.',
+      icon: '🖼️',
+      id: 'imageGenerator'
     },
     {
       title: 'Image to Prompt',
@@ -39,10 +46,10 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       id: 'imageToPrompt'
     },
     {
-      title: 'Image Generator',
-      description: 'Create AI-generated images from your text prompts.',
-      icon: '🖼️',
-      id: 'imageGenerator'
+      title: 'Prompt Assistant',
+      description: 'Generate structured prompts for AI image generation tools.',
+      icon: '🤖',
+      id: 'prompt'
     }
   ];
 
@@ -51,6 +58,43 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     onSelectFeature(featureId);
   };
 
+  const handleCardClick = (featureId) => {
+    setExpandedCard(expandedCard === featureId ? null : featureId);
+  };
+
+  const renderFeatureCards = (features, isCollapsible = false) => (
+    <div className={`feature-cards ${isCollapsible ? 'collapsible-cards' : ''}`}>
+      {features.map(feature => (
+        <div 
+          key={feature.id} 
+          className={`feature-card ${isCollapsible ? 'collapsible' : ''} ${expandedCard === feature.id ? 'expanded' : ''}`}
+          onClick={() => isCollapsible && handleCardClick(feature.id)}
+        >
+          <div className="feature-card-header">
+            <div className="feature-icon">{feature.icon}</div>
+            <h3>{feature.title}</h3>
+            {isCollapsible && (
+              <span className="expand-icon">{expandedCard === feature.id ? '−' : '+'}</span>
+            )}
+          </div>
+          <div className="feature-card-content">
+            {feature.description && <p>{feature.description}</p>}
+            <button
+              className="feature-button"
+              disabled={!isLoggedIn}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFeatureClick(feature.id);
+              }}
+            >
+              {isLoggedIn ? `Try ${feature.title}` : 'Login to Use'}
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div className="home-container">
       <div className="home-description">
@@ -58,29 +102,42 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
         <p>Your AI-powered platform for crafting engaging and impactful posts and prompts.</p>
       </div>
       
-      <div className="feature-cards">
-        {features.map(feature => (
-          <div key={feature.id} className="feature-card">
-            {feature.image ? (
-              <img 
-                src={feature.image} 
-                alt={feature.title} 
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px', marginBottom: '12px' }}
-              />
-            ) : (
-              <div className="feature-icon">{feature.icon}</div>
-            )}
-            <h3>{feature.title}</h3>
-            {feature.description && <p>{feature.description}</p>}
-            <button
-              className="feature-button"
-              disabled={!isLoggedIn}
-              onClick={() => handleFeatureClick(feature.id)}
-            >
-              {isLoggedIn ? `Try ${feature.title}` : 'Login to Use'}
-            </button>
-          </div>
-        ))}
+      <div className="content-tabs">
+        <button 
+          className={`tab-button ${activeTab === 'imagery' ? 'active' : ''}`}
+          onClick={() => setActiveTab('imagery')}
+        >
+          Visual Tools
+        </button>
+        <button 
+          className={`tab-button ${activeTab === 'written' ? 'active' : ''}`}
+          onClick={() => setActiveTab('written')}
+        >
+          Writing Tools
+        </button>
+      </div>
+
+      <div className="tab-content">
+        {activeTab === 'imagery' ? (
+          <>
+            <div className="tab-description">
+              <h3>Create and optimize images using advanced AI technology</h3>
+            </div>
+            <div className="visual-tools-flex">
+              {renderFeatureCards(imageryFeatures, true)}
+              <RandomGallery />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="tab-description">
+              <h3>Enhance your written content with our AI-powered writing tools</h3>
+            </div>
+            <div className="writing-tools-flex">
+              {renderFeatureCards(writtenFeatures, true)}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

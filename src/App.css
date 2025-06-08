@@ -2245,3 +2245,226 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
+
+.content-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.tab-button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+  color: #a0a0b0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
+}
+
+.tab-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-description {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.tab-description h3 {
+  color: #a0a0b0;
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+@media (max-width: 768px) {
+  .content-tabs {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 1rem;
+  }
+
+  .tab-button {
+    width: 100%;
+    padding: 0.8rem;
+  }
+}
+
+.collapsible-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 9.375%;
+  margin-left: 0;
+}
+
+.feature-card.collapsible {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  width: 100%;
+}
+
+.feature-card.collapsible .feature-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem;
+  background: rgba(30, 32, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.feature-card.collapsible .feature-card-content {
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  padding: 0 0.3rem;
+}
+
+.feature-card.collapsible.expanded .feature-card-content {
+  max-height: 200px;
+  opacity: 1;
+  padding: 0.3rem;
+}
+
+.feature-card.collapsible .expand-icon {
+  margin-left: auto;
+  font-size: 1rem;
+  color: #a0a0b0;
+  transition: transform 0.3s ease;
+}
+
+.feature-card.collapsible.expanded .expand-icon {
+  transform: rotate(180deg);
+}
+
+.feature-card.collapsible:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 194, 255, 0.15);
+}
+
+.feature-card.collapsible h3 {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.feature-card.collapsible p {
+  font-size: 0.7rem;
+  color: #a0a0b0;
+  margin: 0.35rem 0;
+}
+
+.feature-card.collapsible .feature-icon {
+  font-size: 0.9rem;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+
+.feature-card.collapsible .feature-button {
+  font-size: 0.7rem;
+  padding: 5px 12px;
+}
+
+.feature-card.collapsible .expand-icon {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .feature-card.collapsible .feature-card-header {
+    padding: 0.8rem;
+  }
+  
+  .feature-card.collapsible .feature-card-content {
+    padding: 0 0.8rem;
+  }
+  
+  .feature-card.collapsible.expanded .feature-card-content {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .collapsible-cards {
+    width: 94% !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+  .feature-card.collapsible {
+    width: 94% !important;
+    margin: 0 auto 1rem auto !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .home-container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tab-content {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+  }
+  .collapsible-cards {
+    margin-left: 16px;
+    width: 9.375%;
+  }
+  .feature-card.collapsible {
+    margin-left: 0;
+  }
+}
+
+.visual-tools-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 64px;
+}
+
+@media (max-width: 768px) {
+  .visual-tools-flex {
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+.writing-tools-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.writing-tools-flex .collapsible-cards {
+  width: 9.375%;
+}
+
+@media (max-width: 768px) {
+  .writing-tools-flex {
+    flex-direction: column;
+  }
+  .writing-tools-flex .collapsible-cards {
+    width: 94% !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+}

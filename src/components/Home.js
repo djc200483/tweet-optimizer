@@ -133,7 +133,9 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
             <div className="tab-description">
               <h3>Enhance your written content with our AI-powered writing tools</h3>
             </div>
-            {renderFeatureCards(writtenFeatures, true)}
+            <div className="writing-tools-flex">
+              {renderFeatureCards(writtenFeatures, true)}
+            </div>
           </>
         )}
       </div>

@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
+import { useAuth } from './auth/AuthContext';
 
-const REPLICATE_API_TOKEN = process.env.REACT_APP_REPLICATE_API_TOKEN;
-const REPLICATE_MODEL_VERSION = process.env.REACT_APP_REPLICATE_KLING_VERSION;
-const REPLICATE_API_URL = 'https://api.replicate.com/v1/predictions';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 const ASPECT_RATIOS = [
   { label: '16:9', value: '16:9' },
@@ -15,6 +14,7 @@ const DURATIONS = [
 ];
 
 export default function VideoGenerator() {
+  const { token } = useAuth();
   const [prompt, setPrompt] = useState('');
   const [aspectRatio, setAspectRatio] = useState(ASPECT_RATIOS[0].value);
   const [duration, setDuration] = useState(DURATIONS[0].value);
@@ -50,70 +50,28 @@ export default function VideoGenerator() {
     setStatus('');
     setPredictionId('');
 
-    // Prepare input payload
-    const input = {
-      prompt,
-      aspect_ratio: aspectRatio,
-      duration,
-      cfg_scale: 0.5,
-    };
-    if (startImageData) {
-      input.start_image = startImageData;
-    }
-
     try {
-      const response = await fetch(REPLICATE_API_URL, {
+      const response = await fetch(`${API_URL}/generate-video`, {
         method: 'POST',
         headers: {
-          'Authorization': `Token ${REPLICATE_API_TOKEN}`,
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          version: REPLICATE_MODEL_VERSION,
-          input,
+          prompt,
+          aspectRatio,
+          duration,
+          startImage: startImageData || undefined
         }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.detail || 'Failed to start video generation');
-      setPredictionId(data.id);
-      pollPrediction(data.id);
+      if (!response.ok) throw new Error(data.error || 'Failed to start video generation');
+      if (!data.videos || !Array.isArray(data.videos)) throw new Error('Invalid response from server');
+      setVideoUrl(data.videos[0]);
+      setStatus('');
+      setIsLoading(false);
     } catch (err) {
       setError(err.message);
-      setIsLoading(false);
-    }
-  };
-
-  // Poll for prediction status
-  const pollPrediction = async (id) => {
-    setStatus('Generating video...');
-    try {
-      let done = false;
-      while (!done) {
-        const res = await fetch(`${REPLICATE_API_URL}/${id}`, {
-          headers: {
-            'Authorization': `Token ${REPLICATE_API_TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await res.json();
-        if (data.status === 'succeeded') {
-          setVideoUrl(data.output && data.output[0]);
-          setStatus('');
-          setIsLoading(false);
-          done = true;
-        } else if (data.status === 'failed') {
-          setError('Video generation failed.');
-          setStatus('');
-          setIsLoading(false);
-          done = true;
-        } else {
-          setStatus('Generating video...');
-          await new Promise((resolve) => setTimeout(resolve, 2500));
-        }
-      }
-    } catch (err) {
-      setError('Error polling video status.');
-      setStatus('');
       setIsLoading(false);
     }
   };

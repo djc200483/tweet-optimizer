@@ -916,11 +916,6 @@ app.post('/generate-video', authMiddleware, async (req, res) => {
       throw new Error(finalPrediction.error || 'Video generation failed');
     }
 
-    if (!finalPrediction.output || !Array.isArray(finalPrediction.output)) {
-      console.error('Invalid prediction output:', finalPrediction);
-      throw new Error('Invalid response format from video generation API');
-    }
-
     // Handle output as string or array
     let urls = [];
     if (typeof finalPrediction.output === 'string') {

@@ -2418,3 +2418,17 @@ body {
     margin-left: 0;
   }
 }
+
+.visual-tools-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+@media (max-width: 768px) {
+  .visual-tools-flex {
+    flex-direction: column;
+    gap: 24px;
+  }
+}

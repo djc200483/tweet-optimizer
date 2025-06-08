@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import RandomGallery from './RandomGallery';
 
 export default function Home({ onSelectFeature, isLoggedIn }) {
   const [activeTab, setActiveTab] = useState('imagery');
@@ -122,7 +123,10 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
             <div className="tab-description">
               <h3>Create and optimize images using advanced AI technology</h3>
             </div>
-            {renderFeatureCards(imageryFeatures, true)}
+            <div className="visual-tools-flex">
+              {renderFeatureCards(imageryFeatures, true)}
+              <RandomGallery />
+            </div>
           </>
         ) : (
           <>

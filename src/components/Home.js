@@ -79,7 +79,11 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
                 handleFeatureClick(feature.id);
               }}
             >
-              {isLoggedIn ? `Try ${feature.title}` : 'Login to Use'}
+              {isLoggedIn
+                ? (feature.id === 'imageGenerator' ? 'Generate'
+                  : feature.id === 'imageToPrompt' ? 'Add Image'
+                  : `Try ${feature.title}`)
+                : 'Login to Use'}
             </button>
           </div>
         </div>

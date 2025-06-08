@@ -2362,29 +2362,29 @@ body {
 
 .feature-card.collapsible h3 {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
 }
 
 .feature-card.collapsible p {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: #a0a0b0;
   margin: 0.35rem 0;
 }
 
 .feature-card.collapsible .feature-icon {
-  font-size: 0.9rem;
-  width: 24px;
-  height: 24px;
+  font-size: 1.1rem;
+  width: 28px;
+  height: 28px;
   margin: 0;
 }
 
 .feature-card.collapsible .feature-button {
-  font-size: 0.7rem;
-  padding: 5px 12px;
+  font-size: 0.8rem;
+  padding: 6px 14px;
 }
 
 .feature-card.collapsible .expand-icon {
-  font-size: 0.8rem;
+  font-size: 0.95rem;
 }
 
 @media (max-width: 768px) {
@@ -2468,4 +2468,12 @@ body {
     margin: 0 auto !important;
     box-sizing: border-box !important;
   }
+}
+
+.visual-tools-flex .collapsible-cards {
+  width: 16%;
+}
+.visual-tools-flex > *:last-child {
+  min-width: 0;
+  flex-shrink: 1;
 }

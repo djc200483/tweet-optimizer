@@ -893,7 +893,7 @@ app.post('/generate-video', authMiddleware, async (req, res) => {
     }
 
     const predictionInput = {
-      version: process.env.REPLICATE_KLING_VERSION,
+      model: "kwaivgi/kling-v1.6-pro",
       input
     };
 

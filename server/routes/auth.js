@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { Resend } = require('resend');
+const adminAuth = require('../middleware/adminAuth');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -261,7 +262,7 @@ router.all('/verify', async (req, res) => {
 });
 
 // Debug endpoint - DO NOT USE IN PRODUCTION
-router.get('/debug-db-state', async (req, res) => {
+router.get('/debug-db-state', adminAuth, async (req, res) => {
   try {
     const registeredUsers = await db.query(`
       SELECT 
@@ -297,7 +298,7 @@ router.post('/forgot-password', async (req, res) => {
     
     // Find user
     const result = await db.query(
-      'SELECT id, email, x_handle FROM users WHERE email = $1',
+      'SELECT id, email, x_handle, is_active FROM users WHERE email = $1',
       [email]
     );
     
@@ -308,6 +309,11 @@ router.post('/forgot-password', async (req, res) => {
     
     if (result.rows.length === 0) {
       // Don't reveal if email exists or not
+      return res.json({ message: 'If an account exists with this email, a password reset link will be sent.' });
+    }
+    
+    // Block password reset for disabled users
+    if (!result.rows[0].is_active) {
       return res.json({ message: 'If an account exists with this email, a password reset link will be sent.' });
     }
     
@@ -469,7 +475,7 @@ router.post('/reset-password', async (req, res) => {
 });
 
 // Temporary debug endpoint to check table structure
-router.get('/debug-table-structure', async (req, res) => {
+router.get('/debug-table-structure', adminAuth, async (req, res) => {
   try {
     const tableInfo = await db.query(`
       SELECT column_name, data_type, character_maximum_length

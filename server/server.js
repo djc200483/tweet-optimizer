@@ -660,7 +660,6 @@ console.log('Replicate API Token configured:', {
 });
 
 // Add this before the module.exports
-/*
 app.post('/generate-image', authMiddleware, async (req, res) => {
   try {
     const { prompt, aspectRatio, num_outputs = 2 } = req.body;
@@ -820,7 +819,6 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     });
   }
 });
-*/
 
 // Add this before the module.exports
 app.get('/api/images', authMiddleware, async (req, res) => {
@@ -857,6 +855,7 @@ app.get('/api/images', authMiddleware, async (req, res) => {
   }
 });
 
+/*
 app.post('/generate-video', authMiddleware, async (req, res) => {
   try {
     const { prompt, aspectRatio, duration, startImage } = req.body;
@@ -947,3 +946,4 @@ app.post('/generate-video', authMiddleware, async (req, res) => {
     });
   }
 });
+*/

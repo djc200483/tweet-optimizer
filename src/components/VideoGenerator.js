@@ -1,3 +1,4 @@
+/*
 import React, { useState, useRef } from 'react';
 import { useAuth } from './auth/AuthContext';
 
@@ -117,37 +118,40 @@ export default function VideoGenerator() {
             style={{ marginTop: 4 }}
           />
         </label>
-        <label>
-          Duration
-          <select
-            value={duration}
-            onChange={e => setDuration(Number(e.target.value))}
-            required
-            style={{ width: '100%', borderRadius: 8, padding: 10, marginTop: 4, fontSize: 16 }}
-          >
-            {DURATIONS.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </label>
         <button
           type="submit"
           disabled={isLoading}
-          style={{ background: 'linear-gradient(135deg, #00c2ff, #a855f7)', color: '#fff', border: 'none', borderRadius: 8, padding: '12px 0', fontSize: 18, cursor: 'pointer', marginTop: 8 }}
+          style={{
+            background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+            color: 'white',
+            border: 'none',
+            padding: '12px',
+            borderRadius: 8,
+            fontSize: 16,
+            cursor: isLoading ? 'not-allowed' : 'pointer',
+            opacity: isLoading ? 0.7 : 1
+          }}
         >
           {isLoading ? 'Generating...' : 'Generate Video'}
         </button>
       </form>
-      {status && <div style={{ marginTop: 24, textAlign: 'center', color: '#a0a0b0' }}>{status}</div>}
-      {error && <div style={{ marginTop: 24, color: '#ff6b6b', textAlign: 'center' }}>{error}</div>}
+
+      {error && (
+        <div style={{ color: '#ff6b6b', marginTop: 16, textAlign: 'center' }}>
+          {error}
+        </div>
+      )}
+
       {videoUrl && (
-        <div style={{ marginTop: 32, textAlign: 'center' }}>
-          <video src={videoUrl} controls style={{ width: '100%', borderRadius: 12, background: '#000' }} />
-          <a href={videoUrl} download target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: 12, color: '#00c2ff', fontWeight: 500 }}>
-            Download Video
-          </a>
+        <div style={{ marginTop: 24 }}>
+          <video
+            src={videoUrl}
+            controls
+            style={{ width: '100%', borderRadius: 8 }}
+          />
         </div>
       )}
     </div>
   );
-} 
+}
+*/ 

@@ -44,11 +44,11 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       description: 'Generate structured prompts for AI image generation tools.',
       id: 'prompt'
     },
-    {
+    /*{
       title: 'Video Generator',
       description: 'Generate short AI-powered videos from your prompts.',
       id: 'videoGenerator'
-    }
+    }*/
   ];
 
   const handleFeatureClick = (featureId) => {

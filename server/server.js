@@ -730,13 +730,19 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       throw new Error(finalPrediction.error || 'Image generation failed');
     }
 
-    if (!finalPrediction.output || !Array.isArray(finalPrediction.output)) {
+    // Handle both single URL string and array of URLs
+    let validUrls = [];
+    if (typeof finalPrediction.output === 'string') {
+      validUrls = [finalPrediction.output];
+    } else if (Array.isArray(finalPrediction.output)) {
+      validUrls = finalPrediction.output;
+    } else {
       console.error('Invalid prediction output:', finalPrediction);
       throw new Error('Invalid response format from image generation API');
     }
 
     // Filter out any non-string or empty values
-    const validUrls = finalPrediction.output.filter(url => {
+    validUrls = validUrls.filter(url => {
       if (typeof url !== 'string' || !url) {
         console.error('Invalid URL in output:', url);
         return false;

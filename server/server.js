@@ -688,16 +688,15 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
 
     // Create the prediction with detailed input logging
     const predictionInput = {
-      version: "black-forest-labs/flux-1.1-pro",
+      version: "black-forest-labs/flux-schnell",
       input: {
         prompt: prompt,
         go_fast: true,
-        num_outputs: num_outputs,
+        num_outputs: 4,
         num_inference_steps: 4,
         guidance_scale: 7.5,
         output_format: "png",
         aspect_ratio: aspectRatio,
-        scheduler: "K_EULER",
         seed: Math.floor(Math.random() * 1000000)
       }
     };

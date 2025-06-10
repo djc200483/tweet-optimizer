@@ -107,11 +107,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/images/explore`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(`${API_URL}/api/images/explore`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch explore images');
@@ -129,7 +125,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   const fetchMyImages = useCallback(async () => {
     try {

@@ -14,6 +14,7 @@ import ImageGenerator from './components/ImageGenerator';
 import EvergreenContent from './components/EvergreenContent';
 import Home from './components/Home';
 import LoadingSpinner from './components/LoadingSpinner';
+import VideoGenerator from './components/VideoGenerator';
 import './App.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -324,6 +325,18 @@ function AppContent() {
               ← Back to Home
             </button>
             <ImageGenerator />
+          </>
+        );
+      case 'videoGenerator':
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <VideoGenerator />
           </>
         );
       default:

@@ -27,7 +27,7 @@ router.get('/my-images', authMiddleware, async (req, res) => {
 });
 
 // Get all public images (explore)
-router.get('/explore', authMiddleware, async (req, res) => {
+router.get('/explore', async (req, res) => {
   try {
     const result = await db.query(
       `WITH seed AS (

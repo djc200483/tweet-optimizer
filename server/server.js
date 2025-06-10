@@ -688,7 +688,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
 
     // Create the prediction with detailed input logging
     const predictionInput = {
-      version: "black-forest-labs/flux-schnell",
+      version: "black-forest-labs/flux-1.1-pro",
       input: {
         prompt: prompt,
         go_fast: true,

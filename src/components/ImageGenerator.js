@@ -207,7 +207,7 @@ export default function ImageGenerator() {
             onTouchMove={handleTouchMove}
             placeholder="Enter your image prompt here..."
             className="prompt-textarea"
-            rows={1}
+            rows={4}
           />
         </div>
 

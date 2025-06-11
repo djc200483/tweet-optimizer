@@ -14,7 +14,7 @@ export default function ImageGenerator() {
 
   const models = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
-    { value: 'xlabs-ai/flux-dev-realism:39b3434f194f87a900d1bc2b6d4b983e90f0dde1d5022c27b52c143d670758fa', label: 'Flux Realism' }
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' }
   ];
 
   const aspectRatios = {
@@ -25,7 +25,7 @@ export default function ImageGenerator() {
       { value: '4:3', label: 'Standard (4:3)' },
       { value: '3:4', label: 'Portrait (3:4)' }
     ],
-    'xlabs-ai/flux-dev-realism:39b3434f194f87a900d1bc2b6d4b983e90f0dde1d5022c27b52c143d670758fa': [
+    'black-forest-labs/flux-1.1-pro-ultra': [
       { value: '1:1', label: 'Square (1:1)' },
       { value: '16:9', label: 'Landscape (16:9)' },
       { value: '21:9', label: 'Ultrawide (21:9)' },

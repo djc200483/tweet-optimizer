@@ -17,25 +17,23 @@ export default function ImageGenerator() {
     { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' }
   ];
 
+  const naturalAspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '21:9', label: 'Ultrawide (21:9)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '3:2', label: 'Classic Photo (3:2)' },
+    { value: '2:3', label: 'Portrait Classic (2:3)' },
+    { value: '5:4', label: 'Large Format (5:4)' },
+    { value: '4:5', label: 'Portrait (4:5)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '9:21', label: 'Tall Vertical (9:21)' }
+  ];
+
   const aspectRatios = {
-    'black-forest-labs/flux-schnell': [
-      { value: '1:1', label: 'Square (1:1)' },
-      { value: '16:9', label: 'Landscape (16:9)' },
-      { value: '9:16', label: 'Portrait (9:16)' },
-      { value: '4:3', label: 'Standard (4:3)' },
-      { value: '3:4', label: 'Portrait (3:4)' }
-    ],
-    'black-forest-labs/flux-1.1-pro-ultra': [
-      { value: '1:1', label: 'Square (1:1)' },
-      { value: '16:9', label: 'Landscape (16:9)' },
-      { value: '21:9', label: 'Ultrawide (21:9)' },
-      { value: '2:3', label: 'Portrait (2:3)' },
-      { value: '3:2', label: 'Landscape (3:2)' },
-      { value: '4:5', label: 'Portrait (4:5)' },
-      { value: '5:4', label: 'Landscape (5:4)' },
-      { value: '9:16', label: 'Portrait (9:16)' },
-      { value: '9:21', label: 'Portrait (9:21)' }
-    ]
+    'black-forest-labs/flux-schnell': naturalAspectRatios,
+    'black-forest-labs/flux-1.1-pro-ultra': naturalAspectRatios
   };
 
   const defaultModel = 'black-forest-labs/flux-schnell';

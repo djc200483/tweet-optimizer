@@ -9,21 +9,77 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 export default function ImageGenerator() {
   const { token, user } = useAuth();
   const [prompt, setPrompt] = useState('');
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
+  const textareaRef = useRef(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const models = [
+    { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
+    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
+    { value: 'google/imagen-4', label: 'Imagen 4' },
+    { value: 'minimax/image-01', label: 'MiniMax 01' }
+  ];
+
+  const naturalAspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '21:9', label: 'Ultrawide (21:9)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '3:2', label: 'Classic Photo (3:2)' },
+    { value: '2:3', label: 'Portrait Classic (2:3)' },
+    { value: '5:4', label: 'Large Format (5:4)' },
+    { value: '4:5', label: 'Portrait (4:5)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '9:21', label: 'Tall Vertical (9:21)' }
+  ];
+
+  const flux11ProAspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '3:2', label: 'Classic Photo (3:2)' },
+    { value: '2:3', label: 'Portrait Classic (2:3)' },
+    { value: '4:5', label: 'Portrait (4:5)' },
+    { value: '5:4', label: 'Large Format (5:4)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '4:3', label: 'Standard (4:3)' }
+  ];
+
+  const imagen4AspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '9:16', label: 'Vertical (9:16)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '4:3', label: 'Standard (4:3)' }
+  ];
+
+  const minimaxAspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '3:2', label: 'Classic Photo (3:2)' },
+    { value: '2:3', label: 'Portrait Classic (2:3)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '21:9', label: 'Ultrawide (21:9)' }
+  ];
+
+  const aspectRatios = {
+    'black-forest-labs/flux-schnell': naturalAspectRatios,
+    'black-forest-labs/flux-1.1-pro': flux11ProAspectRatios,
+    'black-forest-labs/flux-1.1-pro-ultra': naturalAspectRatios,
+    'google/imagen-4': imagen4AspectRatios,
+    'minimax/image-01': minimaxAspectRatios
+  };
+
+  const defaultModel = 'black-forest-labs/flux-schnell';
+  const [selectedModel, setSelectedModel] = useState(defaultModel);
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState(aspectRatios[defaultModel][0].value);
   const [generatedImages, setGeneratedImages] = useState([]);
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const textareaRef = useRef(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
-
-  const aspectRatios = [
-    { value: '1:1', label: 'Square (1:1)' },
-    { value: '16:9', label: 'Landscape (16:9)' },
-    { value: '9:16', label: 'Portrait (9:16)' },
-    { value: '4:3', label: 'Standard (4:3)' },
-    { value: '3:4', label: 'Portrait (3:4)' }
-  ];
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
@@ -55,6 +111,7 @@ export default function ImageGenerator() {
       setError('');
       
       console.log('Sending prompt to generate images:', prompt);
+      console.log('Using model:', selectedModel);
       console.log('Using aspect ratio:', selectedAspectRatio);
       
       const response = await fetch(`${API_URL}/generate-image`, {
@@ -65,6 +122,7 @@ export default function ImageGenerator() {
         },
         body: JSON.stringify({ 
           prompt: prompt,
+          model: selectedModel,
           aspectRatio: selectedAspectRatio,
           num_outputs: 2
         }),
@@ -136,59 +194,80 @@ export default function ImageGenerator() {
 
   return (
     <div className="optimizer-container image-generator-page">
-      <div className="sticky-toolbar">
-        <div className="toolbar-content">
-          <div className="prompt-input-container">
-            <textarea
-              ref={textareaRef}
-              value={prompt}
-              onChange={handlePromptChange}
-              onKeyDown={handleKeyDown}
-              onWheel={handleWheel}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              placeholder="Enter your image prompt here..."
-              className="prompt-textarea"
-              rows={1}
-            />
-          </div>
-          <div className="toolbar-controls">
-            <select
-              id="aspect-ratio"
-              value={selectedAspectRatio}
-              onChange={(e) => setSelectedAspectRatio(e.target.value)}
-              className="aspect-ratio-select"
-            >
-              {aspectRatios.map(ratio => (
-                <option key={ratio.value} value={ratio.value}>
-                  {ratio.label}
-                </option>
-              ))}
-            </select>
-
-            <button
-              onClick={handleGenerateWithFlux}
-              disabled={isGenerateLoading || !prompt.trim()}
-              className="generate-flux-button"
-            >
-              {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
-            </button>
-          </div>
+      <div className="left-toolbar">
+        <div className="toolbar-section">
+          <h3>Prompt</h3>
+          <textarea
+            ref={textareaRef}
+            value={prompt}
+            onChange={handlePromptChange}
+            onKeyDown={handleKeyDown}
+            onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            placeholder="Enter your image prompt here..."
+            className="prompt-textarea"
+            rows={4}
+          />
         </div>
+
+        <div className="toolbar-section">
+          <h3>Model</h3>
+          <select
+            value={selectedModel}
+            onChange={(e) => {
+              const newModel = e.target.value;
+              setSelectedModel(newModel);
+              setSelectedAspectRatio(aspectRatios[newModel][0].value);
+            }}
+            className="model-select"
+          >
+            {models.map(model => (
+              <option key={model.value} value={model.value}>
+                {model.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="toolbar-section">
+          <h3>Aspect Ratio</h3>
+          <select
+            value={selectedAspectRatio}
+            onChange={(e) => setSelectedAspectRatio(e.target.value)}
+            className="aspect-ratio-select"
+          >
+            {aspectRatios[selectedModel]?.map(ratio => (
+              <option key={ratio.value} value={ratio.value}>
+                {ratio.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          onClick={handleGenerateWithFlux}
+          disabled={isGenerateLoading || !prompt.trim()}
+          className="generate-flux-button"
+        >
+          {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate'}
+        </button>
       </div>
 
-      <div className="feature-description">
-        <p>Create stunning AI-generated images from your text prompts. Simply enter your prompt, choose your preferred aspect ratio, and let our AI bring your vision to life.</p>
-      </div>
+      <div className="main-content">
+        <div className="feature-description">
+          <p>Create stunning AI-generated images from your text prompts. Simply enter your prompt, choose your preferred model and aspect ratio, and let our AI bring your vision to life.</p>
+        </div>
 
-      {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message">{error}</div>}
 
-      <div className="gallery-wrapper" style={{ width: '100%', marginTop: '24px' }}>
-        <ImageGallery 
-          userId={user.id} 
-          onUsePrompt={setPrompt} 
-          refreshTrigger={refreshTrigger}
-        />
+        <div className="gallery-wrapper">
+          <ImageGallery 
+            userId={user.id} 
+            onUsePrompt={setPrompt} 
+            refreshTrigger={refreshTrigger}
+          />
+        </div>
       </div>
     </div>
   );

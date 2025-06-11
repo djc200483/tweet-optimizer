@@ -688,11 +688,11 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
 
     // Create the prediction with detailed input logging
     const predictionInput = {
-      version: "black-forest-labs/flux-schnell",
+      version: req.body.model || "black-forest-labs/flux-schnell",
       input: {
         prompt: prompt,
         go_fast: true,
-        num_outputs: 4,
+        num_outputs: req.body.model === 'minimax/image-01' ? 2 : (['black-forest-labs/flux-1.1-pro', 'black-forest-labs/flux-1.1-pro-ultra', 'google/imagen-4'].includes(req.body.model) ? 1 : 4),
         num_inference_steps: 4,
         guidance_scale: 7.5,
         output_format: "png",

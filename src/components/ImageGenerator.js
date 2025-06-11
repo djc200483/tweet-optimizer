@@ -250,7 +250,7 @@ export default function ImageGenerator() {
           disabled={isGenerateLoading || !prompt.trim()}
           className="generate-flux-button"
         >
-          {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
+          {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate'}
         </button>
       </div>
 

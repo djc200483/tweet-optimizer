@@ -19,7 +19,8 @@ export default function ImageGenerator() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const models = [
-    { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' }
+    { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
+    { value: 'xlabs-ai/flux-dev-realism:39b3434f194f87a900d1bc2b6d4b983e90f0dde1d5022c27b52c143d670758fa', label: 'Flux Realism' }
   ];
 
   const aspectRatios = [

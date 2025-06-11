@@ -15,7 +15,9 @@ export default function ImageGenerator() {
   const models = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
     { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
-    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' }
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
+    { value: 'google/imagen-4', label: 'Imagen 4' },
+    { value: 'minimax/image-01', label: 'MiniMax 01' }
   ];
 
   const naturalAspectRatios = [
@@ -44,10 +46,31 @@ export default function ImageGenerator() {
     { value: '4:3', label: 'Standard (4:3)' }
   ];
 
+  const imagen4AspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '9:16', label: 'Vertical (9:16)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '4:3', label: 'Standard (4:3)' }
+  ];
+
+  const minimaxAspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '3:2', label: 'Classic Photo (3:2)' },
+    { value: '2:3', label: 'Portrait Classic (2:3)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '21:9', label: 'Ultrawide (21:9)' }
+  ];
+
   const aspectRatios = {
     'black-forest-labs/flux-schnell': naturalAspectRatios,
     'black-forest-labs/flux-1.1-pro': flux11ProAspectRatios,
-    'black-forest-labs/flux-1.1-pro-ultra': naturalAspectRatios
+    'black-forest-labs/flux-1.1-pro-ultra': naturalAspectRatios,
+    'google/imagen-4': imagen4AspectRatios,
+    'minimax/image-01': minimaxAspectRatios
   };
 
   const defaultModel = 'black-forest-labs/flux-schnell';

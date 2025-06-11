@@ -23,13 +23,26 @@ export default function ImageGenerator() {
     { value: 'xlabs-ai/flux-dev-realism:39b3434f194f87a900d1bc2b6d4b983e90f0dde1d5022c27b52c143d670758fa', label: 'Flux Realism' }
   ];
 
-  const aspectRatios = [
-    { value: '1:1', label: 'Square (1:1)' },
-    { value: '16:9', label: 'Landscape (16:9)' },
-    { value: '9:16', label: 'Portrait (9:16)' },
-    { value: '4:3', label: 'Standard (4:3)' },
-    { value: '3:4', label: 'Portrait (3:4)' }
-  ];
+  const aspectRatios = {
+    'black-forest-labs/flux-schnell': [
+      { value: '1:1', label: 'Square (1:1)' },
+      { value: '16:9', label: 'Landscape (16:9)' },
+      { value: '9:16', label: 'Portrait (9:16)' },
+      { value: '4:3', label: 'Standard (4:3)' },
+      { value: '3:4', label: 'Portrait (3:4)' }
+    ],
+    'xlabs-ai/flux-dev-realism:39b3434f194f87a900d1bc2b6d4b983e90f0dde1d5022c27b52c143d670758fa': [
+      { value: '1:1', label: 'Square (1:1)' },
+      { value: '16:9', label: 'Landscape (16:9)' },
+      { value: '21:9', label: 'Ultrawide (21:9)' },
+      { value: '2:3', label: 'Portrait (2:3)' },
+      { value: '3:2', label: 'Landscape (3:2)' },
+      { value: '4:5', label: 'Portrait (4:5)' },
+      { value: '5:4', label: 'Landscape (5:4)' },
+      { value: '9:16', label: 'Portrait (9:16)' },
+      { value: '9:21', label: 'Portrait (9:21)' }
+    ]
+  };
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
@@ -165,7 +178,11 @@ export default function ImageGenerator() {
           <h3>Model</h3>
           <select
             value={selectedModel}
-            onChange={(e) => setSelectedModel(e.target.value)}
+            onChange={(e) => {
+              setSelectedModel(e.target.value);
+              // Reset aspect ratio to first available option for the selected model
+              setSelectedAspectRatio(aspectRatios[e.target.value][0].value);
+            }}
             className="model-select"
           >
             {models.map(model => (
@@ -183,7 +200,7 @@ export default function ImageGenerator() {
             onChange={(e) => setSelectedAspectRatio(e.target.value)}
             className="aspect-ratio-select"
           >
-            {aspectRatios.map(ratio => (
+            {aspectRatios[selectedModel].map(ratio => (
               <option key={ratio.value} value={ratio.value}>
                 {ratio.label}
               </option>

@@ -91,6 +91,12 @@
   }
 }
 
+.prompt-textarea,
+.model-select,
+.aspect-ratio-select {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .prompt-textarea {
   width: 100%;
   padding: 12px;
@@ -131,6 +137,14 @@
 
 .prompt-textarea::placeholder {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.prompt-textarea:focus,
+.model-select:focus,
+.aspect-ratio-select:focus {
+  outline: none;
+  border-color: #2563eb !important; /* blue-600 */
+  box-shadow: 0 0 0 2px #2563eb44;
 }
 
 .sticky-toolbar {

@@ -9,13 +9,6 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 export default function ImageGenerator() {
   const { token, user } = useAuth();
   const [prompt, setPrompt] = useState('');
-  const defaultModel = 'black-forest-labs/flux-schnell';
-  const [selectedModel, setSelectedModel] = useState(defaultModel);
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState(aspectRatios[defaultModel][0].value);
-  const [generatedImages, setGeneratedImages] = useState([]);
-  const [isGenerateLoading, setIsGenerateLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
   const textareaRef = useRef(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -44,6 +37,14 @@ export default function ImageGenerator() {
       { value: '9:21', label: 'Portrait (9:21)' }
     ]
   };
+
+  const defaultModel = 'black-forest-labs/flux-schnell';
+  const [selectedModel, setSelectedModel] = useState(defaultModel);
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState(aspectRatios[defaultModel][0].value);
+  const [generatedImages, setGeneratedImages] = useState([]);
+  const [isGenerateLoading, setIsGenerateLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;

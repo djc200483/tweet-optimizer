@@ -266,6 +266,8 @@
   padding: 24px;
   min-height: 100vh;
   background: #1a1b1f;
+  width: 98%;
+  margin: 80px auto 0;
 }
 
 .left-toolbar {
@@ -390,6 +392,8 @@
   .optimizer-container.image-generator-page {
     flex-direction: column;
     padding: 16px;
+    width: 100%;
+    margin-top: 60px;
   }
 
   .left-toolbar {
@@ -407,6 +411,7 @@
 @media (max-width: 768px) {
   .optimizer-container.image-generator-page {
     padding: 12px;
+    margin-top: 50px;
   }
 
   .left-toolbar {

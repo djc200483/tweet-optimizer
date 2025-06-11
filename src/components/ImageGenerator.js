@@ -14,6 +14,7 @@ export default function ImageGenerator() {
 
   const models = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
+    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
     { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' }
   ];
 
@@ -31,8 +32,21 @@ export default function ImageGenerator() {
     { value: '9:21', label: 'Tall Vertical (9:21)' }
   ];
 
+  const flux11ProAspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '3:2', label: 'Classic Photo (3:2)' },
+    { value: '2:3', label: 'Portrait Classic (2:3)' },
+    { value: '4:5', label: 'Portrait (4:5)' },
+    { value: '5:4', label: 'Large Format (5:4)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '4:3', label: 'Standard (4:3)' }
+  ];
+
   const aspectRatios = {
     'black-forest-labs/flux-schnell': naturalAspectRatios,
+    'black-forest-labs/flux-1.1-pro': flux11ProAspectRatios,
     'black-forest-labs/flux-1.1-pro-ultra': naturalAspectRatios
   };
 

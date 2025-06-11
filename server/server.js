@@ -692,7 +692,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       input: {
         prompt: prompt,
         go_fast: true,
-        num_outputs: req.body.model === 'xlabs-ai/flux-dev-realism:39b3434f194f87a900d1bc2b6d4b983e90f0dde1d5022c27b52c143d670758fa' ? 2 : 4,
+        num_outputs: (req.body.model === 'black-forest-labs/flux-1.1-pro' || req.body.model === 'black-forest-labs/flux-1.1-pro-ultra') ? 1 : 4,
         num_inference_steps: 4,
         guidance_scale: 7.5,
         output_format: "png",

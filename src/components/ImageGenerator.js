@@ -9,8 +9,9 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 export default function ImageGenerator() {
   const { token, user } = useAuth();
   const [prompt, setPrompt] = useState('');
-  const [selectedModel, setSelectedModel] = useState('stability-ai/sdxl');
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
+  const defaultModel = 'black-forest-labs/flux-schnell';
+  const [selectedModel, setSelectedModel] = useState(defaultModel);
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState(aspectRatios[defaultModel][0].value);
   const [generatedImages, setGeneratedImages] = useState([]);
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [error, setError] = useState('');
@@ -179,9 +180,9 @@ export default function ImageGenerator() {
           <select
             value={selectedModel}
             onChange={(e) => {
-              setSelectedModel(e.target.value);
-              // Reset aspect ratio to first available option for the selected model
-              setSelectedAspectRatio(aspectRatios[e.target.value][0].value);
+              const newModel = e.target.value;
+              setSelectedModel(newModel);
+              setSelectedAspectRatio(aspectRatios[newModel][0].value);
             }}
             className="model-select"
           >
@@ -200,7 +201,7 @@ export default function ImageGenerator() {
             onChange={(e) => setSelectedAspectRatio(e.target.value)}
             className="aspect-ratio-select"
           >
-            {aspectRatios[selectedModel].map(ratio => (
+            {aspectRatios[selectedModel]?.map(ratio => (
               <option key={ratio.value} value={ratio.value}>
                 {ratio.label}
               </option>

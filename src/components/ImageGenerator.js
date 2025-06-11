@@ -19,10 +19,7 @@ export default function ImageGenerator() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const models = [
-    { value: 'stability-ai/sdxl', label: 'Stable Diffusion XL' },
-    { value: 'stability-ai/stable-diffusion', label: 'Stable Diffusion' },
-    { value: 'tstramer/midjourney-diffusion', label: 'Midjourney Diffusion' },
-    { value: 'nightmareai/real-esrgan', label: 'Real ESRGAN' }
+    { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' }
   ];
 
   const aspectRatios = [

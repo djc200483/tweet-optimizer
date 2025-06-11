@@ -9,6 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 export default function ImageGenerator() {
   const { token, user } = useAuth();
   const [prompt, setPrompt] = useState('');
+  const [selectedModel, setSelectedModel] = useState('stability-ai/sdxl');
   const [selectedAspectRatio, setSelectedAspectRatio] = useState('1:1');
   const [generatedImages, setGeneratedImages] = useState([]);
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
@@ -16,6 +17,13 @@ export default function ImageGenerator() {
   const [searchQuery, setSearchQuery] = useState('');
   const textareaRef = useRef(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const models = [
+    { value: 'stability-ai/sdxl', label: 'Stable Diffusion XL' },
+    { value: 'stability-ai/stable-diffusion', label: 'Stable Diffusion' },
+    { value: 'tstramer/midjourney-diffusion', label: 'Midjourney Diffusion' },
+    { value: 'nightmareai/real-esrgan', label: 'Real ESRGAN' }
+  ];
 
   const aspectRatios = [
     { value: '1:1', label: 'Square (1:1)' },
@@ -55,6 +63,7 @@ export default function ImageGenerator() {
       setError('');
       
       console.log('Sending prompt to generate images:', prompt);
+      console.log('Using model:', selectedModel);
       console.log('Using aspect ratio:', selectedAspectRatio);
       
       const response = await fetch(`${API_URL}/generate-image`, {
@@ -65,6 +74,7 @@ export default function ImageGenerator() {
         },
         body: JSON.stringify({ 
           prompt: prompt,
+          model: selectedModel,
           aspectRatio: selectedAspectRatio,
           num_outputs: 2
         }),
@@ -136,59 +146,76 @@ export default function ImageGenerator() {
 
   return (
     <div className="optimizer-container image-generator-page">
-      <div className="sticky-toolbar">
-        <div className="toolbar-content">
-          <div className="prompt-input-container">
-            <textarea
-              ref={textareaRef}
-              value={prompt}
-              onChange={handlePromptChange}
-              onKeyDown={handleKeyDown}
-              onWheel={handleWheel}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              placeholder="Enter your image prompt here..."
-              className="prompt-textarea"
-              rows={1}
-            />
-          </div>
-          <div className="toolbar-controls">
-            <select
-              id="aspect-ratio"
-              value={selectedAspectRatio}
-              onChange={(e) => setSelectedAspectRatio(e.target.value)}
-              className="aspect-ratio-select"
-            >
-              {aspectRatios.map(ratio => (
-                <option key={ratio.value} value={ratio.value}>
-                  {ratio.label}
-                </option>
-              ))}
-            </select>
-
-            <button
-              onClick={handleGenerateWithFlux}
-              disabled={isGenerateLoading || !prompt.trim()}
-              className="generate-flux-button"
-            >
-              {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
-            </button>
-          </div>
+      <div className="left-toolbar">
+        <div className="toolbar-section">
+          <h3>Prompt</h3>
+          <textarea
+            ref={textareaRef}
+            value={prompt}
+            onChange={handlePromptChange}
+            onKeyDown={handleKeyDown}
+            onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            placeholder="Enter your image prompt here..."
+            className="prompt-textarea"
+            rows={1}
+          />
         </div>
+
+        <div className="toolbar-section">
+          <h3>Model</h3>
+          <select
+            value={selectedModel}
+            onChange={(e) => setSelectedModel(e.target.value)}
+            className="model-select"
+          >
+            {models.map(model => (
+              <option key={model.value} value={model.value}>
+                {model.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="toolbar-section">
+          <h3>Aspect Ratio</h3>
+          <select
+            value={selectedAspectRatio}
+            onChange={(e) => setSelectedAspectRatio(e.target.value)}
+            className="aspect-ratio-select"
+          >
+            {aspectRatios.map(ratio => (
+              <option key={ratio.value} value={ratio.value}>
+                {ratio.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          onClick={handleGenerateWithFlux}
+          disabled={isGenerateLoading || !prompt.trim()}
+          className="generate-flux-button"
+        >
+          {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate with Flux'}
+        </button>
       </div>
 
-      <div className="feature-description">
-        <p>Create stunning AI-generated images from your text prompts. Simply enter your prompt, choose your preferred aspect ratio, and let our AI bring your vision to life.</p>
-      </div>
+      <div className="main-content">
+        <div className="feature-description">
+          <p>Create stunning AI-generated images from your text prompts. Simply enter your prompt, choose your preferred model and aspect ratio, and let our AI bring your vision to life.</p>
+        </div>
 
-      {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message">{error}</div>}
 
-      <div className="gallery-wrapper" style={{ width: '100%', marginTop: '24px' }}>
-        <ImageGallery 
-          userId={user.id} 
-          onUsePrompt={setPrompt} 
-          refreshTrigger={refreshTrigger}
-        />
+        <div className="gallery-wrapper">
+          <ImageGallery 
+            userId={user.id} 
+            onUsePrompt={setPrompt} 
+            refreshTrigger={refreshTrigger}
+          />
+        </div>
       </div>
     </div>
   );

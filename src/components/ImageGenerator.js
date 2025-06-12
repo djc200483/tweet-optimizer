@@ -103,6 +103,7 @@ export default function ImageGenerator() {
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
 
   // Clear prompt and aspect ratio if Portrait Series model is selected
   useEffect(() => {
@@ -369,21 +370,34 @@ export default function ImageGenerator() {
 
         <div className="toolbar-section">
           <h3>Model</h3>
-          <select
-            value={selectedModel}
-            onChange={(e) => {
-              const newModel = e.target.value;
-              setSelectedModel(newModel);
-              setSelectedAspectRatio(aspectRatios[newModel][0].value);
-            }}
-            className="model-select"
-          >
-            {models.map(model => (
-              <option key={model.value} value={model.value}>
-                {model.label}
-              </option>
-            ))}
-          </select>
+          <div className="model-select-container">
+            <div 
+              className="model-select-header"
+              onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+            >
+              {models.find(m => m.value === selectedModel)?.label || 'Select Model'}
+            </div>
+            {isModelDropdownOpen && (
+              <div className="model-dropdown">
+                {models.map(model => (
+                  <div
+                    key={model.value}
+                    className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
+                    onClick={() => {
+                      setSelectedModel(model.value);
+                      setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                      setIsModelDropdownOpen(false);
+                    }}
+                  >
+                    <div className="model-label">{model.label}</div>
+                    {model.description && (
+                      <div className="model-description">{model.description}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Portrait Series background color dropdown */}

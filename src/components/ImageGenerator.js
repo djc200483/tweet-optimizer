@@ -11,14 +11,37 @@ export default function ImageGenerator() {
   const [prompt, setPrompt] = useState('');
   const textareaRef = useRef(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [generationType, setGenerationType] = useState('text-to-image');
+  const [sourceImage, setSourceImage] = useState(null);
+  const [sourceImagePreview, setSourceImagePreview] = useState(null);
 
-  const models = [
+  const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
     { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
     { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
     { value: 'google/imagen-4', label: 'Imagen 4' },
     { value: 'minimax/image-01', label: 'MiniMax 01' }
   ];
+
+  const imageToImageModels = [
+    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
+    { value: 'minimax/image-01', label: 'MiniMax 01' },
+    { value: 'flux-kontext-apps/portrait-series', label: 'Portrait Series (Flux Kontext)' }
+  ];
+
+  const portraitBackgroundColors = [
+    { value: 'white', label: 'White' },
+    { value: 'black', label: 'Black' },
+    { value: 'gray', label: 'Gray' },
+    { value: 'green screen', label: 'Green Screen' },
+    { value: 'neutral', label: 'Neutral' },
+    { value: 'original', label: 'Original' }
+  ];
+
+  const [portraitBackground, setPortraitBackground] = useState('white');
+
+  const models = generationType === 'image-to-image' ? imageToImageModels : allModels;
 
   const naturalAspectRatios = [
     { value: '1:1', label: 'Square (1:1)' },
@@ -81,6 +104,21 @@ export default function ImageGenerator() {
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Clear prompt and aspect ratio if Portrait Series model is selected
+  useEffect(() => {
+    if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
+      setPrompt('');
+      setSelectedAspectRatio('');
+    }
+  }, [generationType, selectedModel]);
+
+  // Clear prompt if Portrait Series model is selected
+  useEffect(() => {
+    if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
+      setPrompt('');
+    }
+  }, [generationType, selectedModel]);
+
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -101,31 +139,59 @@ export default function ImageGenerator() {
   }, []);
 
   const handleGenerateWithFlux = async () => {
-    if (!prompt.trim()) {
+    if (!prompt.trim() && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) {
       setError('Please enter a prompt first');
+      return;
+    }
+    if (generationType === 'image-to-image' && !sourceImage) {
+      setError('Please upload an image for Image to Image');
       return;
     }
 
     try {
       setIsGenerateLoading(true);
       setError('');
-      
-      console.log('Sending prompt to generate images:', prompt);
-      console.log('Using model:', selectedModel);
-      console.log('Using aspect ratio:', selectedAspectRatio);
-      
+      let sourceImageBase64 = undefined;
+      if (generationType === 'image-to-image' && sourceImage) {
+        // Read file as base64
+        sourceImageBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            // Remove the data URL prefix
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(sourceImage);
+        });
+      }
+
+      // Build request body
+      let body = {
+        prompt: prompt,
+        model: selectedModel,
+        aspectRatio: selectedAspectRatio,
+        num_outputs: 2,
+        ...(generationType === 'image-to-image' && sourceImageBase64 ? { sourceImageBase64 } : {})
+      };
+      // Portrait Series model specifics
+      if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
+        body = {
+          model: selectedModel,
+          aspectRatio: selectedAspectRatio,
+          num_outputs: 3, // not used by backend, but for clarity
+          sourceImageBase64,
+          background: portraitBackground
+        };
+      }
+
       const response = await fetch(`${API_URL}/generate-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ 
-          prompt: prompt,
-          model: selectedModel,
-          aspectRatio: selectedAspectRatio,
-          num_outputs: 2
-        }),
+        body: JSON.stringify(body),
       });
       
       if (!response.ok) {
@@ -192,9 +258,97 @@ export default function ImageGenerator() {
     }
   };
 
+  const handleGenerationTypeChange = (e) => {
+    const newType = e.target.value;
+    setGenerationType(newType);
+    
+    // If switching to image-to-image and current model isn't supported, switch to first supported model
+    if (newType === 'image-to-image' && !imageToImageModels.some(model => model.value === selectedModel)) {
+      setSelectedModel(imageToImageModels[0].value);
+      setSelectedAspectRatio(aspectRatios[imageToImageModels[0].value][0].value);
+    }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file type
+    const validTypes = ['image/webp', 'image/jpeg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+      setError('Please upload a valid image file (WebP, JPG, or PNG)');
+      return;
+    }
+
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setSourceImage(file);
+    setSourceImagePreview(previewUrl);
+    setError('');
+  };
+
+  const handleRemoveImage = () => {
+    if (sourceImagePreview) {
+      URL.revokeObjectURL(sourceImagePreview);
+    }
+    setSourceImage(null);
+    setSourceImagePreview(null);
+  };
+
   return (
     <div className="optimizer-container image-generator-page">
       <div className="left-toolbar">
+        <div className="toolbar-section">
+          <h3>Generation Type</h3>
+          <select
+            value={generationType}
+            onChange={handleGenerationTypeChange}
+            className="model-select"
+          >
+            <option value="text-to-image">Text to Image</option>
+            <option value="image-to-image">Image to Image</option>
+            <option value="text-to-video" disabled>Text to Video (coming soon)</option>
+            <option value="image-to-video" disabled>Image to Video (coming soon)</option>
+          </select>
+        </div>
+
+        {generationType === 'image-to-image' && (
+          <div className="toolbar-section">
+            <h3>Source Image</h3>
+            <div className="image-upload-container">
+              {!sourceImagePreview ? (
+                <div className="image-upload-box">
+                  <input
+                    type="file"
+                    accept=".webp,.jpg,.jpeg,.png"
+                    onChange={handleImageUpload}
+                    className="image-upload-input"
+                    id="image-upload"
+                  />
+                  <label htmlFor="image-upload" className="image-upload-label">
+                    <span>Click to upload image</span>
+                    <span className="image-upload-hint">WebP, JPG, or PNG</span>
+                  </label>
+                </div>
+              ) : (
+                <div className="image-preview-container">
+                  <img 
+                    src={sourceImagePreview} 
+                    alt="Source" 
+                    className="image-preview"
+                  />
+                  <button 
+                    onClick={handleRemoveImage}
+                    className="remove-image-button"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className="toolbar-section">
           <h3>Prompt</h3>
           <textarea
@@ -208,6 +362,8 @@ export default function ImageGenerator() {
             placeholder="Enter your image prompt here..."
             className="prompt-textarea"
             rows={4}
+            disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
+            style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
           />
         </div>
 
@@ -230,12 +386,30 @@ export default function ImageGenerator() {
           </select>
         </div>
 
+        {/* Portrait Series background color dropdown */}
+        {generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' && (
+          <div className="toolbar-section">
+            <h3>Background Color</h3>
+            <select
+              value={portraitBackground}
+              onChange={e => setPortraitBackground(e.target.value)}
+              className="model-select"
+            >
+              {portraitBackgroundColors.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="toolbar-section">
           <h3>Aspect Ratio</h3>
           <select
             value={selectedAspectRatio}
             onChange={(e) => setSelectedAspectRatio(e.target.value)}
             className="aspect-ratio-select"
+            disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
+            style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
           >
             {aspectRatios[selectedModel]?.map(ratio => (
               <option key={ratio.value} value={ratio.value}>
@@ -247,7 +421,11 @@ export default function ImageGenerator() {
 
         <button
           onClick={handleGenerateWithFlux}
-          disabled={isGenerateLoading || !prompt.trim()}
+          disabled={
+            isGenerateLoading ||
+            (!prompt.trim() && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) ||
+            (generationType === 'image-to-image' && !sourceImage)
+          }
           className="generate-flux-button"
         >
           {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate'}

@@ -3,6 +3,7 @@ import LoadingSpinner from './LoadingSpinner';
 import { useAuth } from './auth/AuthContext';
 import ImageGallery from './ImageGallery';
 import './ImageGenerator.css';
+import ReactDOM from 'react-dom';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -107,6 +108,8 @@ export default function ImageGenerator() {
   const [isGenerationTypeDropdownOpen, setIsGenerationTypeDropdownOpen] = useState(false);
   const [isAspectRatioDropdownOpen, setIsAspectRatioDropdownOpen] = useState(false);
   const [isBackgroundDropdownOpen, setIsBackgroundDropdownOpen] = useState(false);
+  const backgroundHeaderRef = useRef(null);
+  const [backgroundDropdownPos, setBackgroundDropdownPos] = useState({ top: 0, left: 0, width: 0 });
 
   // Clear prompt and aspect ratio if Portrait Series model is selected
   useEffect(() => {
@@ -299,6 +302,19 @@ export default function ImageGenerator() {
     setSourceImagePreview(null);
   };
 
+  // When opening the background dropdown, calculate its position
+  const openBackgroundDropdown = () => {
+    if (backgroundHeaderRef.current) {
+      const rect = backgroundHeaderRef.current.getBoundingClientRect();
+      setBackgroundDropdownPos({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width
+      });
+    }
+    setIsBackgroundDropdownOpen(true);
+  };
+
   return (
     <div className="optimizer-container image-generator-page">
       <div className="left-toolbar">
@@ -435,22 +451,33 @@ export default function ImageGenerator() {
             <div className="model-select-container">
               <div
                 className="model-select-header"
-                onClick={() => setIsBackgroundDropdownOpen(!isBackgroundDropdownOpen)}
+                ref={backgroundHeaderRef}
+                onClick={openBackgroundDropdown}
               >
                 {portraitBackgroundColors.find(opt => opt.value === portraitBackground)?.label}
               </div>
-              {isBackgroundDropdownOpen && (
-                <div className="model-dropdown">
+              {isBackgroundDropdownOpen && ReactDOM.createPortal(
+                <div
+                  className="model-dropdown"
+                  style={{
+                    position: 'absolute',
+                    top: backgroundDropdownPos.top,
+                    left: backgroundDropdownPos.left,
+                    width: backgroundDropdownPos.width,
+                    zIndex: 3000
+                  }}
+                >
                   {portraitBackgroundColors.map(opt => (
                     <div
                       key={opt.value}
                       className={`model-option${portraitBackground === opt.value ? ' selected' : ''}`}
-                      onClick={() => { setPortraitBackground(opt.value); setIsBackgroundDropdownOpen(false); }}
+                      onMouseDown={() => { setPortraitBackground(opt.value); setIsBackgroundDropdownOpen(false); }}
                     >
                       {opt.label}
                     </div>
                   ))}
-                </div>
+                </div>,
+                document.body
               )}
             </div>
           </div>

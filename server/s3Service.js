@@ -66,6 +66,37 @@ async function uploadImageToS3(imageUrl, key) {
     }
 }
 
+// Upload image buffer to S3
+async function uploadImageBufferToS3(buffer, key) {
+    try {
+        // Upload to S3
+        const command = new PutObjectCommand({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: key,
+            Body: buffer,
+            ContentType: 'image/png',
+            CacheControl: 'public, max-age=31536000'
+        });
+        await s3Client.send(command);
+        const s3Url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+        return {
+            success: true,
+            s3Url: s3Url
+        };
+    } catch (error) {
+        console.error('Error in uploadImageBufferToS3:', {
+            message: error.message,
+            code: error.code,
+            key
+        });
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+}
+
 module.exports = {
-    uploadImageToS3
+    uploadImageToS3,
+    uploadImageBufferToS3
 }; 

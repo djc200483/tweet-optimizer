@@ -650,7 +650,7 @@ const replicate = new Replicate({
 });
 
 // Import S3 service
-const { uploadImageToS3 } = require('./s3Service');
+const { uploadImageToS3, uploadImageBufferToS3 } = require('./s3Service');
 
 // Add logging for Replicate configuration
 console.log('Replicate API Token configured:', {
@@ -662,20 +662,16 @@ console.log('Replicate API Token configured:', {
 // Add this before the module.exports
 app.post('/generate-image', authMiddleware, async (req, res) => {
   try {
-    const { prompt, aspectRatio, num_outputs = 2 } = req.body;
+    const { prompt, aspectRatio, num_outputs = 2, model, sourceImageBase64 } = req.body;
     const userId = req.user.id;
     console.log('=== Starting image generation process ===');
     console.log('Request details:', {
       prompt,
       aspectRatio,
       num_outputs,
-      userId
-    });
-
-    console.log('Replicate configuration:', {
-      tokenExists: !!process.env.REPLICATE_API_TOKEN,
-      tokenLength: process.env.REPLICATE_API_TOKEN?.length,
-      tokenPrefix: process.env.REPLICATE_API_TOKEN?.substring(0, 4)
+      userId,
+      model,
+      hasSourceImage: !!sourceImageBase64
     });
 
     if (!process.env.REPLICATE_API_TOKEN) {
@@ -686,21 +682,53 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    // Create the prediction with detailed input logging
-    const predictionInput = {
-      version: req.body.model || "black-forest-labs/flux-schnell",
-      input: {
-        prompt: prompt,
-        go_fast: true,
-        num_outputs: req.body.model === 'minimax/image-01' ? 2 : (['black-forest-labs/flux-1.1-pro', 'black-forest-labs/flux-1.1-pro-ultra', 'google/imagen-4'].includes(req.body.model) ? 1 : 4),
-        num_inference_steps: 4,
-        guidance_scale: 7.5,
-        output_format: "png",
-        aspect_ratio: aspectRatio,
-        seed: Math.floor(Math.random() * 1000000)
+    // Handle image-to-image: upload image to S3 if provided
+    let imageS3Url = null;
+    if (sourceImageBase64) {
+      // Decode base64 and upload to S3
+      const buffer = Buffer.from(sourceImageBase64, 'base64');
+      const timestamp = Date.now();
+      const key = `user-images/${userId}/${timestamp}.png`;
+      const s3Result = await uploadImageBufferToS3(buffer, key);
+      if (!s3Result.success) {
+        return res.status(500).json({ error: 'Failed to upload image to S3', details: s3Result.error });
       }
+      imageS3Url = s3Result.s3Url;
+    }
+
+    // Build Replicate input
+    const replicateInput = {
+      prompt: prompt,
+      go_fast: true,
+      num_outputs: model === 'minimax/image-01' ? 2 : ([
+        'black-forest-labs/flux-1.1-pro',
+        'black-forest-labs/flux-1.1-pro-ultra',
+        'google/imagen-4'
+      ].includes(model) ? 1 : 4),
+      num_inference_steps: 4,
+      guidance_scale: 7.5,
+      output_format: 'png',
+      aspect_ratio: aspectRatio,
+      seed: Math.floor(Math.random() * 1000000)
     };
-    
+
+    // Add image parameter for image-to-image
+    if (imageS3Url) {
+      if (model === 'minimax/image-01') {
+        replicateInput['subject_reference'] = imageS3Url;
+      } else if (
+        model === 'black-forest-labs/flux-1.1-pro' ||
+        model === 'black-forest-labs/flux-1.1-pro-ultra'
+      ) {
+        replicateInput['image_prompt'] = imageS3Url;
+      }
+    }
+
+    const predictionInput = {
+      version: model || 'black-forest-labs/flux-schnell',
+      input: replicateInput
+    };
+
     console.log('Creating prediction with input:', JSON.stringify(predictionInput, null, 2));
     const prediction = await replicate.predictions.create(predictionInput);
     console.log('Initial prediction created:', JSON.stringify(prediction, null, 2));
@@ -709,8 +737,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     let finalPrediction = await replicate.predictions.get(prediction.id);
     console.log('Initial prediction status:', finalPrediction.status);
 
-    // Keep polling until the prediction is complete
-    while (finalPrediction.status !== "succeeded" && finalPrediction.status !== "failed") {
+    while (finalPrediction.status !== 'succeeded' && finalPrediction.status !== 'failed') {
       console.log('Waiting for prediction...', {
         status: finalPrediction.status,
         id: prediction.id
@@ -725,7 +752,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       output: finalPrediction.output
     });
 
-    if (finalPrediction.status === "failed") {
+    if (finalPrediction.status === 'failed') {
       throw new Error(finalPrediction.error || 'Image generation failed');
     }
 
@@ -763,18 +790,10 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
 
     // Process each image: upload to S3 and save to database
     console.log('=== Starting image processing ===');
-    
-    // Process all images in parallel
     const processedImages = await Promise.all(validUrls.map(async (imageUrl, index) => {
-      console.log(`Starting processing for image ${index + 1}/${validUrls.length}`);
-      
-      // Generate a unique key for S3
       const timestamp = new Date().getTime();
       const key = `images/${userId}/${timestamp}-${index}.png`;
-      
-      // Start S3 upload immediately
       const s3Result = await uploadImageToS3(imageUrl, key);
-      
       if (!s3Result.success) {
         console.error('Failed to upload to S3:', s3Result.error);
         return {
@@ -783,14 +802,11 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
           error: s3Result.error
         };
       }
-
-      // Save to database in parallel with other operations
       try {
         const result = await db.query(
           'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
           [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio]
         );
-        
         return {
           originalUrl: imageUrl,
           s3Url: s3Result.s3Url,

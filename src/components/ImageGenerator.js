@@ -116,15 +116,29 @@ export default function ImageGenerator() {
       setError('Please enter a prompt first');
       return;
     }
+    if (generationType === 'image-to-image' && !sourceImage) {
+      setError('Please upload an image for Image to Image');
+      return;
+    }
 
     try {
       setIsGenerateLoading(true);
       setError('');
-      
-      console.log('Sending prompt to generate images:', prompt);
-      console.log('Using model:', selectedModel);
-      console.log('Using aspect ratio:', selectedAspectRatio);
-      
+      let sourceImageBase64 = undefined;
+      if (generationType === 'image-to-image' && sourceImage) {
+        // Read file as base64
+        sourceImageBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            // Remove the data URL prefix
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(sourceImage);
+        });
+      }
+
       const response = await fetch(`${API_URL}/generate-image`, {
         method: 'POST',
         headers: {
@@ -135,7 +149,8 @@ export default function ImageGenerator() {
           prompt: prompt,
           model: selectedModel,
           aspectRatio: selectedAspectRatio,
-          num_outputs: 2
+          num_outputs: 2,
+          ...(generationType === 'image-to-image' && sourceImageBase64 ? { sourceImageBase64 } : {})
         }),
       });
       
@@ -346,7 +361,11 @@ export default function ImageGenerator() {
 
         <button
           onClick={handleGenerateWithFlux}
-          disabled={isGenerateLoading || !prompt.trim()}
+          disabled={
+            isGenerateLoading ||
+            !prompt.trim() ||
+            (generationType === 'image-to-image' && !sourceImage)
+          }
           className="generate-flux-button"
         >
           {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate'}

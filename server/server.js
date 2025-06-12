@@ -819,7 +819,7 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       try {
         const result = await db.query(
           'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-          [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio]
+          [userId, prompt !== undefined ? prompt : '', imageUrl, s3Result.s3Url, aspectRatio]
         );
         return {
           originalUrl: imageUrl,

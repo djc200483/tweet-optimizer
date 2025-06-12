@@ -3,6 +3,7 @@ import LoadingSpinner from './LoadingSpinner';
 import { useAuth } from './auth/AuthContext';
 import ImageGallery from './ImageGallery';
 import './ImageGenerator.css';
+import ReactDOM from 'react-dom';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -16,18 +17,18 @@ export default function ImageGenerator() {
   const [sourceImagePreview, setSourceImagePreview] = useState(null);
 
   const allModels = [
-    { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
-    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
-    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
-    { value: 'google/imagen-4', label: 'Imagen 4' },
-    { value: 'minimax/image-01', label: 'MiniMax 01' }
+    { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
+    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro', description: 'High-quality, fast text-to-image model balancing image fidelity with prompt accuracy.' },
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra', description: 'Ultra‑high resolution images quickly, with photoreal realism.' },
+    { value: 'google/imagen-4', label: 'Imagen 4', description: 'Top-tier photorealism, sharp detail and typography.' },
+    { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' }
   ];
 
   const imageToImageModels = [
-    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
-    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
-    { value: 'minimax/image-01', label: 'MiniMax 01' },
-    { value: 'flux-kontext-apps/portrait-series', label: 'Portrait Series (Flux Kontext)' }
+    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro', description: 'High-quality, fast text-to-image model balancing image fidelity with prompt accuracy.' },
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra', description: 'Ultra‑high resolution images quickly, with photoreal realism.' },
+    { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' },
+    { value: 'flux-kontext-apps/portrait-series', label: 'Portrait Series (Flux Kontext)', description: 'Generates diverse portrait variations from one photo.' }
   ];
 
   const portraitBackgroundColors = [
@@ -103,6 +104,12 @@ export default function ImageGenerator() {
   const [isGenerateLoading, setIsGenerateLoading] = useState(false);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
+  const [isGenerationTypeDropdownOpen, setIsGenerationTypeDropdownOpen] = useState(false);
+  const [isAspectRatioDropdownOpen, setIsAspectRatioDropdownOpen] = useState(false);
+  const [isBackgroundDropdownOpen, setIsBackgroundDropdownOpen] = useState(false);
+  const backgroundHeaderRef = useRef(null);
+  const [backgroundDropdownPos, setBackgroundDropdownPos] = useState({ top: 0, left: 0, width: 0 });
 
   // Clear prompt and aspect ratio if Portrait Series model is selected
   useEffect(() => {
@@ -295,21 +302,40 @@ export default function ImageGenerator() {
     setSourceImagePreview(null);
   };
 
+  // When opening the background dropdown, calculate its position
+  const openBackgroundDropdown = () => {
+    if (backgroundHeaderRef.current) {
+      const rect = backgroundHeaderRef.current.getBoundingClientRect();
+      setBackgroundDropdownPos({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width
+      });
+    }
+    setIsBackgroundDropdownOpen(true);
+  };
+
   return (
     <div className="optimizer-container image-generator-page">
       <div className="left-toolbar">
         <div className="toolbar-section">
           <h3>Generation Type</h3>
-          <select
-            value={generationType}
-            onChange={handleGenerationTypeChange}
-            className="model-select"
-          >
-            <option value="text-to-image">Text to Image</option>
-            <option value="image-to-image">Image to Image</option>
-            <option value="text-to-video" disabled>Text to Video (coming soon)</option>
-            <option value="image-to-video" disabled>Image to Video (coming soon)</option>
-          </select>
+          <div className="model-select-container">
+            <div
+              className="model-select-header"
+              onClick={() => setIsGenerationTypeDropdownOpen(!isGenerationTypeDropdownOpen)}
+            >
+              {generationType === 'text-to-image' ? 'Text to Image' : generationType === 'image-to-image' ? 'Image to Image' : generationType === 'text-to-video' ? 'Text to Video' : 'Image to Video'}
+            </div>
+            {isGenerationTypeDropdownOpen && (
+              <div className="model-dropdown">
+                <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Text to Image</div>
+                <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
+                <div className="model-option disabled">Text to Video (coming soon)</div>
+                <div className="model-option disabled">Image to Video (coming soon)</div>
+              </div>
+            )}
+          </div>
         </div>
 
         {generationType === 'image-to-image' && (
@@ -369,54 +395,122 @@ export default function ImageGenerator() {
 
         <div className="toolbar-section">
           <h3>Model</h3>
-          <select
-            value={selectedModel}
-            onChange={(e) => {
-              const newModel = e.target.value;
-              setSelectedModel(newModel);
-              setSelectedAspectRatio(aspectRatios[newModel][0].value);
-            }}
-            className="model-select"
-          >
-            {models.map(model => (
-              <option key={model.value} value={model.value}>
-                {model.label}
-              </option>
-            ))}
-          </select>
+          <div className="model-select-container">
+            <div 
+              className="model-select-header"
+              onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+            >
+              {models.find(m => m.value === selectedModel)?.label || 'Select Model'}
+            </div>
+            {isModelDropdownOpen && (
+              <div className="model-dropdown">
+                {models.map(model => (
+                  <div
+                    key={model.value}
+                    className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
+                    onMouseDown={e => {
+                      e.preventDefault();
+                      setSelectedModel(model.value);
+                      if (model.value === 'flux-kontext-apps/portrait-series') {
+                        setSelectedAspectRatio('');
+                      } else {
+                        setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                      }
+                      setIsModelDropdownOpen(false);
+                    }}
+                    tabIndex={0}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setSelectedModel(model.value);
+                        if (model.value === 'flux-kontext-apps/portrait-series') {
+                          setSelectedAspectRatio('');
+                        } else {
+                          setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                        }
+                        setIsModelDropdownOpen(false);
+                      }
+                    }}
+                    role="option"
+                    aria-selected={model.value === selectedModel}
+                  >
+                    <div className="model-label">{model.label}</div>
+                    {model.description && (
+                      <div className="model-description">{model.description}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Portrait Series background color dropdown */}
         {generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' && (
           <div className="toolbar-section">
             <h3>Background Color</h3>
-            <select
-              value={portraitBackground}
-              onChange={e => setPortraitBackground(e.target.value)}
-              className="model-select"
-            >
-              {portraitBackgroundColors.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+            <div className="model-select-container">
+              <div
+                className="model-select-header"
+                ref={backgroundHeaderRef}
+                onClick={openBackgroundDropdown}
+              >
+                {portraitBackgroundColors.find(opt => opt.value === portraitBackground)?.label}
+              </div>
+              {isBackgroundDropdownOpen && ReactDOM.createPortal(
+                <div
+                  className="model-dropdown"
+                  style={{
+                    position: 'absolute',
+                    top: backgroundDropdownPos.top,
+                    left: backgroundDropdownPos.left,
+                    width: backgroundDropdownPos.width,
+                    zIndex: 3000
+                  }}
+                >
+                  {portraitBackgroundColors.map(opt => (
+                    <div
+                      key={opt.value}
+                      className={`model-option${portraitBackground === opt.value ? ' selected' : ''}`}
+                      onMouseDown={() => { setPortraitBackground(opt.value); setIsBackgroundDropdownOpen(false); }}
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>,
+                document.body
+              )}
+            </div>
           </div>
         )}
 
         <div className="toolbar-section">
           <h3>Aspect Ratio</h3>
-          <select
-            value={selectedAspectRatio}
-            onChange={(e) => setSelectedAspectRatio(e.target.value)}
-            className="aspect-ratio-select"
-            disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
-            style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
-          >
-            {aspectRatios[selectedModel]?.map(ratio => (
-              <option key={ratio.value} value={ratio.value}>
-                {ratio.label}
-              </option>
-            ))}
-          </select>
+          <div className="model-select-container">
+            <div
+              className="model-select-header"
+              onClick={() => {
+                if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) {
+                  setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
+                }
+              }}
+              style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
+            >
+              {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
+            </div>
+            {isAspectRatioDropdownOpen && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && (
+              <div className="model-dropdown">
+                {aspectRatios[selectedModel]?.map(ratio => (
+                  <div
+                    key={ratio.value}
+                    className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
+                    onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
+                  >
+                    {ratio.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <button

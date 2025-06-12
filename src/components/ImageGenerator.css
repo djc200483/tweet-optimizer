@@ -183,7 +183,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   background: rgba(26, 27, 31, 0.95) !important;
   color: #ffffff !important;
-  font-size: 14px;
+  font-size: 12px !important;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
@@ -339,12 +339,14 @@
   top: 24px;
   height: fit-content;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: visible;
 }
 
 .toolbar-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
 .toolbar-section h3 {
@@ -385,7 +387,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   background: rgba(26, 27, 31, 0.95) !important;
   color: #ffffff !important;
-  font-size: 14px;
+  font-size: 12px !important;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
@@ -605,4 +607,98 @@
 
 .remove-image-button:hover {
   background: rgba(0, 0, 0, 0.9);
+}
+
+.model-select-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.model-select-header,
+.model-select,
+.aspect-ratio-select {
+  font-size: 12px;
+}
+
+.model-select-header {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(26, 27, 31, 0.95);
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.model-select-header::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.model-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  display: block;
+  background: rgba(26, 27, 31, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 2000;
+}
+
+.model-option {
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+}
+
+.model-option:last-child {
+  border-bottom: none;
+}
+
+.model-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.model-option.selected {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.model-label {
+  font-size: 12px;
+  color: #ffffff;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+.model-description {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+  text-align: left;
 } 

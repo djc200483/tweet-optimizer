@@ -43,11 +43,6 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       title: 'Prompt Assistant',
       description: 'Generate structured prompts for AI image generation tools.',
       id: 'prompt'
-    },
-    {
-      title: 'Video Generator',
-      description: 'Generate short AI-powered videos from your prompts.',
-      id: 'videoGenerator'
     }
   ];
 

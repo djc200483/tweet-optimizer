@@ -678,7 +678,9 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       throw new Error('Replicate API Token is not configured');
     }
 
-    if (!prompt) {
+    // Only require prompt for models that need it
+    const modelNeedsPrompt = !['flux-kontext-apps/portrait-series'].includes(model);
+    if (modelNeedsPrompt && !prompt) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 

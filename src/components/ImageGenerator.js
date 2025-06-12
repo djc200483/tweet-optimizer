@@ -26,8 +26,20 @@ export default function ImageGenerator() {
   const imageToImageModels = [
     { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
     { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
-    { value: 'minimax/image-01', label: 'MiniMax 01' }
+    { value: 'minimax/image-01', label: 'MiniMax 01' },
+    { value: 'flux-kontext-apps/portrait-series', label: 'Portrait Series (Flux Kontext)' }
   ];
+
+  const portraitBackgroundColors = [
+    { value: 'white', label: 'White' },
+    { value: 'black', label: 'Black' },
+    { value: 'gray', label: 'Gray' },
+    { value: 'green screen', label: 'Green Screen' },
+    { value: 'neutral', label: 'Neutral' },
+    { value: 'original', label: 'Original' }
+  ];
+
+  const [portraitBackground, setPortraitBackground] = useState('white');
 
   const models = generationType === 'image-to-image' ? imageToImageModels : allModels;
 
@@ -92,6 +104,13 @@ export default function ImageGenerator() {
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Clear prompt if Portrait Series model is selected
+  useEffect(() => {
+    if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
+      setPrompt('');
+    }
+  }, [generationType, selectedModel]);
+
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -112,7 +131,7 @@ export default function ImageGenerator() {
   }, []);
 
   const handleGenerateWithFlux = async () => {
-    if (!prompt.trim()) {
+    if (!prompt.trim() && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) {
       setError('Please enter a prompt first');
       return;
     }
@@ -139,19 +158,32 @@ export default function ImageGenerator() {
         });
       }
 
+      // Build request body
+      let body = {
+        prompt: prompt,
+        model: selectedModel,
+        aspectRatio: selectedAspectRatio,
+        num_outputs: 2,
+        ...(generationType === 'image-to-image' && sourceImageBase64 ? { sourceImageBase64 } : {})
+      };
+      // Portrait Series model specifics
+      if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
+        body = {
+          model: selectedModel,
+          aspectRatio: selectedAspectRatio,
+          num_outputs: 3, // not used by backend, but for clarity
+          sourceImageBase64,
+          background: portraitBackground
+        };
+      }
+
       const response = await fetch(`${API_URL}/generate-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ 
-          prompt: prompt,
-          model: selectedModel,
-          aspectRatio: selectedAspectRatio,
-          num_outputs: 2,
-          ...(generationType === 'image-to-image' && sourceImageBase64 ? { sourceImageBase64 } : {})
-        }),
+        body: JSON.stringify(body),
       });
       
       if (!response.ok) {
@@ -322,6 +354,8 @@ export default function ImageGenerator() {
             placeholder="Enter your image prompt here..."
             className="prompt-textarea"
             rows={4}
+            disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
+            style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
           />
         </div>
 
@@ -344,6 +378,22 @@ export default function ImageGenerator() {
           </select>
         </div>
 
+        {/* Portrait Series background color dropdown */}
+        {generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' && (
+          <div className="toolbar-section">
+            <h3>Background Color</h3>
+            <select
+              value={portraitBackground}
+              onChange={e => setPortraitBackground(e.target.value)}
+              className="model-select"
+            >
+              {portraitBackgroundColors.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="toolbar-section">
           <h3>Aspect Ratio</h3>
           <select
@@ -363,7 +413,7 @@ export default function ImageGenerator() {
           onClick={handleGenerateWithFlux}
           disabled={
             isGenerateLoading ||
-            !prompt.trim() ||
+            (!prompt.trim() && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) ||
             (generationType === 'image-to-image' && !sourceImage)
           }
           className="generate-flux-button"

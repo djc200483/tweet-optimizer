@@ -610,6 +610,7 @@
 .model-select-container {
   position: relative;
   width: 100%;
+  min-width: 0;
 }
 
 .model-select-header {
@@ -639,14 +640,17 @@
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
+  right: auto;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   background: rgba(26, 27, 31, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   margin-top: 4px;
   max-height: 300px;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 1000;
   box-sizing: border-box;
 }

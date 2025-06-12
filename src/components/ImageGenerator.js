@@ -13,13 +13,21 @@ export default function ImageGenerator() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [generationType, setGenerationType] = useState('text-to-image');
 
-  const models = [
+  const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
     { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
     { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
     { value: 'google/imagen-4', label: 'Imagen 4' },
     { value: 'minimax/image-01', label: 'MiniMax 01' }
   ];
+
+  const imageToImageModels = [
+    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
+    { value: 'minimax/image-01', label: 'MiniMax 01' }
+  ];
+
+  const models = generationType === 'image-to-image' ? imageToImageModels : allModels;
 
   const naturalAspectRatios = [
     { value: '1:1', label: 'Square (1:1)' },
@@ -193,6 +201,17 @@ export default function ImageGenerator() {
     }
   };
 
+  const handleGenerationTypeChange = (e) => {
+    const newType = e.target.value;
+    setGenerationType(newType);
+    
+    // If switching to image-to-image and current model isn't supported, switch to first supported model
+    if (newType === 'image-to-image' && !imageToImageModels.some(model => model.value === selectedModel)) {
+      setSelectedModel(imageToImageModels[0].value);
+      setSelectedAspectRatio(aspectRatios[imageToImageModels[0].value][0].value);
+    }
+  };
+
   return (
     <div className="optimizer-container image-generator-page">
       <div className="left-toolbar">
@@ -200,7 +219,7 @@ export default function ImageGenerator() {
           <h3>Generation Type</h3>
           <select
             value={generationType}
-            onChange={(e) => setGenerationType(e.target.value)}
+            onChange={handleGenerationTypeChange}
             className="model-select"
           >
             <option value="text-to-image">Text to Image</option>

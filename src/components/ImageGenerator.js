@@ -104,6 +104,14 @@ export default function ImageGenerator() {
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Clear prompt and aspect ratio if Portrait Series model is selected
+  useEffect(() => {
+    if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
+      setPrompt('');
+      setSelectedAspectRatio('');
+    }
+  }, [generationType, selectedModel]);
+
   // Clear prompt if Portrait Series model is selected
   useEffect(() => {
     if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
@@ -400,6 +408,8 @@ export default function ImageGenerator() {
             value={selectedAspectRatio}
             onChange={(e) => setSelectedAspectRatio(e.target.value)}
             className="aspect-ratio-select"
+            disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
+            style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
           >
             {aspectRatios[selectedModel]?.map(ratio => (
               <option key={ratio.value} value={ratio.value}>

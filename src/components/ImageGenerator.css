@@ -608,6 +608,7 @@
 }
 
 .model-select-container {
+  position: relative;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -648,7 +649,9 @@
 }
 
 .model-dropdown {
-  position: static;
+  position: absolute;
+  top: 100%;
+  left: 0;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -662,7 +665,7 @@
   max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .model-option {

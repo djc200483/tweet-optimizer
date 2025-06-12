@@ -17,17 +17,17 @@ export default function ImageGenerator() {
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
-    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
-    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
-    { value: 'google/imagen-4', label: 'Imagen 4' },
-    { value: 'minimax/image-01', label: 'MiniMax 01' }
+    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro', description: 'High-quality, fast text-to-image model balancing image fidelity with prompt accuracy.' },
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra', description: 'Ultra‑high resolution images quickly, with photoreal realism.' },
+    { value: 'google/imagen-4', label: 'Imagen 4', description: 'Top-tier photorealism, sharp detail and typography.' },
+    { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' }
   ];
 
   const imageToImageModels = [
-    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
-    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
-    { value: 'minimax/image-01', label: 'MiniMax 01' },
-    { value: 'flux-kontext-apps/portrait-series', label: 'Portrait Series (Flux Kontext)' }
+    { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro', description: 'High-quality, fast text-to-image model balancing image fidelity with prompt accuracy.' },
+    { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra', description: 'Ultra‑high resolution images quickly, with photoreal realism.' },
+    { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' },
+    { value: 'flux-kontext-apps/portrait-series', label: 'Portrait Series (Flux Kontext)', description: 'Generates diverse portrait variations from one photo.' }
   ];
 
   const portraitBackgroundColors = [

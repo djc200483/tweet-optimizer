@@ -615,6 +615,12 @@
   padding: 0;
 }
 
+.model-select-header,
+.model-select,
+.aspect-ratio-select {
+  font-size: 12px;
+}
+
 .model-select-header {
   width: 100%;
   max-width: 100%;
@@ -678,14 +684,14 @@
 }
 
 .model-label {
-  font-size: 14px;
+  font-size: 12px;
   color: #ffffff;
   margin-bottom: 4px;
   text-align: left;
 }
 
 .model-description {
-  font-size: 12px;
+  font-size: 10px;
   color: rgba(255, 255, 255, 0.6);
   line-height: 1.4;
   text-align: left;

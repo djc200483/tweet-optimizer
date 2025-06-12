@@ -611,6 +611,8 @@
   position: relative;
   width: 100%;
   min-width: 0;
+  display: block;
+  box-sizing: border-box;
 }
 
 .model-select-header {
@@ -637,13 +639,11 @@
 }
 
 .model-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: auto;
+  position: static;
   width: 100%;
   min-width: 0;
   max-width: 100%;
+  display: block;
   background: rgba(26, 27, 31, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;

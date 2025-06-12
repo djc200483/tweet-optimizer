@@ -267,8 +267,8 @@ export default function ImageGenerator() {
           >
             <option value="text-to-image">Text to Image</option>
             <option value="image-to-image">Image to Image</option>
-            <option value="text-to-video">Text to Video</option>
-            <option value="image-to-video">Image to Video</option>
+            <option value="text-to-video" disabled>Text to Video (coming soon)</option>
+            <option value="image-to-video" disabled>Image to Video (coming soon)</option>
           </select>
         </div>
 

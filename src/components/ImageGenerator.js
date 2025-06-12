@@ -104,6 +104,9 @@ export default function ImageGenerator() {
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
+  const [isGenerationTypeDropdownOpen, setIsGenerationTypeDropdownOpen] = useState(false);
+  const [isAspectRatioDropdownOpen, setIsAspectRatioDropdownOpen] = useState(false);
+  const [isBackgroundDropdownOpen, setIsBackgroundDropdownOpen] = useState(false);
 
   // Clear prompt and aspect ratio if Portrait Series model is selected
   useEffect(() => {
@@ -301,16 +304,22 @@ export default function ImageGenerator() {
       <div className="left-toolbar">
         <div className="toolbar-section">
           <h3>Generation Type</h3>
-          <select
-            value={generationType}
-            onChange={handleGenerationTypeChange}
-            className="model-select"
-          >
-            <option value="text-to-image">Text to Image</option>
-            <option value="image-to-image">Image to Image</option>
-            <option value="text-to-video" disabled>Text to Video (coming soon)</option>
-            <option value="image-to-video" disabled>Image to Video (coming soon)</option>
-          </select>
+          <div className="model-select-container">
+            <div
+              className="model-select-header"
+              onClick={() => setIsGenerationTypeDropdownOpen(!isGenerationTypeDropdownOpen)}
+            >
+              {generationType === 'text-to-image' ? 'Text to Image' : generationType === 'image-to-image' ? 'Image to Image' : generationType === 'text-to-video' ? 'Text to Video' : 'Image to Video'}
+            </div>
+            {isGenerationTypeDropdownOpen && (
+              <div className="model-dropdown">
+                <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Text to Image</div>
+                <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
+                <div className="model-option disabled">Text to Video (coming soon)</div>
+                <div className="model-option disabled">Image to Video (coming soon)</div>
+              </div>
+            )}
+          </div>
         </div>
 
         {generationType === 'image-to-image' && (
@@ -404,33 +413,58 @@ export default function ImageGenerator() {
         {generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' && (
           <div className="toolbar-section">
             <h3>Background Color</h3>
-            <select
-              value={portraitBackground}
-              onChange={e => setPortraitBackground(e.target.value)}
-              className="model-select"
-            >
-              {portraitBackgroundColors.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+            <div className="model-select-container">
+              <div
+                className="model-select-header"
+                onClick={() => setIsBackgroundDropdownOpen(!isBackgroundDropdownOpen)}
+              >
+                {portraitBackgroundColors.find(opt => opt.value === portraitBackground)?.label}
+              </div>
+              {isBackgroundDropdownOpen && (
+                <div className="model-dropdown">
+                  {portraitBackgroundColors.map(opt => (
+                    <div
+                      key={opt.value}
+                      className={`model-option${portraitBackground === opt.value ? ' selected' : ''}`}
+                      onClick={() => { setPortraitBackground(opt.value); setIsBackgroundDropdownOpen(false); }}
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
         <div className="toolbar-section">
           <h3>Aspect Ratio</h3>
-          <select
-            value={selectedAspectRatio}
-            onChange={(e) => setSelectedAspectRatio(e.target.value)}
-            className="aspect-ratio-select"
-            disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
-            style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
-          >
-            {aspectRatios[selectedModel]?.map(ratio => (
-              <option key={ratio.value} value={ratio.value}>
-                {ratio.label}
-              </option>
-            ))}
-          </select>
+          <div className="model-select-container">
+            <div
+              className="model-select-header"
+              onClick={() => {
+                if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) {
+                  setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
+                }
+              }}
+              style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
+            >
+              {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
+            </div>
+            {isAspectRatioDropdownOpen && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && (
+              <div className="model-dropdown">
+                {aspectRatios[selectedModel]?.map(ratio => (
+                  <div
+                    key={ratio.value}
+                    className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
+                    onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
+                  >
+                    {ratio.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <button

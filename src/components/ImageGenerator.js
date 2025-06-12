@@ -393,16 +393,24 @@ export default function ImageGenerator() {
                     key={model.value}
                     className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
                     onMouseDown={e => {
-                      e.preventDefault(); // Prevent focus loss
+                      e.preventDefault();
                       setSelectedModel(model.value);
-                      setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                      if (model.value === 'flux-kontext-apps/portrait-series') {
+                        setSelectedAspectRatio('');
+                      } else {
+                        setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                      }
                       setIsModelDropdownOpen(false);
                     }}
                     tabIndex={0}
                     onKeyDown={e => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         setSelectedModel(model.value);
-                        setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                        if (model.value === 'flux-kontext-apps/portrait-series') {
+                          setSelectedAspectRatio('');
+                        } else {
+                          setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                        }
                         setIsModelDropdownOpen(false);
                       }
                     }}

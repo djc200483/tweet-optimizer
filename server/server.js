@@ -723,7 +723,19 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
         model === 'black-forest-labs/flux-1.1-pro-ultra'
       ) {
         replicateInput['image_prompt'] = imageS3Url;
+      } else if (model === 'flux-kontext-apps/portrait-series') {
+        replicateInput['input_image'] = imageS3Url;
       }
+    }
+
+    // Portrait Series model specifics
+    if (model === 'flux-kontext-apps/portrait-series') {
+      replicateInput['num_images'] = 3;
+      if (req.body.background) {
+        replicateInput['background'] = req.body.background;
+      }
+      // Do not send prompt
+      delete replicateInput.prompt;
     }
 
     const predictionInput = {

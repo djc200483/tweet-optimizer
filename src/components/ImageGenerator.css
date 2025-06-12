@@ -620,12 +620,12 @@
   max-width: 100%;
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
+  padding: 12px;
+  font-size: 14px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(26, 27, 31, 0.95);
   color: #ffffff;
-  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;

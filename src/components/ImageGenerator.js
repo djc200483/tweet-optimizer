@@ -392,11 +392,22 @@ export default function ImageGenerator() {
                   <div
                     key={model.value}
                     className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
-                    onClick={() => {
+                    onMouseDown={e => {
+                      e.preventDefault(); // Prevent focus loss
                       setSelectedModel(model.value);
                       setSelectedAspectRatio(aspectRatios[model.value][0].value);
                       setIsModelDropdownOpen(false);
                     }}
+                    tabIndex={0}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setSelectedModel(model.value);
+                        setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                        setIsModelDropdownOpen(false);
+                      }
+                    }}
+                    role="option"
+                    aria-selected={model.value === selectedModel}
                   >
                     <div className="model-label">{model.label}</div>
                     {model.description && (

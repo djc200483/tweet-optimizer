@@ -11,6 +11,7 @@ export default function ImageGenerator() {
   const [prompt, setPrompt] = useState('');
   const textareaRef = useRef(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [generationType, setGenerationType] = useState('text-to-image');
 
   const models = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
@@ -195,6 +196,20 @@ export default function ImageGenerator() {
   return (
     <div className="optimizer-container image-generator-page">
       <div className="left-toolbar">
+        <div className="toolbar-section">
+          <h3>Generation Type</h3>
+          <select
+            value={generationType}
+            onChange={(e) => setGenerationType(e.target.value)}
+            className="model-select"
+          >
+            <option value="text-to-image">Text to Image</option>
+            <option value="image-to-image">Image to Image</option>
+            <option value="text-to-video">Text to Video</option>
+            <option value="image-to-video">Image to Video</option>
+          </select>
+        </div>
+
         <div className="toolbar-section">
           <h3>Prompt</h3>
           <textarea

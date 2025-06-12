@@ -16,7 +16,7 @@ export default function ImageGenerator() {
   const [sourceImagePreview, setSourceImagePreview] = useState(null);
 
   const allModels = [
-    { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
+    { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
     { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro' },
     { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra' },
     { value: 'google/imagen-4', label: 'Imagen 4' },

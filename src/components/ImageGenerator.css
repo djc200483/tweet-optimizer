@@ -342,9 +342,9 @@
 }
 
 .toolbar-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .toolbar-section h3 {
@@ -608,16 +608,19 @@
 }
 
 .model-select-container {
-  position: relative;
   width: 100%;
-  min-width: 0;
-  display: block;
+  max-width: 100%;
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 .model-select-header {
   width: 100%;
-  padding: 12px;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(26, 27, 31, 0.95);
@@ -641,8 +644,10 @@
 .model-dropdown {
   position: static;
   width: 100%;
-  min-width: 0;
   max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   display: block;
   background: rgba(26, 27, 31, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -652,7 +657,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 1000;
-  box-sizing: border-box;
 }
 
 .model-option {

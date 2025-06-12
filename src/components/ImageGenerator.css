@@ -339,12 +339,14 @@
   top: 24px;
   height: fit-content;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: visible;
 }
 
 .toolbar-section {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .toolbar-section h3 {

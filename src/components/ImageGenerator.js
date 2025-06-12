@@ -12,6 +12,8 @@ export default function ImageGenerator() {
   const textareaRef = useRef(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [generationType, setGenerationType] = useState('text-to-image');
+  const [sourceImage, setSourceImage] = useState(null);
+  const [sourceImagePreview, setSourceImagePreview] = useState(null);
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell' },
@@ -212,6 +214,32 @@ export default function ImageGenerator() {
     }
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file type
+    const validTypes = ['image/webp', 'image/jpeg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+      setError('Please upload a valid image file (WebP, JPG, or PNG)');
+      return;
+    }
+
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setSourceImage(file);
+    setSourceImagePreview(previewUrl);
+    setError('');
+  };
+
+  const handleRemoveImage = () => {
+    if (sourceImagePreview) {
+      URL.revokeObjectURL(sourceImagePreview);
+    }
+    setSourceImage(null);
+    setSourceImagePreview(null);
+  };
+
   return (
     <div className="optimizer-container image-generator-page">
       <div className="left-toolbar">
@@ -228,6 +256,43 @@ export default function ImageGenerator() {
             <option value="image-to-video">Image to Video</option>
           </select>
         </div>
+
+        {generationType === 'image-to-image' && (
+          <div className="toolbar-section">
+            <h3>Source Image</h3>
+            <div className="image-upload-container">
+              {!sourceImagePreview ? (
+                <div className="image-upload-box">
+                  <input
+                    type="file"
+                    accept=".webp,.jpg,.jpeg,.png"
+                    onChange={handleImageUpload}
+                    className="image-upload-input"
+                    id="image-upload"
+                  />
+                  <label htmlFor="image-upload" className="image-upload-label">
+                    <span>Click to upload image</span>
+                    <span className="image-upload-hint">WebP, JPG, or PNG</span>
+                  </label>
+                </div>
+              ) : (
+                <div className="image-preview-container">
+                  <img 
+                    src={sourceImagePreview} 
+                    alt="Source" 
+                    className="image-preview"
+                  />
+                  <button 
+                    onClick={handleRemoveImage}
+                    className="remove-image-button"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="toolbar-section">
           <h3>Prompt</h3>

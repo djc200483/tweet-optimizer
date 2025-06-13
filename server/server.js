@@ -714,6 +714,11 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       seed: Math.floor(Math.random() * 1000000)
     };
 
+    // Add style parameter for recraft-ai/recraft-v3
+    if (model === 'recraft-ai/recraft-v3' && req.body.style) {
+      replicateInput['style'] = req.body.style;
+    }
+
     // Add image parameter for image-to-image
     if (imageS3Url) {
       if (model === 'minimax/image-01') {

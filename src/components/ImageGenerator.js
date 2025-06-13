@@ -113,7 +113,7 @@ export default function ImageGenerator() {
     'black-forest-labs/flux-1.1-pro': flux11ProAspectRatios,
     'black-forest-labs/flux-1.1-pro-ultra': naturalAspectRatios,
     'google/imagen-4': imagen4AspectRatios,
-    'minimax/image-01': minimaxAspectios,
+    'minimax/image-01': minimaxAspectRatios,
     'recraft-ai/recraft-v3': recraftAspectRatios
   };
 

@@ -317,12 +317,6 @@ function AppContent() {
       case 'imageGenerator':
         return (
           <>
-            <button 
-              className="back-home-button"
-              onClick={() => setCurrentFeature(null)}
-            >
-              ← Back to Home
-            </button>
             <ImageGenerator />
           </>
         );

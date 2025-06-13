@@ -317,6 +317,13 @@ export default function ImageGenerator() {
 
   return (
     <div className="optimizer-container image-generator-page">
+      <button 
+        className="back-home-button"
+        onClick={() => window.location.href = '/'}
+        style={{ position: 'absolute', top: '20px', left: '20px' }}
+      >
+        Home
+      </button>
       <div className="left-toolbar">
         <div className="toolbar-section">
           <h3>Generation Type</h3>

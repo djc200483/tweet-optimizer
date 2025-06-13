@@ -21,7 +21,8 @@ export default function ImageGenerator() {
     { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro', description: 'High-quality, fast text-to-image model balancing image fidelity with prompt accuracy.' },
     { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra', description: 'Ultra‑high resolution images quickly, with photoreal realism.' },
     { value: 'google/imagen-4', label: 'Imagen 4', description: 'Top-tier photorealism, sharp detail and typography.' },
-    { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' }
+    { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' },
+    { value: 'recraft-ai/recraft-v3', label: 'Recraft V3', description: 'High-quality image generation with style control.' }
   ];
 
   const imageToImageModels = [
@@ -89,12 +90,31 @@ export default function ImageGenerator() {
     { value: '21:9', label: 'Ultrawide (21:9)' }
   ];
 
+  const recraftAspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '3:2', label: 'Classic Photo (3:2)' },
+    { value: '2:3', label: 'Portrait Classic (2:3)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '1:2', label: 'Tall (1:2)' },
+    { value: '2:1', label: 'Wide (2:1)' },
+    { value: '7:5', label: '7:5' },
+    { value: '5:7', label: '5:7' },
+    { value: '4:5', label: 'Portrait (4:5)' },
+    { value: '5:4', label: 'Large Format (5:4)' },
+    { value: '3:5', label: '3:5' },
+    { value: '5:3', label: '5:3' }
+  ];
+
   const aspectRatios = {
     'black-forest-labs/flux-schnell': naturalAspectRatios,
     'black-forest-labs/flux-1.1-pro': flux11ProAspectRatios,
     'black-forest-labs/flux-1.1-pro-ultra': naturalAspectRatios,
     'google/imagen-4': imagen4AspectRatios,
-    'minimax/image-01': minimaxAspectRatios
+    'minimax/image-01': minimaxAspectios,
+    'recraft-ai/recraft-v3': recraftAspectRatios
   };
 
   const defaultModel = 'black-forest-labs/flux-schnell';
@@ -110,6 +130,8 @@ export default function ImageGenerator() {
   const [isBackgroundDropdownOpen, setIsBackgroundDropdownOpen] = useState(false);
   const backgroundHeaderRef = useRef(null);
   const [backgroundDropdownPos, setBackgroundDropdownPos] = useState({ top: 0, left: 0, width: 0 });
+  const [selectedStyle, setSelectedStyle] = useState('realistic_image');
+  const [isStyleDropdownOpen, setIsStyleDropdownOpen] = useState(false);
 
   // Clear prompt and aspect ratio if Portrait Series model is selected
   useEffect(() => {
@@ -189,6 +211,14 @@ export default function ImageGenerator() {
           num_outputs: 3, // not used by backend, but for clarity
           sourceImageBase64,
           background: portraitBackground
+        };
+      }
+
+      // Add style for recraft in text-to-image
+      if (generationType === 'text-to-image' && selectedModel === 'recraft-ai/recraft-v3') {
+        body = {
+          ...body,
+          style: selectedStyle
         };
       }
 
@@ -314,6 +344,28 @@ export default function ImageGenerator() {
     }
     setIsBackgroundDropdownOpen(true);
   };
+
+  // User-friendly style labels for recraft
+  const recraftStyles = [
+    { value: 'realistic_image', label: 'Realistic Image' },
+    { value: 'digital_illustration', label: 'Digital Illustration' },
+    { value: 'digital_illustration/pixel_art', label: 'Pixel Art' },
+    { value: 'digital_illustration/hand_drawn', label: 'Hand Drawn' },
+    { value: 'digital_illustration/grain', label: 'Grain Illustration' },
+    { value: 'digital_illustration/infantile_sketch', label: 'Infantile Sketch' },
+    { value: 'digital_illustration/2d_art_poster', label: '2D Art Poster' },
+    { value: 'digital_illustration/handmade_3d', label: 'Handmade 3D' },
+    { value: 'digital_illustration/hand_drawn_outline', label: 'Hand Drawn Outline' },
+    { value: 'digital_illustration/engraving_color', label: 'Engraving Color' },
+    { value: 'digital_illustration/2d_art_poster_2', label: '2D Art Poster 2' },
+    { value: 'realistic_image/b_and_w', label: 'Black & White' },
+    { value: 'realistic_image/hard_flash', label: 'Hard Flash' },
+    { value: 'realistic_image/hdr', label: 'HDR' },
+    { value: 'realistic_image/natural_light', label: 'Natural Light' },
+    { value: 'realistic_image/studio_portrait', label: 'Studio Portrait' },
+    { value: 'realistic_image/enterprise', label: 'Enterprise' },
+    { value: 'realistic_image/motion_blur', label: 'Motion Blur' }
+  ];
 
   return (
     <div className="optimizer-container image-generator-page">
@@ -519,6 +571,34 @@ export default function ImageGenerator() {
             )}
           </div>
         </div>
+
+        {/* Show style dropdown only for recraft-ai/recraft-v3 in text-to-image */}
+        {generationType === 'text-to-image' && selectedModel === 'recraft-ai/recraft-v3' && (
+          <div className="toolbar-section">
+            <h3>Style</h3>
+            <div className="model-select-container">
+              <div
+                className="model-select-header"
+                onClick={() => setIsStyleDropdownOpen(!isStyleDropdownOpen)}
+              >
+                {recraftStyles.find(opt => opt.value === selectedStyle)?.label || 'Select Style'}
+              </div>
+              {isStyleDropdownOpen && (
+                <div className="model-dropdown">
+                  {recraftStyles.map(opt => (
+                    <div
+                      key={opt.value}
+                      className={`model-option${selectedStyle === opt.value ? ' selected' : ''}`}
+                      onMouseDown={() => { setSelectedStyle(opt.value); setIsStyleDropdownOpen(false); }}
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <button
           onClick={handleGenerateWithFlux}

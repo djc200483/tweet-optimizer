@@ -320,7 +320,7 @@ export default function ImageGenerator() {
       <button 
         className="back-home-button"
         onClick={() => window.location.href = '/'}
-        style={{ position: 'absolute', top: '20px', left: '20px' }}
+        style={{ position: 'absolute', top: '10px', left: '20px' }}
       >
         Home
       </button>

@@ -509,6 +509,19 @@ export default function ImageGenerator() {
           </div>
         )}
 
+        {generationType === 'image-to-prompt' && (
+          <div className="toolbar-section">
+            <h3>Prompt Output</h3>
+            <div className="prompt-output">
+              {generatedPrompt ? (
+                <div className="prompt-text">{generatedPrompt}</div>
+              ) : (
+                <div className="prompt-placeholder">Generated prompt will appear here</div>
+              )}
+            </div>
+          </div>
+        )}
+
         {generationType !== 'image-to-prompt' && (
           <div className="toolbar-section">
             <label className="toolbar-label">Model</label>

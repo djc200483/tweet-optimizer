@@ -15,6 +15,7 @@ export default function ImageGenerator() {
   const [generationType, setGenerationType] = useState('text-to-image');
   const [sourceImage, setSourceImage] = useState(null);
   const [sourceImagePreview, setSourceImagePreview] = useState(null);
+  const [generatedPrompt, setGeneratedPrompt] = useState('');
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
@@ -248,6 +249,9 @@ export default function ImageGenerator() {
 
       // Trigger a refresh of the gallery
       setRefreshTrigger(prev => prev + 1);
+
+      // Update generatedPrompt
+      setGeneratedPrompt(data.prompt);
     } catch (err) {
       console.error('Error generating images:', err);
       setError('Failed to generate images. Please try again.');

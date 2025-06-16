@@ -480,7 +480,7 @@ export default function ImageGenerator() {
         {generationType === 'image-to-prompt' && (
           <div className="toolbar-section">
             <h3>Prompt Output</h3>
-            <div className="prompt-output-container unique-prompt-output">
+            <div className="prompt-output-container" style={{ fontSize: '12px', minHeight: '150px', height: '150px' }}>
               {generatedPrompt ? (
                 <div className="prompt-text">{generatedPrompt}</div>
               ) : (

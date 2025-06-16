@@ -16,6 +16,7 @@ export default function ImageGenerator() {
   const [sourceImage, setSourceImage] = useState(null);
   const [sourceImagePreview, setSourceImagePreview] = useState(null);
   const [generatedPrompt, setGeneratedPrompt] = useState('');
+  const [showImageGrid, setShowImageGrid] = useState(false);
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },

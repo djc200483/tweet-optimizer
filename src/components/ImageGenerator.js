@@ -482,7 +482,7 @@ export default function ImageGenerator() {
             <h3>Prompt Output</h3>
             <div className="prompt-output-container" style={{ fontSize: '11px', minHeight: '150px', height: '150px' }}>
               {generatedPrompt ? (
-                <div className="prompt-text">{generatedPrompt}</div>
+                <div className="prompt-text" style={{ fontSize: '11px' }}>{generatedPrompt}</div>
               ) : (
                 <div className="prompt-placeholder">Generated prompt will appear here</div>
               )}

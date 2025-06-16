@@ -453,34 +453,36 @@ export default function ImageGenerator() {
           />
         </div>
 
-        <div className="toolbar-section">
-          <h3>Model</h3>
-          <div className="model-select-container">
-            <div 
-              className="model-select-header"
-              onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
-            >
-              {models.find(m => m.value === selectedModel)?.label || 'Select Model'}
-            </div>
-            {isModelDropdownOpen && (
-              <div className="model-dropdown">
-                {models.map(model => (
-                  <div
-                    key={model.value}
-                    className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
-                    onMouseDown={e => {
-                      e.preventDefault();
-                      setSelectedModel(model.value);
-                      if (model.value === 'flux-kontext-apps/portrait-series') {
-                        setSelectedAspectRatio('');
-                      } else {
-                        setSelectedAspectRatio(aspectRatios[model.value][0].value);
-                      }
-                      setIsModelDropdownOpen(false);
-                    }}
-                    tabIndex={0}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
+        {generationType === 'image-to-prompt' && (
+          <div className="toolbar-section">
+            <label className="toolbar-label">Source Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-900"
+            />
+          </div>
+        )}
+
+        {generationType !== 'image-to-prompt' && (
+          <div className="toolbar-section">
+            <label className="toolbar-label">Model</label>
+            <div className="model-select-container">
+              <div
+                className="model-select-header"
+                onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+              >
+                {models.find(m => m.value === selectedModel)?.label || 'Select Model'}
+              </div>
+              {isModelDropdownOpen && (
+                <div className="model-dropdown">
+                  {models.map(model => (
+                    <div
+                      key={model.value}
+                      className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
+                      onMouseDown={e => {
+                        e.preventDefault();
                         setSelectedModel(model.value);
                         if (model.value === 'flux-kontext-apps/portrait-series') {
                           setSelectedAspectRatio('');
@@ -488,21 +490,33 @@ export default function ImageGenerator() {
                           setSelectedAspectRatio(aspectRatios[model.value][0].value);
                         }
                         setIsModelDropdownOpen(false);
-                      }
-                    }}
-                    role="option"
-                    aria-selected={model.value === selectedModel}
-                  >
-                    <div className="model-label">{model.label}</div>
-                    {model.description && (
-                      <div className="model-description">{model.description}</div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+                      }}
+                      tabIndex={0}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setSelectedModel(model.value);
+                          if (model.value === 'flux-kontext-apps/portrait-series') {
+                            setSelectedAspectRatio('');
+                          } else {
+                            setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                          }
+                          setIsModelDropdownOpen(false);
+                        }
+                      }}
+                      role="option"
+                      aria-selected={model.value === selectedModel}
+                    >
+                      <div className="model-label">{model.label}</div>
+                      {model.description && (
+                        <div className="model-description">{model.description}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Portrait Series background color dropdown */}
         {generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' && (
@@ -543,35 +557,37 @@ export default function ImageGenerator() {
           </div>
         )}
 
-        <div className="toolbar-section">
-          <h3>Aspect Ratio</h3>
-          <div className="model-select-container">
-            <div
-              className="model-select-header"
-              onClick={() => {
-                if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) {
-                  setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
-                }
-              }}
-              style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
-            >
-              {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
-            </div>
-            {isAspectRatioDropdownOpen && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && (
-              <div className="model-dropdown">
-                {aspectRatios[selectedModel]?.map(ratio => (
-                  <div
-                    key={ratio.value}
-                    className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
-                    onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
-                  >
-                    {ratio.label}
-                  </div>
-                ))}
+        {generationType !== 'image-to-prompt' && (
+          <div className="toolbar-section">
+            <label className="toolbar-label">Aspect Ratio</label>
+            <div className="model-select-container">
+              <div
+                className="model-select-header"
+                onClick={() => {
+                  if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) {
+                    setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
+                  }
+                }}
+                style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
+              >
+                {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
               </div>
-            )}
+              {isAspectRatioDropdownOpen && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && (
+                <div className="model-dropdown">
+                  {aspectRatios[selectedModel]?.map(ratio => (
+                    <div
+                      key={ratio.value}
+                      className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
+                      onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
+                    >
+                      {ratio.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Show style dropdown only for recraft-ai/recraft-v3 in text-to-image */}
         {generationType === 'text-to-image' && selectedModel === 'recraft-ai/recraft-v3' && (

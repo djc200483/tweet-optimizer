@@ -384,12 +384,13 @@ export default function ImageGenerator() {
               className="model-select-header"
               onClick={() => setIsGenerationTypeDropdownOpen(!isGenerationTypeDropdownOpen)}
             >
-              {generationType === 'text-to-image' ? 'Text to Image' : generationType === 'image-to-image' ? 'Image to Image' : generationType === 'text-to-video' ? 'Text to Video' : 'Image to Video'}
+              {generationType === 'text-to-image' ? 'Text to Image' : generationType === 'image-to-image' ? 'Image to Image' : generationType === 'image-to-prompt' ? 'Image to Prompt' : 'Image to Video'}
             </div>
             {isGenerationTypeDropdownOpen && (
               <div className="model-dropdown">
                 <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Text to Image</div>
                 <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
+                <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); }}>Image to Prompt</div>
                 <div className="model-option disabled">Text to Video (coming soon)</div>
                 <div className="model-option disabled">Image to Video (coming soon)</div>
               </div>

@@ -644,14 +644,10 @@ export default function ImageGenerator() {
 
         <button
           onClick={handleGenerateWithFlux}
-          disabled={
-            isGenerateLoading ||
-            (!prompt.trim() && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) ||
-            (generationType === 'image-to-image' && !sourceImage)
-          }
-          className="generate-flux-button"
+          disabled={isGenerateLoading || (generationType === 'image-to-prompt' && !sourceImage)}
+          className="generate-button"
         >
-          {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate'}
+          {isGenerateLoading ? 'Generating...' : 'Generate'}
         </button>
       </div>
 

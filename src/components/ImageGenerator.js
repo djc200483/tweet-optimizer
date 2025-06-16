@@ -458,23 +458,25 @@ export default function ImageGenerator() {
           </div>
         )}
 
-        <div className="toolbar-section">
-          <h3>Prompt</h3>
-          <textarea
-            ref={textareaRef}
-            value={prompt}
-            onChange={handlePromptChange}
-            onKeyDown={handleKeyDown}
-            onWheel={handleWheel}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            placeholder="Enter your image prompt here..."
-            className="prompt-textarea"
-            rows={4}
-            disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
-            style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
-          />
-        </div>
+        {generationType !== 'image-to-prompt' && (
+          <div className="toolbar-section">
+            <h3>Prompt</h3>
+            <textarea
+              ref={textareaRef}
+              value={prompt}
+              onChange={handlePromptChange}
+              onKeyDown={handleKeyDown}
+              onWheel={handleWheel}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              placeholder="Enter your image prompt here..."
+              className="prompt-textarea"
+              rows={4}
+              disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
+              style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
+            />
+          </div>
+        )}
 
         {generationType === 'image-to-prompt' && (
           <div className="toolbar-section">

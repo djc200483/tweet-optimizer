@@ -701,4 +701,12 @@
   color: rgba(255, 255, 255, 0.6);
   line-height: 1.4;
   text-align: left;
+}
+
+.prompt-output-container {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
 } 

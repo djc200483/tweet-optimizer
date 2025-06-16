@@ -170,12 +170,8 @@ export default function ImageGenerator() {
   }, []);
 
   const handleGenerateWithFlux = async () => {
-    if (!prompt.trim() && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) {
-      setError('Please enter a prompt first');
-      return;
-    }
-    if (generationType === 'image-to-image' && !sourceImage) {
-      setError('Please upload an image for Image to Image');
+    if (generationType === 'image-to-prompt' && !sourceImage) {
+      setError('Please upload an image first');
       return;
     }
 
@@ -183,7 +179,7 @@ export default function ImageGenerator() {
       setIsGenerateLoading(true);
       setError('');
       let sourceImageBase64 = undefined;
-      if (generationType === 'image-to-image' && sourceImage) {
+      if (generationType === 'image-to-prompt' && sourceImage) {
         // Read file as base64
         sourceImageBase64 = await new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -197,64 +193,29 @@ export default function ImageGenerator() {
         });
       }
 
-      // Build request body
-      let body = {
-        prompt: prompt,
-        model: selectedModel,
-        aspectRatio: selectedAspectRatio,
-        num_outputs: 2,
-        ...(generationType === 'image-to-image' && sourceImageBase64 ? { sourceImageBase64 } : {})
-      };
-      // Portrait Series model specifics
-      if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
-        body = {
-          model: selectedModel,
-          aspectRatio: selectedAspectRatio,
-          num_outputs: 3, // not used by backend, but for clarity
-          sourceImageBase64,
-          background: portraitBackground
-        };
-      }
-
-      // Add style for recraft in text-to-image
-      if (generationType === 'text-to-image' && selectedModel === 'recraft-ai/recraft-v3') {
-        body = {
-          ...body,
-          style: selectedStyle
-        };
-      }
-
-      const response = await fetch(`${API_URL}/generate-image`, {
+      // Call the analyze-image endpoint to get the prompt
+      const response = await fetch(`${API_URL}/analyze-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ 
+          imageBase64: sourceImageBase64
+        }),
       });
-      
+
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Server error:', errorData);
-        throw new Error(errorData.error || 'Failed to generate image');
+        throw new Error('Failed to analyze image');
       }
-      
+
       const data = await response.json();
-      console.log('Received image data:', data);
-      
-      if (!data.images || !Array.isArray(data.images)) {
-        console.error('Invalid response format:', data);
-        throw new Error('Invalid response format from server');
-      }
-
-      // Trigger a refresh of the gallery
-      setRefreshTrigger(prev => prev + 1);
-
-      // Update generatedPrompt
       setGeneratedPrompt(data.prompt);
+      setShowImageGrid(false); // Reset image grid when new prompt is generated
     } catch (err) {
-      console.error('Error generating images:', err);
-      setError('Failed to generate images. Please try again.');
+      console.error('Error:', err);
+      setError('Failed to analyze image. Please try again.');
     } finally {
       setIsGenerateLoading(false);
     }

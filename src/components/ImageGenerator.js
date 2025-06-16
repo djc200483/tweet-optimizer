@@ -474,22 +474,35 @@ export default function ImageGenerator() {
 
         {generationType === 'image-to-prompt' && (
           <div className="toolbar-section">
-            <label className="toolbar-label">Source Image</label>
-            <div className="model-select-container">
-              <div
-                className="model-select"
-                onClick={() => setIsSourceImageDropdownOpen(!isSourceImageDropdownOpen)}
-              >
-                {sourceImage ? sourceImage.name : 'Select Image'}
-              </div>
-              {isSourceImageDropdownOpen && (
-                <div className="model-dropdown">
+            <h3>Source Image</h3>
+            <div className="image-upload-container">
+              {!sourceImagePreview ? (
+                <div className="image-upload-box">
                   <input
                     type="file"
-                    accept="image/*"
+                    accept=".webp,.jpg,.jpeg,.png"
                     onChange={handleSourceImageChange}
-                    className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-900"
+                    className="image-upload-input"
+                    id="image-upload"
                   />
+                  <label htmlFor="image-upload" className="image-upload-label">
+                    <span>Click to upload image</span>
+                    <span className="image-upload-hint">WebP, JPG, or PNG</span>
+                  </label>
+                </div>
+              ) : (
+                <div className="image-preview-container">
+                  <img 
+                    src={sourceImagePreview} 
+                    alt="Source" 
+                    className="image-preview"
+                  />
+                  <button 
+                    onClick={handleRemoveImage}
+                    className="remove-image-button"
+                  >
+                    Remove
+                  </button>
                 </div>
               )}
             </div>

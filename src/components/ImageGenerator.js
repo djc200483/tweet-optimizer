@@ -132,6 +132,7 @@ export default function ImageGenerator() {
   const [backgroundDropdownPos, setBackgroundDropdownPos] = useState({ top: 0, left: 0, width: 0 });
   const [selectedStyle, setSelectedStyle] = useState('realistic_image');
   const [isStyleDropdownOpen, setIsStyleDropdownOpen] = useState(false);
+  const [isSourceImageDropdownOpen, setIsSourceImageDropdownOpen] = useState(false);
 
   // Clear prompt and aspect ratio if Portrait Series model is selected
   useEffect(() => {
@@ -367,6 +368,24 @@ export default function ImageGenerator() {
     { value: 'realistic_image/motion_blur', label: 'Motion Blur' }
   ];
 
+  const handleSourceImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file type
+    const validTypes = ['image/webp', 'image/jpeg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+      setError('Please upload a valid image file (WebP, JPG, or PNG)');
+      return;
+    }
+
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setSourceImage(file);
+    setSourceImagePreview(previewUrl);
+    setError('');
+  };
+
   return (
     <div className="optimizer-container image-generator-page">
       <button 
@@ -456,12 +475,24 @@ export default function ImageGenerator() {
         {generationType === 'image-to-prompt' && (
           <div className="toolbar-section">
             <label className="toolbar-label">Source Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-900"
-            />
+            <div className="model-select-container">
+              <div
+                className="model-select"
+                onClick={() => setIsSourceImageDropdownOpen(!isSourceImageDropdownOpen)}
+              >
+                {sourceImage ? sourceImage.name : 'Select Image'}
+              </div>
+              {isSourceImageDropdownOpen && (
+                <div className="model-dropdown">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleSourceImageChange}
+                    className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-900"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         )}
 

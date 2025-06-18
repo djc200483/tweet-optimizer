@@ -17,6 +17,7 @@ export default function ImageGenerator() {
   const [sourceImagePreview, setSourceImagePreview] = useState(null);
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [showImageGrid, setShowImageGrid] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
@@ -299,6 +300,12 @@ export default function ImageGenerator() {
     setSourceImagePreview(null);
   };
 
+  const handleCopyPrompt = () => {
+    navigator.clipboard.writeText(generatedPrompt);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
   // When opening the background dropdown, calculate its position
   const openBackgroundDropdown = () => {
     if (backgroundHeaderRef.current) {
@@ -484,8 +491,8 @@ export default function ImageGenerator() {
               {generatedPrompt ? (
                 <div className="prompt-text" style={{ fontSize: '12px' }}>
                   {generatedPrompt}
-                  <button onClick={() => navigator.clipboard.writeText(generatedPrompt)} className="copy-button">
-                    <span role="img" aria-label="copy">📋</span>
+                  <button onClick={handleCopyPrompt} className={`copy-button ${isCopied ? 'copied' : ''}`}>
+                    {isCopied ? '✓' : '📋'}
                   </button>
                 </div>
               ) : (

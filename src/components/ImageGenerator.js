@@ -491,8 +491,12 @@ export default function ImageGenerator() {
               {generatedPrompt ? (
                 <div className="prompt-text" style={{ fontSize: '12px' }}>
                   {generatedPrompt}
-                  <button onClick={handleCopyPrompt} className={`copy-button ${isCopied ? 'copied' : ''}`}>
-                    {isCopied ? '✓' : '📋'}
+                  <button onClick={handleCopyPrompt} className={`copy-button ${isCopied ? 'copied' : ''}`}> 
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '6px'}}>
+                      <rect x="7" y="7" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
+                      <rect x="4" y="4" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
+                    </svg>
+                    {isCopied ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
               ) : (

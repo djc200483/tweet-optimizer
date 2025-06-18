@@ -181,26 +181,33 @@ body {
 }
 
 .copy-button {
-  padding: 8px 16px;
-  background-color: #28a745;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  background: #181818;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background 0.2s;
+  box-shadow: none;
 }
 
-.copy-button:hover {
-  background-color: #218838;
+.copy-button:hover, .copy-button:focus {
+  background: #232323;
+}
+
+.copy-button svg {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .copy-button.copied {
-  background-color: #28a745;
-  transform: scale(1.05);
-}
-
-.copy-button.copied:hover {
-  background-color: #218838;
+  background: #181818;
+  color: #fff;
 }
 
 .tweet-group {

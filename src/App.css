@@ -2493,3 +2493,16 @@ body {
   min-width: 0;
   flex-shrink: 1;
 }
+
+.copy-btn-container {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 4px;
+}
+
+.copy-button.small {
+  padding: 4px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+}

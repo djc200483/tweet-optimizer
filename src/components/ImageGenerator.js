@@ -489,15 +489,17 @@ export default function ImageGenerator() {
             <h3>Prompt Output</h3>
             <div className="prompt-output-container" style={{ fontSize: '11px', minHeight: '150px', height: '150px' }}>
               {generatedPrompt ? (
-                <div className="prompt-text" style={{ fontSize: '12px' }}>
+                <div className="prompt-text" style={{ fontSize: '12px', position: 'relative' }}>
                   {generatedPrompt}
-                  <button onClick={handleCopyPrompt} className={`copy-button ${isCopied ? 'copied' : ''}`}> 
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '6px'}}>
-                      <rect x="7" y="7" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
-                      <rect x="4" y="4" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
-                    </svg>
-                    {isCopied ? 'Copied!' : 'Copy'}
-                  </button>
+                  <div className="copy-btn-container">
+                    <button onClick={handleCopyPrompt} className={`copy-button small ${isCopied ? 'copied' : ''}`}> 
+                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '5px'}}>
+                        <rect x="7" y="7" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
+                        <rect x="4" y="4" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
+                      </svg>
+                      {isCopied ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="prompt-placeholder">Generated prompt will appear here</div>

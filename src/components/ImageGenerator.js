@@ -180,44 +180,76 @@ export default function ImageGenerator() {
     try {
       setIsGenerateLoading(true);
       setError('');
-      let sourceImageBase64 = undefined;
-      if (generationType === 'image-to-prompt' && sourceImage) {
-        // Read file as base64
-        sourceImageBase64 = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            // Remove the data URL prefix
-            const base64 = reader.result.split(',')[1];
-            resolve(base64);
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(sourceImage);
+      if (generationType === 'image-to-prompt') {
+        let sourceImageBase64 = undefined;
+        if (sourceImage) {
+          // Read file as base64
+          sourceImageBase64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              // Remove the data URL prefix
+              const base64 = reader.result.split(',')[1];
+              resolve(base64);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(sourceImage);
+          });
+        }
+        // Call the analyze-image endpoint to get the prompt
+        const response = await fetch(`${API_URL}/analyze-image`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ 
+            imageBase64: sourceImageBase64
+          }),
         });
+        if (!response.ok) {
+          throw new Error('Failed to analyze image');
+        }
+        const data = await response.json();
+        setGeneratedPrompt(data.prompt);
+        setShowImageGrid(false); // Reset image grid when new prompt is generated
+      } else {
+        // text-to-image or image-to-image
+        const payload = {
+          prompt,
+          aspectRatio: selectedAspectRatio,
+          model: selectedModel,
+        };
+        if (generationType === 'image-to-image' && sourceImage) {
+          // Read file as base64
+          payload.sourceImageBase64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const base64 = reader.result.split(',')[1];
+              resolve(base64);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(sourceImage);
+          });
+        }
+        const response = await fetch(`${API_URL}/generate-image`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to generate image');
+        }
+        const data = await response.json();
+        setGeneratedImages(data.images || []);
+        setShowImageGrid(true);
       }
-
-      // Call the analyze-image endpoint to get the prompt
-      const response = await fetch(`${API_URL}/analyze-image`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          imageBase64: sourceImageBase64
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to analyze image');
-      }
-
-      const data = await response.json();
-      setGeneratedPrompt(data.prompt);
-      setShowImageGrid(false); // Reset image grid when new prompt is generated
     } catch (err) {
       console.error('Error:', err);
-      setError('Failed to analyze image. Please try again.');
+      setError(generationType === 'image-to-prompt' ? 'Failed to analyze image. Please try again.' : 'Failed to generate image. Please try again.');
     } finally {
       setIsGenerateLoading(false);
     }

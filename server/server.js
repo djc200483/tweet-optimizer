@@ -64,32 +64,28 @@ const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// More permissive CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'https://tweet-optimizer.vercel.app',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL,
-    'https://tweet-optimizer.vercel.app',
-    'https://tweet-optimizer-production-8f8e.up.railway.app',
-    'http://localhost:3000'
-  ],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   exposedHeaders: ['Content-Length', 'Content-Type'],
   maxAge: 600
 }));
-
-// Update the headers middleware to be more permissive
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (origin) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  next();
-});
 
 // Health check endpoint
 app.get('/', (req, res) => {

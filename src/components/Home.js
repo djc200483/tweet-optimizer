@@ -34,11 +34,11 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
       description: 'Create AI-generated images from your text prompts.',
       id: 'imageGenerator'
     },
-    {
-      title: 'Image to Prompt',
-      description: 'Convert images into detailed AI-ready prompts.',
-      id: 'imageToPrompt'
-    },
+    // {
+    //   title: 'Image to Prompt',
+    //   description: 'Convert images into detailed AI-ready prompts.',
+    //   id: 'imageToPrompt'
+    // },
     {
       title: 'Prompt Assistant',
       description: 'Generate structured prompts for AI image generation tools.',

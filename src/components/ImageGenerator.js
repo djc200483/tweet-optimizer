@@ -249,6 +249,7 @@ export default function ImageGenerator() {
         const data = await response.json();
         setGeneratedImages(data.images || []);
         setShowImageGrid(true);
+        setRefreshTrigger(prev => prev + 1); // Trigger a refresh in the gallery
       }
     } catch (err) {
       console.error('Error:', err);

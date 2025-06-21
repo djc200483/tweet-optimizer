@@ -737,47 +737,49 @@
 }
 
 .prompt-textarea.with-supercharge {
-  padding-right: 120px; /* Make space for the button */
+  padding-bottom: 50px; /* Make space for the button */
 }
 
 .supercharge-button-inline {
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background-color: #25272c;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 6px 12px;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  display: inline-flex;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.2);
+  display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
 }
 
 .supercharge-button-inline:hover:not(:disabled) {
-  background-color: #3a3d44;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 194, 255, 0.3);
 }
 
 .supercharge-button-inline:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background-color: #25272c;
+  box-shadow: none;
+  transform: translateY(0);
 }
 
-/* Ensure proper sizing when loading spinner is active */
-.supercharge-button-inline .loading-container {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* Fix for loading spinner sizing */
+.supercharge-button-inline:disabled .loading-container {
+  width: auto;
+  height: auto;
 }
 
-.supercharge-button-inline .loading-spinner-inline {
-  width: 16px;
-  height: 16px;
+.supercharge-button-inline:disabled .loading-spinner-inline {
+  width: 16px !important;
+  height: 16px !important;
 }
 
 /* Supercharge Modal Styles */

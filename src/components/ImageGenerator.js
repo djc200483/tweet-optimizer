@@ -18,6 +18,9 @@ export default function ImageGenerator() {
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [showImageGrid, setShowImageGrid] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isSuperchargeModalOpen, setIsSuperchargeModalOpen] = useState(false);
+  const [superchargedPrompt, setSuperchargedPrompt] = useState('');
+  const [isSuperchargeLoading, setIsSuperchargeLoading] = useState(false);
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
@@ -338,6 +341,68 @@ export default function ImageGenerator() {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
+  const handleSupercharge = async () => {
+    if (!prompt) {
+      setError('Please enter a prompt to supercharge.');
+      return;
+    }
+    try {
+      setIsSuperchargeLoading(true);
+      setError('');
+      const response = await fetch(`${API_URL}/rewrite-tweet`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ 
+          tweet: prompt,
+          tone: 'hyper-detailed',
+          hook: 'descriptive',
+          customInstructions: `Transform this image generation prompt into an extensively detailed masterpiece. 
+            While preserving the core elements, significantly expand the description with:
+            - Rich, intricate details about textures, materials, and surfaces (e.g., weathered metal, glossy reflections, rough stone)
+            - Comprehensive lighting information (quality, direction, color, shadows, highlights)
+            - Atmospheric and environmental details (particles, air quality, weather effects)
+            - Specific color palettes and their interactions
+            - Detailed spatial relationships and composition elements
+            - Precise descriptions of any patterns, decorative elements, or unique features
+            - Mood-enhancing environmental details (temperature, time of day, season)
+            Feel free to be creative and expansive while maintaining the original intent and style.
+            The goal is to create a prompt that would give an AI image generator enough detail to create a stunning, precise image.`
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to supercharge prompt');
+      }
+      
+      const data = await response.json();
+      if (!data.rewrittenTweets || !data.rewrittenTweets.length) {
+        throw new Error('Invalid response format from server');
+      }
+      
+      setSuperchargedPrompt(data.rewrittenTweets[0]);
+      setIsSuperchargeModalOpen(true);
+    } catch (error) {
+      console.error('Error supercharging prompt:', error);
+      setError(error.message || 'Failed to supercharge prompt. Please try again.');
+    } finally {
+      setIsSuperchargeLoading(false);
+    }
+  };
+
+  const handleUseSuperchargedPrompt = () => {
+    setPrompt(superchargedPrompt);
+    adjustTextareaHeight();
+    setIsSuperchargeModalOpen(false);
+  };
+
+  const handleCloseSuperchargeModal = () => {
+    setIsSuperchargeModalOpen(false);
+  };
+
   // When opening the background dropdown, calculate its position
   const openBackgroundDropdown = () => {
     if (backgroundHeaderRef.current) {
@@ -462,20 +527,29 @@ export default function ImageGenerator() {
         {generationType !== 'image-to-prompt' && (
           <div className="toolbar-section">
             <h3>Prompt</h3>
-            <textarea
-              ref={textareaRef}
-              value={prompt}
-              onChange={handlePromptChange}
-              onKeyDown={handleKeyDown}
-              onWheel={handleWheel}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              placeholder="Enter your image prompt here..."
-              className="prompt-textarea"
-              rows={4}
-              disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
-              style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
-            />
+            <div className="prompt-input-wrapper">
+              <textarea
+                ref={textareaRef}
+                value={prompt}
+                onChange={handlePromptChange}
+                onKeyDown={handleKeyDown}
+                onWheel={handleWheel}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                placeholder="Enter your image prompt here..."
+                className="prompt-textarea with-supercharge"
+                rows={4}
+                disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
+                style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
+              />
+              <button
+                onClick={handleSupercharge}
+                className="supercharge-button-inline"
+                disabled={isSuperchargeLoading || !prompt}
+              >
+                {isSuperchargeLoading ? <LoadingSpinner size="inline" /> : 'Supercharge'}
+              </button>
+            </div>
           </div>
         )}
 
@@ -716,6 +790,20 @@ export default function ImageGenerator() {
           />
         </div>
       </div>
+      {isSuperchargeModalOpen && (
+        <div className="supercharge-modal-overlay">
+          <div className="supercharge-modal-content">
+            <h3>Supercharged Prompt</h3>
+            <div className="supercharge-modal-prompt">
+              {superchargedPrompt}
+            </div>
+            <div className="supercharge-modal-actions">
+              <button onClick={handleUseSuperchargedPrompt} className="modal-button primary">Use this Prompt</button>
+              <button onClick={handleCloseSuperchargeModal} className="modal-button secondary">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

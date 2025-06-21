@@ -771,6 +771,18 @@
   transform: translateY(0);
 }
 
+/*
+  Override global loading container styles specifically for the
+  supercharge button to prevent the unwanted overlay.
+*/
+.supercharge-button-inline .loading-container {
+  position: static; /* Prevent absolute positioning */
+  background: none;  /* Remove the overlay background */
+  width: auto;       /* Allow it to shrink to its content */
+  height: auto;      /* Allow it to shrink to its content */
+  min-height: 0;     /* Reset min-height */
+}
+
 /* Fix for loading spinner sizing */
 .supercharge-button-inline:disabled .loading-container {
   width: auto;

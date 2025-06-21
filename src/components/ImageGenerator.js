@@ -776,10 +776,6 @@ export default function ImageGenerator() {
       </div>
 
       <div className="main-content">
-        <div className="feature-description">
-          <p>Create stunning AI-generated images from your text prompts. Simply enter your prompt, choose your preferred model and aspect ratio, and let our AI bring your vision to life.</p>
-        </div>
-
         {error && <div className="error-message">{error}</div>}
 
         <div className="gallery-wrapper">

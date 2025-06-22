@@ -119,7 +119,7 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
             <div className="tab-description">
               <h3>Create and optimize images using advanced AI technology</h3>
               <button
-                className="tab-button"
+                className="tab-button active"
                 disabled={!isLoggedIn}
                 onClick={() => {
                   if (isLoggedIn) {

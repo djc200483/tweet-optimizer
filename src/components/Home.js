@@ -4,6 +4,7 @@ import RandomGallery from './RandomGallery';
 export default function Home({ onSelectFeature, isLoggedIn }) {
   const [activeTab, setActiveTab] = useState('imagery');
   const [expandedCard, setExpandedCard] = useState(null);
+  const [hasLoggedOutUserClicked, setHasLoggedOutUserClicked] = useState(false);
 
   const writtenFeatures = [
     {
@@ -120,14 +121,19 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
               <h3>Create and optimize images using advanced AI technology</h3>
               <button
                 className="tab-button active"
-                disabled={!isLoggedIn}
                 onClick={() => {
                   if (isLoggedIn) {
                     onSelectFeature('imageGenerator');
+                  } else {
+                    if (hasLoggedOutUserClicked) {
+                      window.location.href = '/auth';
+                    } else {
+                      setHasLoggedOutUserClicked(true);
+                    }
                   }
                 }}
               >
-                {isLoggedIn ? 'Generate' : 'Log in'}
+                {!isLoggedIn && hasLoggedOutUserClicked ? 'Log in' : 'Generate'}
               </button>
             </div>
             <div className="visual-tools-flex">

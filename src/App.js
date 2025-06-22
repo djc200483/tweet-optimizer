@@ -214,6 +214,18 @@ function AppContent() {
   const renderFeature = () => {
     console.log('Rendering feature:', currentFeature);
     switch(currentFeature) {
+      case 'auth':
+        return (
+          <>
+            <button 
+              className="back-home-button"
+              onClick={() => setCurrentFeature(null)}
+            >
+              ← Back to Home
+            </button>
+            <Auth onClose={() => setCurrentFeature(null)} />
+          </>
+        );
       case 'optimize':
         return (
           <>

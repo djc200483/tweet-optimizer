@@ -126,7 +126,7 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
                     onSelectFeature('imageGenerator');
                   } else {
                     if (hasLoggedOutUserClicked) {
-                      window.location.href = '/auth';
+                      onSelectFeature('auth');
                     } else {
                       setHasLoggedOutUserClicked(true);
                     }

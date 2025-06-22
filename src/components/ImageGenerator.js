@@ -547,7 +547,7 @@ export default function ImageGenerator() {
               <button
                 className="supercharge-button-inline"
                 disabled={!prompt}
-                style={{ right: '120px' }}
+                style={{ right: '140px' }}
               >
                 Assistant
               </button>

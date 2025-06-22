@@ -293,6 +293,7 @@ body {
   width: 95%;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: 20px;
 }
 
 .analysis-container {
@@ -2300,20 +2301,26 @@ body {
 
 .tab-description {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
 }
 
 .tab-description h3 {
-  color: #a0a0b0;
-  font-size: 1.2rem;
-  font-weight: normal;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 15px;
+}
+
+.tab-description .feature-button {
+  width: auto;
+  display: inline-block;
+  padding: 10px 30px;
 }
 
 @media (max-width: 768px) {
   .content-tabs {
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 0 1rem;
+    gap: 10px;
   }
 
   .tab-button {

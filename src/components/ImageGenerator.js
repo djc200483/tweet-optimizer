@@ -22,6 +22,19 @@ export default function ImageGenerator() {
   const [superchargedPrompt, setSuperchargedPrompt] = useState('');
   const [isSuperchargeLoading, setIsSuperchargeLoading] = useState(false);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
+  const [isAssistantModalOpen, setIsAssistantModalOpen] = useState(false);
+  const [assistantSelectedOptions, setAssistantSelectedOptions] = useState({
+    subject: { main: '', sub: '' },
+    resolution: '',
+    style: { main: '', sub: '' },
+    emotion: { main: '', sub: '' },
+    lighting: { main: '', sub: '' },
+    composition: { main: '', sub: '' },
+    timePeriod: { main: '', sub: '' },
+    extraDetails: { main: '', sub: '' }
+  });
+  const [assistantGeneratedPrompt, setAssistantGeneratedPrompt] = useState('');
+  const [assistantCollapsedSections, setAssistantCollapsedSections] = useState({});
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
@@ -458,6 +471,185 @@ export default function ImageGenerator() {
     setError('');
   };
 
+  const handleAssistant = () => {
+    setIsAssistantModalOpen(true);
+  };
+
+  const handleCloseAssistantModal = () => {
+    setIsAssistantModalOpen(false);
+  };
+
+  const handleUseAssistantPrompt = () => {
+    setPrompt(assistantGeneratedPrompt);
+    setIsAssistantModalOpen(false);
+  };
+
+  const assistantCategories = {
+    subject: {
+      title: 'Subject Matter',
+      main: [
+        'Nature', 'Animals', 'People', 'Architecture', 'Technology', 'History', 'Fantasy', 'Mythology', 'Horror', 'Abstract'
+      ],
+      sub: {
+        'Nature': ['Forests and Woodlands', 'Oceanic Landscapes', 'Mountain Ranges', 'Deserts and Sand Dunes', 'Waterfalls and Rivers', 'Flower Fields', 'Tropical Rainforests', 'Autumn Leaves', 'Snowy Landscapes', 'Night Skies'],
+        'Animals': ['Wild Mammals', 'Birds in Flight', 'Marine Life', 'Reptiles and Amphibians', 'Insects and Butterflies', 'Pets and Domesticated Animals', 'Predators in the Wild', 'Endangered Species', 'Wildlife in Action', 'Animal Behavior'],
+        'People': ['Portraits of Individuals', 'Group Gatherings', 'Historical Figures', 'Everyday Life', 'Mythical Creatures and Gods', 'Human Emotions and Expressions', 'Fashion and Clothing', 'Cultural Traditions', 'Vintage and Retro People', 'Social Interaction'],
+        'Architecture': ['Ancient Ruins', 'Modern Cityscapes', 'Gothic Cathedrals', 'Futuristic Buildings', 'Traditional Houses and Villages', 'Ancient Temples and Pyramids', 'Castles and Fortresses', 'City Skylines', 'Urban Streetscapes', 'Rural Architecture'],
+        'Technology': ['Robots and AI', 'Space Exploration', 'Futuristic Gadgets', 'Virtual Reality Landscapes', 'Machines in Motion', 'Cybernetic Augmentation', 'Electric Vehicles', 'Drones and Aerial Devices', 'Nanotechnology', 'Smart Cities'],
+        'History': ['Ancient Civilizations', 'Wars and Conflicts', 'Cultural Evolution', 'Historical Reenactments', 'Industrial Revolution', 'Victorian Era', 'Medieval Times', '20th Century History', 'The Renaissance', 'Colonial Times'],
+        'Fantasy': ['Magical Realms', 'Dragons and Mythical Beasts', 'Elven Forests', 'Enchanted Castles', 'Wizards and Sorcery', 'Fairy Tales', 'Fantasy Creatures', 'Magic in Everyday Life', 'Mythical Heroes and Legends', 'Magical Artifacts'],
+        'Mythology': ['Greek Gods and Heroes', 'Norse Myths and Legends', 'Egyptian Deities and Pharaohs', 'Celtic Folk Tales', 'Native American Spirits', 'African Folklore', 'South American Legends', 'Polynesian Mythology', 'Asian Deities and Spirits', 'Aboriginal Mythology'],
+        'Horror': ['Haunted Houses', 'Monsters and Creatures', 'Supernatural Entities', 'Dark Forests and Swamps', 'Paranormal Events', 'Ghosts and Spirits', 'Creepy Dolls and Objects', 'Occult Rituals', 'Witches and Magic', 'Psychological Horror'],
+        'Abstract': ['Geometric Shapes and Patterns', 'Color Theory Experiments', 'Surreal Dreamscapes', 'Non-representational Forms', 'Emotional Expression through Art', 'Organic and Fluid Forms', 'Minimalist Designs', 'Conceptual Art', 'Movement and Motion in Art', 'Abstract Faces and Figures']
+      }
+    },
+    style: {
+      title: 'Style & Medium',
+      options: [
+        { main: 'Photorealistic', subcategories: ['Portrait Photography', 'Landscape Photography', 'Street Photography', 'Architectural Photography', 'Nature Photography', 'Documentary Style', 'Fashion Photography', 'Sports Photography', 'Macro Photography', 'Aerial Photography'] },
+        { main: 'Digital Art', subcategories: ['Concept Art', 'Character Design', 'Environment Design', 'Digital Painting', '3D Renders', 'Pixel Art', 'Vector Graphics', 'Digital Illustration', 'Matte Painting', 'Digital Sculpting'] },
+        { main: 'Traditional Art', subcategories: ['Oil Painting', 'Watercolor', 'Acrylic Painting', 'Charcoal Drawing', 'Pencil Sketch', 'Ink Drawing', 'Pastel Art', 'Gouache Painting', 'Mixed Media', 'Sculpture'] },
+        { main: 'Cinematic', subcategories: ['Film Noir', 'Sci-Fi Movie', 'Fantasy Epic', 'Documentary', 'Action Movie', 'Romantic Comedy', 'Horror Film', 'Western', 'War Movie', 'Musical'] },
+        { main: 'Artistic Styles', subcategories: ['Impressionism', 'Expressionism', 'Surrealism', 'Cubism', 'Art Nouveau', 'Art Deco', 'Renaissance', 'Baroque', 'Modernism', 'Contemporary Art'] }
+      ]
+    },
+    emotion: {
+      title: 'Emotion & Mood',
+      options: [
+        { main: 'Peaceful', subcategories: ['Serene', 'Tranquil', 'Calm', 'Relaxed', 'Meditative', 'Zen-like', 'Harmonious', 'Balanced', 'Gentle', 'Soothing'] },
+        { main: 'Energetic', subcategories: ['Dynamic', 'Vibrant', 'Lively', 'Energetic', 'Powerful', 'Intense', 'Passionate', 'Exciting', 'Thrilling', 'Electric'] },
+        { main: 'Mysterious', subcategories: ['Enigmatic', 'Cryptic', 'Puzzling', 'Intriguing', 'Bewildering', 'Perplexing', 'Confusing', 'Unclear', 'Ambiguous', 'Vague'] },
+        { main: 'Melancholic', subcategories: ['Sad', 'Sorrowful', 'Gloomy', 'Depressing', 'Dismal', 'Cheerless', 'Dreary', 'Bleak', 'Desolate', 'Forlorn'] },
+        { main: 'Joyful', subcategories: ['Happy', 'Cheerful', 'Delighted', 'Pleased', 'Content', 'Satisfied', 'Grateful', 'Thankful', 'Appreciative', 'Blessed'] }
+      ]
+    },
+    lighting: {
+      title: 'Lighting & Atmosphere',
+      options: [
+        { main: 'Natural Light', subcategories: ['Sunlight', 'Moonlight', 'Starlight', 'Dawn Light', 'Dusk Light', 'Overcast', 'Shade', 'Reflected Light', 'Diffused Light', 'Golden Hour'] },
+        { main: 'Artificial Light', subcategories: ['Neon Lights', 'LED Lighting', 'Incandescent', 'Fluorescent', 'Candlelight', 'Firelight', 'Spotlight', 'Ambient Lighting', 'Studio Lighting', 'Street Lights'] },
+        { main: 'Dramatic Lighting', subcategories: ['High Contrast', 'Low Key', 'High Key', 'Rim Lighting', 'Backlighting', 'Side Lighting', 'Top Lighting', 'Bottom Lighting', 'Split Lighting', 'Broad Lighting'] },
+        { main: 'Atmospheric Effects', subcategories: ['Fog', 'Mist', 'Haze', 'Smoke', 'Dust', 'Rain', 'Snow', 'Clouds', 'Vapor', 'Steam'] },
+        { main: 'Color Temperature', subcategories: ['Warm Light', 'Cool Light', 'Neutral Light', 'Colored Light', 'Mixed Lighting', 'Dynamic Lighting', 'Static Lighting', 'Pulsing Light', 'Flickering Light', 'Steady Light'] }
+      ]
+    },
+    composition: {
+      title: 'Composition & Perspective',
+      options: [
+        { main: 'Camera Angles', subcategories: ['Eye Level', 'Low Angle', 'High Angle', 'Bird\'s Eye View', 'Worm\'s Eye View', 'Dutch Angle', 'Canted Angle', 'Straight On', 'Profile View', 'Three-Quarter View'] },
+        { main: 'Framing', subcategories: ['Close-up', 'Medium Shot', 'Long Shot', 'Extreme Close-up', 'Wide Shot', 'Establishing Shot', 'Over-the-Shoulder', 'Point of View', 'Reaction Shot', 'Insert Shot'] },
+        { main: 'Composition Rules', subcategories: ['Rule of Thirds', 'Golden Ratio', 'Symmetry', 'Asymmetry', 'Leading Lines', 'Framing', 'Depth of Field', 'Foreground', 'Background', 'Midground'] },
+        { main: 'Perspective', subcategories: ['One Point', 'Two Point', 'Three Point', 'Isometric', 'Oblique', 'Aerial', 'Ground Level', 'Elevated', 'Underwater', 'Through Window'] },
+        { main: 'Focus', subcategories: ['Sharp Focus', 'Soft Focus', 'Selective Focus', 'Deep Focus', 'Shallow Focus', 'Bokeh', 'Motion Blur', 'Tilt Shift', 'Macro Focus', 'Infinity Focus'] }
+      ]
+    },
+    timePeriod: {
+      title: 'Time Period',
+      options: [
+        { main: 'Ancient Times', subcategories: ['Prehistoric', 'Ancient Egypt', 'Ancient Greece', 'Ancient Rome', 'Mesopotamia', 'Ancient China', 'Ancient India', 'Maya Civilization', 'Aztec Empire', 'Inca Empire'] },
+        { main: 'Medieval', subcategories: ['Early Middle Ages', 'High Middle Ages', 'Late Middle Ages', 'Byzantine Empire', 'Islamic Golden Age', 'Mongol Empire', 'Crusades', 'Feudal Japan', 'Medieval Europe', 'Medieval Asia'] },
+        { main: 'Renaissance', subcategories: ['Italian Renaissance', 'Northern Renaissance', 'Early Renaissance', 'High Renaissance', 'Late Renaissance', 'Renaissance Architecture', 'Renaissance Art', 'Renaissance Fashion', 'Renaissance Technology', 'Renaissance Culture'] },
+        { main: 'Modern Era', subcategories: ['Industrial Revolution', 'Victorian Era', 'Edwardian Era', 'Art Nouveau Period', 'Art Deco Period', 'Modernism', 'Postmodernism', 'Contemporary', 'Digital Age', 'Information Age'] },
+        { main: 'Future', subcategories: ['Near Future', 'Far Future', 'Dystopian Future', 'Utopian Future', 'Space Age', 'Cyberpunk', 'Steampunk', 'Post-apocalyptic', 'Transhumanist', 'Interstellar'] }
+      ]
+    },
+    extraDetails: {
+      title: 'Extra Details',
+      options: [
+        { main: 'Weather', subcategories: ['Sunny', 'Cloudy', 'Rainy', 'Snowy', 'Stormy', 'Foggy', 'Windy', 'Calm', 'Humid', 'Dry'] },
+        { main: 'Season', subcategories: ['Spring', 'Summer', 'Autumn', 'Winter', 'Monsoon', 'Dry Season', 'Wet Season', 'Growing Season', 'Harvest Season', 'Holiday Season'] },
+        { main: 'Time of Day', subcategories: ['Dawn', 'Morning', 'Noon', 'Afternoon', 'Dusk', 'Evening', 'Night', 'Midnight', 'Early Morning', 'Late Night'] },
+        { main: 'Location', subcategories: ['Urban', 'Rural', 'Suburban', 'Coastal', 'Mountainous', 'Desert', 'Forest', 'Arctic', 'Tropical', 'Temperate'] },
+        { main: 'Atmosphere', subcategories: ['Peaceful', 'Busy', 'Lonely', 'Crowded', 'Quiet', 'Noisy', 'Romantic', 'Mysterious', 'Dangerous', 'Safe'] }
+      ]
+    },
+    resolution: {
+      title: 'Resolution',
+      options: ['4K Ultra HD', '8K Ultra HD', 'High Definition', 'Standard Definition', 'Cinematic', 'Photographic', 'Print Quality', 'Web Optimized', 'Mobile Optimized', 'Retina Display']
+    }
+  };
+
+  const generateAssistantPrompt = () => {
+    let prompt = '';
+    
+    if (assistantSelectedOptions.subject.main) {
+      prompt += assistantSelectedOptions.subject.main;
+      if (assistantSelectedOptions.subject.sub) {
+        prompt += `, ${assistantSelectedOptions.subject.sub}`;
+      }
+    }
+
+    if (assistantSelectedOptions.resolution) {
+      prompt += `, ${assistantSelectedOptions.resolution}`;
+    }
+
+    if (assistantSelectedOptions.style.main) {
+      prompt += `, ${assistantSelectedOptions.style.main}`;
+      if (assistantSelectedOptions.style.sub) {
+        prompt += `, ${assistantSelectedOptions.style.sub}`;
+      }
+    }
+
+    if (assistantSelectedOptions.emotion.main) {
+      prompt += `, ${assistantSelectedOptions.emotion.main}`;
+      if (assistantSelectedOptions.emotion.sub) {
+        prompt += `, ${assistantSelectedOptions.emotion.sub}`;
+      }
+    }
+
+    if (assistantSelectedOptions.lighting.main) {
+      prompt += `, ${assistantSelectedOptions.lighting.main}`;
+      if (assistantSelectedOptions.lighting.sub) {
+        prompt += `, ${assistantSelectedOptions.lighting.sub}`;
+      }
+    }
+
+    if (assistantSelectedOptions.composition.main) {
+      prompt += `, ${assistantSelectedOptions.composition.main}`;
+      if (assistantSelectedOptions.composition.sub) {
+        prompt += `, ${assistantSelectedOptions.composition.sub}`;
+      }
+    }
+
+    if (assistantSelectedOptions.timePeriod.main) {
+      prompt += `, ${assistantSelectedOptions.timePeriod.main}`;
+      if (assistantSelectedOptions.timePeriod.sub) {
+        prompt += `, ${assistantSelectedOptions.timePeriod.sub}`;
+      }
+    }
+
+    if (assistantSelectedOptions.extraDetails.main) {
+      prompt += `, ${assistantSelectedOptions.extraDetails.main}`;
+      if (assistantSelectedOptions.extraDetails.sub) {
+        prompt += `, ${assistantSelectedOptions.extraDetails.sub}`;
+      }
+    }
+
+    return prompt.trim();
+  };
+
+  useEffect(() => {
+    const newPrompt = generateAssistantPrompt();
+    setAssistantGeneratedPrompt(newPrompt);
+  }, [assistantSelectedOptions]);
+
+  const handleAssistantOptionChange = (category, type, value) => {
+    setAssistantSelectedOptions(prev => ({
+      ...prev,
+      [category]: {
+        ...prev[category],
+        [type]: value
+      }
+    }));
+  };
+
+  const toggleAssistantSection = (section) => {
+    setAssistantCollapsedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
   return (
     <div className="optimizer-container image-generator-page">
       <button 
@@ -547,6 +739,7 @@ export default function ImageGenerator() {
               <button
                 className="supercharge-button-inline"
                 style={{ right: '130px' }}
+                onClick={handleAssistant}
               >
                 Assistant
               </button>
@@ -804,6 +997,131 @@ export default function ImageGenerator() {
             <div className="supercharge-modal-actions">
               <button onClick={handleUseSuperchargedPrompt} className="modal-button primary">Use this Prompt</button>
               <button onClick={handleCloseSuperchargeModal} className="modal-button secondary">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isAssistantModalOpen && (
+        <div className="assistant-modal-overlay">
+          <div className="assistant-modal-content">
+            <h3>Assistant Prompt Builder</h3>
+            
+            <div className="assistant-modal-body">
+              <div className="assistant-categories">
+                {Object.entries(assistantCategories).map(([key, category]) => (
+                  <div key={key} className="assistant-category-section">
+                    <div 
+                      className="assistant-category-header"
+                      onClick={() => toggleAssistantSection(key)}
+                    >
+                      <h4>{category.title}</h4>
+                      <span className="assistant-expand-icon">
+                        {assistantCollapsedSections[key] ? '+' : '−'}
+                      </span>
+                    </div>
+                    
+                    {!assistantCollapsedSections[key] && (
+                      <div className="assistant-category-content">
+                        {key === 'subject' ? (
+                          <div className="assistant-style-selector">
+                            <select
+                              value={assistantSelectedOptions.subject.main}
+                              onChange={(e) => handleAssistantOptionChange('subject', 'main', e.target.value)}
+                            >
+                              <option value="">Select Subject Matter</option>
+                              {category.main.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                            {assistantSelectedOptions.subject.main && (
+                              <select
+                                value={assistantSelectedOptions.subject.sub}
+                                onChange={(e) => handleAssistantOptionChange('subject', 'sub', e.target.value)}
+                              >
+                                <option value="">Select Specific Subject</option>
+                                {category.sub[assistantSelectedOptions.subject.main].map((option) => (
+                                  <option key={option} value={option}>
+                                    {option}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          </div>
+                        ) : key === 'resolution' ? (
+                          <div className="assistant-style-selector">
+                            <select
+                              value={assistantSelectedOptions.resolution}
+                              onChange={(e) => handleAssistantOptionChange('resolution', 'main', e.target.value)}
+                            >
+                              <option value="">Select Resolution</option>
+                              {category.options.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : (
+                          <div className="assistant-style-selector">
+                            <select
+                              value={assistantSelectedOptions[key].main}
+                              onChange={(e) => {
+                                const selectedMain = e.target.value;
+                                handleAssistantOptionChange(key, 'main', selectedMain);
+                                handleAssistantOptionChange(key, 'sub', '');
+                              }}
+                            >
+                              <option value="">Select {category.title}</option>
+                              {category.options.map(option => (
+                                <option key={option.main} value={option.main}>
+                                  {option.main}
+                                </option>
+                              ))}
+                            </select>
+                            
+                            {assistantSelectedOptions[key].main && (
+                              <select
+                                value={assistantSelectedOptions[key].sub}
+                                onChange={(e) => {
+                                  handleAssistantOptionChange(key, 'sub', e.target.value);
+                                }}
+                                className="assistant-subcategory-select"
+                              >
+                                <option value="">Select {assistantSelectedOptions[key].main}</option>
+                                {category.options
+                                  .find(option => option.main === assistantSelectedOptions[key].main)
+                                  ?.subcategories.map(sub => (
+                                    <option key={sub} value={sub}>
+                                      {sub}
+                                    </option>
+                                  ))}
+                              </select>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              
+              <div className="assistant-prompt-output">
+                <h4>Generated Prompt</h4>
+                <textarea
+                  value={assistantGeneratedPrompt}
+                  onChange={(e) => setAssistantGeneratedPrompt(e.target.value)}
+                  placeholder="Your prompt will appear here as you make selections..."
+                  className="assistant-prompt-textarea"
+                  rows={6}
+                />
+              </div>
+            </div>
+            
+            <div className="assistant-modal-actions">
+              <button onClick={handleUseAssistantPrompt} className="modal-button primary">Use this Prompt</button>
+              <button onClick={handleCloseAssistantModal} className="modal-button secondary">Close</button>
             </div>
           </div>
         </div>

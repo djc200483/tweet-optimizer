@@ -7,7 +7,7 @@ import './ImageGallery.css';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 const CACHE_KEY = 'random_gallery_cache';
 const CACHE_TIMESTAMP_KEY = 'random_gallery_cache_timestamp';
-const IMAGE_LIMIT = 50;
+const IMAGE_LIMIT = 80;
 
 function getRandomSample(arr, n) {
   const result = [];

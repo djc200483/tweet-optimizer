@@ -30,11 +30,11 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
   ];
 
   const imageryFeatures = [
-    {
-      title: 'Image Generator',
-      description: 'Create AI-generated images from your text prompts.',
-      id: 'imageGenerator'
-    },
+    // {
+    //   title: 'Image Generator',
+    //   description: 'Create AI-generated images from your text prompts.',
+    //   id: 'imageGenerator'
+    // },
     // {
     //   title: 'Image to Prompt',
     //   description: 'Convert images into detailed AI-ready prompts.',

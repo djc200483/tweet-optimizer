@@ -695,20 +695,35 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
     }
 
     // Build Replicate input
-    const replicateInput = {
-      prompt: prompt,
-      go_fast: true,
-      num_outputs: model === 'minimax/image-01' ? 2 : ([
-        'black-forest-labs/flux-1.1-pro',
-        'black-forest-labs/flux-1.1-pro-ultra',
-        'google/imagen-4'
-      ].includes(model) ? 1 : 4),
-      num_inference_steps: 4,
-      guidance_scale: 7.5,
-      output_format: 'png',
-      aspect_ratio: aspectRatio,
-      seed: Math.floor(Math.random() * 1000000)
-    };
+    let replicateInput = {};
+    
+    // Handle bytedance model specifically
+    if (model === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
+      replicateInput = {
+        prompt: prompt,
+        width: req.body.width || 1024,
+        height: req.body.height || 1024,
+        seed: req.body.seed || 0,
+        num_outputs: req.body.num_outputs || 2,
+        num_inference_steps: req.body.num_inference_steps || 4
+      };
+    } else {
+      // Standard Flux model parameters
+      replicateInput = {
+        prompt: prompt,
+        go_fast: true,
+        num_outputs: model === 'minimax/image-01' ? 2 : ([
+          'black-forest-labs/flux-1.1-pro',
+          'black-forest-labs/flux-1.1-pro-ultra',
+          'google/imagen-4'
+        ].includes(model) ? 1 : 4),
+        num_inference_steps: 4,
+        guidance_scale: 7.5,
+        output_format: 'png',
+        aspect_ratio: aspectRatio,
+        seed: Math.floor(Math.random() * 1000000)
+      };
+    }
 
     // Add style parameter for recraft-ai/recraft-v3
     if (model === 'recraft-ai/recraft-v3' && req.body.style) {
@@ -820,7 +835,8 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       try {
         const result = await db.query(
           'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-          [userId, prompt || 'Image to Image generation', imageUrl, s3Result.s3Url, aspectRatio || '3:4']
+          [userId, prompt || 'Image to Image generation', imageUrl, s3Result.s3Url, 
+           model === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe' ? '1:1' : (aspectRatio || '3:4')]
         );
         return {
           originalUrl: imageUrl,

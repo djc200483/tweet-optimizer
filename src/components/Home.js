@@ -118,6 +118,17 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
           <>
             <div className="tab-description">
               <h3>Create and optimize images using advanced AI technology</h3>
+              <button
+                className="feature-button"
+                disabled={!isLoggedIn}
+                onClick={() => {
+                  if (isLoggedIn) {
+                    onSelectFeature('imageGenerator');
+                  }
+                }}
+              >
+                {isLoggedIn ? 'Generate' : 'Log in'}
+              </button>
             </div>
             <div className="visual-tools-flex">
               {renderFeatureCards(imageryFeatures, true)}

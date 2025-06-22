@@ -40,11 +40,11 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     //   description: 'Convert images into detailed AI-ready prompts.',
     //   id: 'imageToPrompt'
     // },
-    {
-      title: 'Prompt Assistant',
-      description: 'Generate structured prompts for AI image generation tools.',
-      id: 'prompt'
-    }
+    // {
+    //   title: 'Prompt Assistant',
+    //   description: 'Generate structured prompts for AI image generation tools.',
+    //   id: 'prompt'
+    // }
   ];
 
   const handleFeatureClick = (featureId) => {
@@ -133,7 +133,7 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
                   }
                 }}
               >
-                {!isLoggedIn && hasLoggedOutUserClicked ? 'Log in' : 'Generate'}
+                {!isLoggedIn && hasLoggedOutUserClicked ? 'Log in' : 'Generate ✨'}
               </button>
             </div>
             <div className="visual-tools-flex">

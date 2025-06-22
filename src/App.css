@@ -538,6 +538,8 @@ body {
   margin: 40px auto;
   padding: 0 20px;
   overflow-x: hidden;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .home-description {
@@ -2499,6 +2501,9 @@ body {
   flex-direction: row;
   align-items: flex-start;
   gap: 0;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
@@ -2538,6 +2543,8 @@ body {
   flex: 1;
   width: 100%;
   padding: 0 20px;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .copy-btn-container {

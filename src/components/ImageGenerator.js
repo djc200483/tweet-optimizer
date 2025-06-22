@@ -1061,7 +1061,12 @@ export default function ImageGenerator() {
                           <div className="assistant-style-selector">
                             <select
                               value={assistantSelectedOptions.resolution}
-                              onChange={(e) => handleAssistantOptionChange('resolution', 'main', e.target.value)}
+                              onChange={(e) => {
+                                setAssistantSelectedOptions(prev => ({
+                                  ...prev,
+                                  resolution: e.target.value
+                                }));
+                              }}
                             >
                               <option value="">Select Resolution</option>
                               {category.options.map((option) => (

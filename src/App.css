@@ -2312,9 +2312,30 @@ body {
 }
 
 .tab-description .feature-button {
-  width: auto;
-  display: inline-block;
-  padding: 10px 30px;
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.2);
+  animation: generatePulse 2s ease-in-out infinite;
+}
+
+@keyframes generatePulse {
+  0% {
+    box-shadow: 0 4px 15px rgba(0, 194, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 15px rgba(0, 194, 255, 0.2), 0 0 0 2px rgba(0, 194, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(0, 194, 255, 0.2);
+  }
 }
 
 @media (max-width: 768px) {

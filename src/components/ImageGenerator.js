@@ -35,6 +35,7 @@ export default function ImageGenerator() {
   });
   const [assistantGeneratedPrompt, setAssistantGeneratedPrompt] = useState('');
   const [assistantCollapsedSections, setAssistantCollapsedSections] = useState({});
+  const [assistantSelectionOrder, setAssistantSelectionOrder] = useState([]);
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
@@ -572,58 +573,22 @@ export default function ImageGenerator() {
   const generateAssistantPrompt = () => {
     let prompt = '';
     
-    if (assistantSelectedOptions.subject.main) {
-      prompt += assistantSelectedOptions.subject.main;
-      if (assistantSelectedOptions.subject.sub) {
-        prompt += `, ${assistantSelectedOptions.subject.sub}`;
+    // Build prompt based on selection order
+    assistantSelectionOrder.forEach(category => {
+      if (category === 'resolution') {
+        if (assistantSelectedOptions.resolution) {
+          prompt += prompt ? `, ${assistantSelectedOptions.resolution}` : assistantSelectedOptions.resolution;
+        }
+      } else {
+        const option = assistantSelectedOptions[category];
+        if (option.main) {
+          prompt += prompt ? `, ${option.main}` : option.main;
+          if (option.sub) {
+            prompt += `, ${option.sub}`;
+          }
+        }
       }
-    }
-
-    if (assistantSelectedOptions.resolution) {
-      prompt += `, ${assistantSelectedOptions.resolution}`;
-    }
-
-    if (assistantSelectedOptions.style.main) {
-      prompt += `, ${assistantSelectedOptions.style.main}`;
-      if (assistantSelectedOptions.style.sub) {
-        prompt += `, ${assistantSelectedOptions.style.sub}`;
-      }
-    }
-
-    if (assistantSelectedOptions.emotion.main) {
-      prompt += `, ${assistantSelectedOptions.emotion.main}`;
-      if (assistantSelectedOptions.emotion.sub) {
-        prompt += `, ${assistantSelectedOptions.emotion.sub}`;
-      }
-    }
-
-    if (assistantSelectedOptions.lighting.main) {
-      prompt += `, ${assistantSelectedOptions.lighting.main}`;
-      if (assistantSelectedOptions.lighting.sub) {
-        prompt += `, ${assistantSelectedOptions.lighting.sub}`;
-      }
-    }
-
-    if (assistantSelectedOptions.composition.main) {
-      prompt += `, ${assistantSelectedOptions.composition.main}`;
-      if (assistantSelectedOptions.composition.sub) {
-        prompt += `, ${assistantSelectedOptions.composition.sub}`;
-      }
-    }
-
-    if (assistantSelectedOptions.timePeriod.main) {
-      prompt += `, ${assistantSelectedOptions.timePeriod.main}`;
-      if (assistantSelectedOptions.timePeriod.sub) {
-        prompt += `, ${assistantSelectedOptions.timePeriod.sub}`;
-      }
-    }
-
-    if (assistantSelectedOptions.extraDetails.main) {
-      prompt += `, ${assistantSelectedOptions.extraDetails.main}`;
-      if (assistantSelectedOptions.extraDetails.sub) {
-        prompt += `, ${assistantSelectedOptions.extraDetails.sub}`;
-      }
-    }
+    });
 
     return prompt.trim();
   };
@@ -631,7 +596,7 @@ export default function ImageGenerator() {
   useEffect(() => {
     const newPrompt = generateAssistantPrompt();
     setAssistantGeneratedPrompt(newPrompt);
-  }, [assistantSelectedOptions]);
+  }, [assistantSelectedOptions, assistantSelectionOrder]);
 
   const handleAssistantOptionChange = (category, type, value) => {
     setAssistantSelectedOptions(prev => ({
@@ -641,6 +606,23 @@ export default function ImageGenerator() {
         [type]: value
       }
     }));
+
+    // Track selection order
+    if (value && !assistantSelectionOrder.includes(category)) {
+      setAssistantSelectionOrder(prev => [...prev, category]);
+    }
+  };
+
+  const handleResolutionChange = (value) => {
+    setAssistantSelectedOptions(prev => ({
+      ...prev,
+      resolution: value
+    }));
+
+    // Track selection order for resolution
+    if (value && !assistantSelectionOrder.includes('resolution')) {
+      setAssistantSelectionOrder(prev => [...prev, 'resolution']);
+    }
   };
 
   const toggleAssistantSection = (section) => {
@@ -1062,10 +1044,7 @@ export default function ImageGenerator() {
                             <select
                               value={assistantSelectedOptions.resolution}
                               onChange={(e) => {
-                                setAssistantSelectedOptions(prev => ({
-                                  ...prev,
-                                  resolution: e.target.value
-                                }));
+                                handleResolutionChange(e.target.value);
                               }}
                             >
                               <option value="">Select Resolution</option>

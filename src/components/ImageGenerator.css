@@ -313,8 +313,11 @@
   }
 
   .gallery-wrapper .masonry-grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
+    display: flex;
+    margin-left: -2px;
+    width: calc(100% + 2px);
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 }
 
@@ -326,6 +329,8 @@
   background: #1a1b1f;
   width: 98%;
   margin: 40px auto 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .left-toolbar {
@@ -432,6 +437,8 @@
 .main-content {
   flex: 1;
   min-width: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .feature-description {
@@ -449,6 +456,8 @@
 
 .gallery-wrapper {
   width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
@@ -457,6 +466,8 @@
     padding: 16px;
     width: 100%;
     margin-top: 60px;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .left-toolbar {
@@ -468,6 +479,8 @@
 
   .main-content {
     width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 }
 
@@ -475,6 +488,8 @@
   .optimizer-container.image-generator-page {
     padding: 12px;
     margin-top: 50px;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .left-toolbar {

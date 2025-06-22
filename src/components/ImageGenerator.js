@@ -237,9 +237,13 @@ export default function ImageGenerator() {
         // text-to-image or image-to-image
         const payload = {
           prompt,
-          aspectRatio: selectedAspectRatio,
           model: selectedModel,
         };
+        
+        // Add aspectRatio for non-bytedance models
+        if (selectedModel !== 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
+          payload.aspectRatio = selectedAspectRatio;
+        }
         
         // Add bytedance-specific parameters
         if (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {

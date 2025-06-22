@@ -940,6 +940,43 @@
   text-align: center;
 }
 
+.assistant-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.assistant-modal-header h3 {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.assistant-modal-close {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assistant-modal-close:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .assistant-modal-body {
   display: flex;
   flex-direction: column;

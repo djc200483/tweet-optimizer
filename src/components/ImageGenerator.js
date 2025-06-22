@@ -1004,7 +1004,15 @@ export default function ImageGenerator() {
       {isAssistantModalOpen && (
         <div className="assistant-modal-overlay">
           <div className="assistant-modal-content">
-            <h3>Assistant Prompt Builder</h3>
+            <div className="assistant-modal-header">
+              <h3>Assistant Prompt Builder</h3>
+              <button 
+                className="assistant-modal-close"
+                onClick={handleCloseAssistantModal}
+              >
+                ×
+              </button>
+            </div>
             
             <div className="assistant-modal-body">
               <div className="assistant-categories">

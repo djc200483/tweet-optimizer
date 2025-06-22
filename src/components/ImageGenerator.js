@@ -43,7 +43,8 @@ export default function ImageGenerator() {
     { value: 'black-forest-labs/flux-1.1-pro-ultra', label: 'Flux 1.1 Pro Ultra', description: 'Ultra‑high resolution images quickly, with photoreal realism.' },
     { value: 'google/imagen-4', label: 'Imagen 4', description: 'Top-tier photorealism, sharp detail and typography.' },
     { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' },
-    { value: 'recraft-ai/recraft-v3', label: 'Recraft V3', description: 'High-quality image generation with style control.' }
+    { value: 'recraft-ai/recraft-v3', label: 'Recraft V3', description: 'High-quality image generation with style control.' },
+    { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' }
   ];
 
   const imageToImageModels = [
@@ -135,7 +136,8 @@ export default function ImageGenerator() {
     'black-forest-labs/flux-1.1-pro-ultra': naturalAspectRatios,
     'google/imagen-4': imagen4AspectRatios,
     'minimax/image-01': minimaxAspectRatios,
-    'recraft-ai/recraft-v3': recraftAspectRatios
+    'recraft-ai/recraft-v3': recraftAspectRatios,
+    'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe': [{ value: '1:1', label: 'Square (1:1)' }]
   };
 
   const defaultModel = 'black-forest-labs/flux-schnell';
@@ -238,6 +240,16 @@ export default function ImageGenerator() {
           aspectRatio: selectedAspectRatio,
           model: selectedModel,
         };
+        
+        // Add bytedance-specific parameters
+        if (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
+          payload.width = 1024;
+          payload.height = 1024;
+          payload.seed = 0;
+          payload.num_outputs = 2;
+          payload.num_inference_steps = 4;
+        }
+        
         if (generationType === 'image-to-image' && sourceImage) {
           // Read file as base64
           payload.sourceImageBase64 = await new Promise((resolve, reject) => {
@@ -818,6 +830,8 @@ export default function ImageGenerator() {
                         setSelectedModel(model.value);
                         if (model.value === 'flux-kontext-apps/portrait-series') {
                           setSelectedAspectRatio('');
+                        } else if (model.value === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
+                          setSelectedAspectRatio('1:1');
                         } else {
                           setSelectedAspectRatio(aspectRatios[model.value][0].value);
                         }
@@ -829,6 +843,8 @@ export default function ImageGenerator() {
                           setSelectedModel(model.value);
                           if (model.value === 'flux-kontext-apps/portrait-series') {
                             setSelectedAspectRatio('');
+                          } else if (model.value === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
+                            setSelectedAspectRatio('1:1');
                           } else {
                             setSelectedAspectRatio(aspectRatios[model.value][0].value);
                           }
@@ -896,15 +912,20 @@ export default function ImageGenerator() {
               <div
                 className="model-select-header"
                 onClick={() => {
-                  if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series')) {
+                  if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
+                      !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe')) {
                     setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
                   }
                 }}
-                style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
+                style={(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') || 
+                       (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') ? 
+                       { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
               >
                 {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
               </div>
-              {isAspectRatioDropdownOpen && !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && (
+              {isAspectRatioDropdownOpen && 
+               !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
+               !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') && (
                 <div className="model-dropdown">
                   {aspectRatios[selectedModel]?.map(ratio => (
                     <div

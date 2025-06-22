@@ -21,6 +21,7 @@ export default function ImageGenerator() {
   const [isSuperchargeModalOpen, setIsSuperchargeModalOpen] = useState(false);
   const [superchargedPrompt, setSuperchargedPrompt] = useState('');
   const [isSuperchargeLoading, setIsSuperchargeLoading] = useState(false);
+  const [isAssistantLoading, setIsAssistantLoading] = useState(false);
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
@@ -543,6 +544,13 @@ export default function ImageGenerator() {
                 disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
                 style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
               />
+              <button
+                className="supercharge-button-inline"
+                disabled={!prompt}
+                style={{ right: '120px' }}
+              >
+                Assistant
+              </button>
               <button
                 onClick={handleSupercharge}
                 className="supercharge-button-inline"

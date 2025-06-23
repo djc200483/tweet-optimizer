@@ -477,7 +477,11 @@
   width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
-  margin-top: -20px; /* Move gallery up slightly */
+}
+
+/* Move only the gallery content up, not the buttons */
+.gallery-wrapper .masonry-grid {
+  margin-top: -20px;
 }
 
 @media (max-width: 1024px) {

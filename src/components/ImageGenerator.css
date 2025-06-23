@@ -437,8 +437,9 @@
 .main-content {
   flex: 1;
   min-width: 0;
-  overflow-x: hidden;
+  overflow-x: visible;
   box-sizing: border-box;
+  position: relative;
 }
 
 .feature-description {

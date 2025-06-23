@@ -16,9 +16,6 @@
   width: auto;
   flex-shrink: 0;
   padding-top: 0;
-  position: sticky;
-  top: 0;
-  z-index: 1500;
   background: rgba(26, 27, 31, 0.95);
   padding: 20px 0;
   backdrop-filter: blur(10px);

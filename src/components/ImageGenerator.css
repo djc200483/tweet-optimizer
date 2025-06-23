@@ -479,9 +479,9 @@
   box-sizing: border-box;
 }
 
-/* Move only the gallery content up, not the buttons */
+/* Remove negative margin so modal overlays work correctly */
 .gallery-wrapper .masonry-grid {
-  margin-top: -40px;
+  margin-top: 0;
 }
 
 @media (max-width: 1024px) {
@@ -1194,4 +1194,9 @@
   .assistant-modal-actions .modal-button {
     width: 100%;
   }
+}
+
+/* Adjust gap between buttons and gallery */
+.gallery-tabs {
+  margin-bottom: 20px;
 } 

@@ -481,7 +481,7 @@
 
 /* Move only the gallery content up, not the buttons */
 .gallery-wrapper .masonry-grid {
-  margin-top: -20px;
+  margin-top: -40px;
 }
 
 @media (max-width: 1024px) {

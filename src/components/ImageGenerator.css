@@ -329,7 +329,7 @@
   background: #1a1b1f;
   width: 98%;
   margin: 40px auto 0;
-  overflow-x: hidden;
+  overflow-x: visible;
   box-sizing: border-box;
 }
 

@@ -441,6 +441,15 @@
   overflow-x: hidden;
   box-sizing: border-box;
   position: relative;
+  
+  /* Custom scrollbar styling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.main-content::-webkit-scrollbar {
+  display: none;
 }
 
 .feature-description {

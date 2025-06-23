@@ -362,6 +362,14 @@
   margin: 0;
 }
 
+.toolbar-label {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  display: block;
+}
+
 .prompt-textarea {
   width: 100%;
   padding: 12px;

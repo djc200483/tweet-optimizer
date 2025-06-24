@@ -69,6 +69,7 @@
   }
 
   .optimizer-container.image-generator-page {
+    display: block;
     height: auto;
     overflow: visible;
     padding: 12px;

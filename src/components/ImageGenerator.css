@@ -69,26 +69,34 @@
   }
 
   .optimizer-container.image-generator-page {
-    display: block;
-    height: auto;
-    overflow: visible;
-    padding: 12px;
-    margin-top: 50px;
-    box-sizing: border-box;
+    display: block !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
   }
 
   .left-toolbar {
-    flex: none;
-    width: 100%;
-    padding: 16px;
+    display: block !important;
+    width: 100% !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
   }
 
   .main-content {
-    display: block;
-    flex: none;
-    width: 100%;
-    height: auto;
-    overflow: visible;
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
   }
 
   .prompt-textarea,

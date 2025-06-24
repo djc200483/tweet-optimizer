@@ -75,7 +75,7 @@
     height: auto !important;
     overflow: visible !important;
     margin: 0 !important;
-    margin-top: 40px !important;
+    margin-top: 60px !important;
     padding: 0 8px !important;
     box-sizing: border-box !important;
   }
@@ -85,7 +85,7 @@
     width: 100% !important;
     position: static !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 8px !important;
     box-sizing: border-box !important;
   }
 

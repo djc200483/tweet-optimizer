@@ -436,8 +436,8 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
             tabIndex={0}
           >
             <HeartIcon
-              width={18}
-              height={18}
+              width={20}
+              height={16}
               fill={like.liked ? '#e0245e' : 'none'}
               stroke="#fff"
               style={{ display: 'block' }}

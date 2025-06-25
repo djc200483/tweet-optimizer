@@ -144,4 +144,75 @@ router.post('/:id/like', authMiddleware, async (req, res) => {
   }
 });
 
+// In-memory cache for liked-today gallery
+let likedTodayCache = {
+  date: null, // e.g. '2024-06-10'
+  images: null
+};
+
+// Helper to get previous UTC day as YYYY-MM-DD
+function getPrevUtcDayString() {
+  const now = new Date();
+  now.setUTCHours(0, 0, 0, 0);
+  now.setUTCDate(now.getUTCDate() - 1);
+  return now.toISOString().slice(0, 10);
+}
+
+// GET /api/images/liked-today
+router.get('/liked-today', async (req, res) => {
+  try {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().slice(0, 10);
+    if (likedTodayCache.date === todayStr && likedTodayCache.images) {
+      return res.json(likedTodayCache.images);
+    }
+    const prevDay = new Date(today);
+    prevDay.setUTCDate(today.getUTCDate() - 1);
+    const prevDayStr = prevDay.toISOString().slice(0, 10);
+    const prevDayStart = prevDayStr + 'T00:00:00.000Z';
+    const prevDayEnd = prevDayStr + 'T23:59:59.999Z';
+
+    // 1. Get images liked during previous UTC day
+    const likedResult = await db.query(`
+      SELECT gi.*, 
+        COUNT(il.id) AS like_count,
+        MAX(il.created_at) AS last_liked_at
+      FROM image_likes il
+      JOIN generated_images gi ON il.image_id = gi.id
+      WHERE il.created_at >= $1 AND il.created_at <= $2
+        AND gi.is_private = false
+      GROUP BY gi.id
+      ORDER BY last_liked_at DESC
+      LIMIT 80
+    `, [prevDayStart, prevDayEnd]);
+    let images = likedResult.rows;
+    const likedImageIds = images.map(img => img.id);
+
+    // 2. If fewer than 80, fill with random public images not already included
+    if (images.length < 80) {
+      const fillCount = 80 - images.length;
+      const fillResult = await db.query(`
+        SELECT gi.*,
+          (SELECT COUNT(*) FROM image_likes il WHERE il.image_id = gi.id) AS like_count
+        FROM generated_images gi
+        WHERE gi.is_private = false
+          AND gi.id NOT IN (${likedImageIds.length > 0 ? likedImageIds.join(',') : 'NULL'})
+        ORDER BY RANDOM()
+        LIMIT $1
+      `, [fillCount]);
+      images = images.concat(fillResult.rows);
+    }
+    // Cache for the day
+    likedTodayCache = {
+      date: todayStr,
+      images
+    };
+    res.json(images);
+  } catch (error) {
+    console.error('Error fetching liked-today gallery:', error);
+    res.status(500).json({ error: 'Failed to fetch liked-today gallery' });
+  }
+});
+
 module.exports = router; 

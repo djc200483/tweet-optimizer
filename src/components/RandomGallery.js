@@ -50,7 +50,7 @@ export default function RandomGallery() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/api/images/explore`, {
+      const response = await fetch(`${API_URL}/api/images/liked-today`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -58,9 +58,8 @@ export default function RandomGallery() {
       });
       if (!response.ok) throw new Error('Failed to fetch images');
       const allImages = await response.json();
-      const randomImages = getRandomSample(allImages, IMAGE_LIMIT);
-      setImages(randomImages);
-      localStorage.setItem(CACHE_KEY, JSON.stringify(randomImages));
+      setImages(allImages);
+      localStorage.setItem(CACHE_KEY, JSON.stringify(allImages));
       localStorage.setItem(CACHE_TIMESTAMP_KEY, new Date().toISOString());
     } catch (err) {
       setError('Failed to load images. Please try again later.');

@@ -306,19 +306,38 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     }
   }, [images, activeTab]);
 
+  // Persist likeStatus changes to cached data
+  useEffect(() => {
+    if (activeTab === 'explore' && exploreImages.length > 0 && Object.keys(likeStatus).length > 0) {
+      // Update the cached images with current like status
+      const updatedImages = exploreImages.map(img => ({
+        ...img,
+        liked_by_user: likeStatus[img.id]?.liked || false,
+        like_count: likeStatus[img.id]?.count || 0
+      }));
+      
+      // Update both state and cache
+      setExploreImages(updatedImages);
+      setCacheData(updatedImages);
+      localStorage.setItem('exploreImages', JSON.stringify(updatedImages));
+    }
+  }, [likeStatus, activeTab, exploreImages]);
+
   // Like/unlike handler
   const handleToggleLike = async (e, imageId) => {
     e.stopPropagation();
     if (!token) return;
+    
+    // Optimistic update
     setLikeStatus(prev => ({
       ...prev,
       [imageId]: {
         ...prev[imageId],
-        // Optimistic toggle
         liked: !prev[imageId]?.liked,
         count: prev[imageId]?.liked ? prev[imageId].count - 1 : prev[imageId].count + 1
       }
     }));
+    
     try {
       const res = await fetch(`${API_URL}/api/images/${imageId}/like`, {
         method: 'POST',

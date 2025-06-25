@@ -27,9 +27,19 @@ router.get('/my-images', authMiddleware, async (req, res) => {
 });
 
 // Get all public images (explore) with like info
-router.get('/explore', authMiddleware, async (req, res) => {
+router.get('/explore', async (req, res) => {
   try {
-    const userId = req.user.id;
+    // If user is logged in, get their id from token, else null
+    let userId = null;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      try {
+        const jwt = require('jsonwebtoken');
+        const decoded = jwt.verify(req.headers.authorization.replace('Bearer ', ''), process.env.JWT_SECRET);
+        userId = decoded.id;
+      } catch (e) {
+        userId = null;
+      }
+    }
     const result = await db.query(
       `WITH ranked_images AS (
         SELECT 

@@ -306,22 +306,26 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     }
   }, [images, activeTab]);
 
-  // Persist likeStatus changes to cached data
+  // Persist likeStatus to localStorage
   useEffect(() => {
-    if (activeTab === 'explore' && exploreImages.length > 0 && Object.keys(likeStatus).length > 0) {
-      // Update the cached images with current like status
-      const updatedImages = exploreImages.map(img => ({
-        ...img,
-        liked_by_user: likeStatus[img.id]?.liked || false,
-        like_count: likeStatus[img.id]?.count || 0
-      }));
-      
-      // Update both state and cache
-      setExploreImages(updatedImages);
-      setCacheData(updatedImages);
-      localStorage.setItem('exploreImages', JSON.stringify(updatedImages));
+    if (activeTab === 'explore' && Object.keys(likeStatus).length > 0) {
+      localStorage.setItem('exploreLikeStatus', JSON.stringify(likeStatus));
     }
-  }, [likeStatus, activeTab, exploreImages]);
+  }, [likeStatus, activeTab]);
+
+  // Load likeStatus from localStorage on mount
+  useEffect(() => {
+    if (activeTab === 'explore') {
+      const savedLikeStatus = localStorage.getItem('exploreLikeStatus');
+      if (savedLikeStatus) {
+        try {
+          setLikeStatus(JSON.parse(savedLikeStatus));
+        } catch (error) {
+          console.error('Error loading like status:', error);
+        }
+      }
+    }
+  }, [activeTab]);
 
   // Like/unlike handler
   const handleToggleLike = async (e, imageId) => {

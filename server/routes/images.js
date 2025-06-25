@@ -202,15 +202,27 @@ router.get('/liked-today', async (req, res) => {
     // 2. If fewer than 80, fill with random public images not already included
     if (images.length < 80) {
       const fillCount = 80 - images.length;
-      const fillResult = await db.query(`
-        SELECT gi.*,
-          (SELECT COUNT(*) FROM image_likes il WHERE il.image_id = gi.id) AS like_count
-        FROM generated_images gi
-        WHERE gi.is_private = false
-          AND gi.id NOT IN (${likedImageIds.length > 0 ? likedImageIds.join(',') : 'NULL'})
-        ORDER BY RANDOM()
-        LIMIT $1
-      `, [fillCount]);
+      let fillResult;
+      if (likedImageIds.length > 0) {
+        fillResult = await db.query(`
+          SELECT gi.*,
+            (SELECT COUNT(*) FROM image_likes il WHERE il.image_id = gi.id) AS like_count
+          FROM generated_images gi
+          WHERE gi.is_private = false
+            AND gi.id NOT IN (${likedImageIds.join(',')})
+          ORDER BY RANDOM()
+          LIMIT $1
+        `, [fillCount]);
+      } else {
+        fillResult = await db.query(`
+          SELECT gi.*,
+            (SELECT COUNT(*) FROM image_likes il WHERE il.image_id = gi.id) AS like_count
+          FROM generated_images gi
+          WHERE gi.is_private = false
+          ORDER BY RANDOM()
+          LIMIT $1
+        `, [fillCount]);
+      }
       images = images.concat(fillResult.rows);
     }
     // Cache for the day

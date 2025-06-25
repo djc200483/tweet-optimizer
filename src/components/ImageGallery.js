@@ -295,11 +295,17 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   // Update likeStatus when images change (Explore tab only)
   useEffect(() => {
     if (activeTab === 'explore' && images.length > 0) {
+      // Load saved like status first
+      const savedLikeStatus = localStorage.getItem('exploreLikeStatus');
+      const savedStatus = savedLikeStatus ? JSON.parse(savedLikeStatus) : {};
+      
+      // Merge API data with saved like status
       const status = {};
       images.forEach(img => {
+        const savedLike = savedStatus[img.id];
         status[img.id] = {
-          liked: !!img.liked_by_user,
-          count: typeof img.like_count === 'number' ? img.like_count : 0
+          liked: savedLike ? savedLike.liked : !!img.liked_by_user,
+          count: savedLike ? savedLike.count : (typeof img.like_count === 'number' ? img.like_count : 0)
         };
       });
       setLikeStatus(status);

@@ -817,32 +817,38 @@
 
 .like-heart-btn {
   position: absolute;
-  right: 12px;
-  bottom: 12px;
-  background: rgba(30,32,40,0.85);
+  right: 6px;
+  bottom: 6px;
+  background: none;
   border: none;
-  border-radius: 50%;
-  padding: 6px 8px 6px 8px;
+  border-radius: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  box-shadow: none;
+  transition: none;
+  min-width: unset;
+  min-height: unset;
 }
 
 .like-heart-btn svg {
+  width: 18px;
+  height: 18px;
   display: block;
   transition: fill 0.2s;
+  filter: none;
 }
 
 .like-heart-btn .like-count {
   color: #fff;
-  font-size: 1rem;
-  margin-left: 6px;
-  font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  font-size: 0.95rem;
+  margin-left: 3px;
+  font-weight: 400;
+  text-shadow: none;
+  line-height: 1;
 }
 
 .like-heart-btn.liked svg {
@@ -851,16 +857,19 @@
 }
 
 .like-heart-btn:focus {
-  outline: 2px solid #e0245e;
+  outline: none;
 }
 
 @media (max-width: 768px) {
   .like-heart-btn {
-    right: 8px;
-    bottom: 8px;
-    padding: 4px 6px 4px 6px;
+    right: 4px;
+    bottom: 4px;
+  }
+  .like-heart-btn svg {
+    width: 16px;
+    height: 16px;
   }
   .like-heart-btn .like-count {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
 } 

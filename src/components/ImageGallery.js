@@ -3,6 +3,7 @@ import { useAuth } from './auth/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
 import Masonry from 'react-masonry-css';
 import './ImageGallery.css';
+import { ReactComponent as HeartIcon } from '../assets/heart.svg';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -45,7 +46,7 @@ const setCacheData = (data) => {
 };
 
 export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -64,6 +65,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const [lastExploreFetch, setLastExploreFetch] = useState(() => {
     return localStorage.getItem('lastExploreFetch') || null;
   });
+  const [likeStatus, setLikeStatus] = useState({});
 
   // Update localStorage when cache changes
   useEffect(() => {
@@ -290,8 +292,66 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
     return () => observer.disconnect();
   }, [images]);
 
+  // Update likeStatus when images change (Explore tab only)
+  useEffect(() => {
+    if (activeTab === 'explore' && images.length > 0) {
+      const status = {};
+      images.forEach(img => {
+        status[img.id] = {
+          liked: !!img.liked_by_user,
+          count: typeof img.like_count === 'number' ? img.like_count : 0
+        };
+      });
+      setLikeStatus(status);
+    }
+  }, [images, activeTab]);
+
+  // Like/unlike handler
+  const handleToggleLike = async (e, imageId) => {
+    e.stopPropagation();
+    if (!token) return;
+    setLikeStatus(prev => ({
+      ...prev,
+      [imageId]: {
+        ...prev[imageId],
+        // Optimistic toggle
+        liked: !prev[imageId]?.liked,
+        count: prev[imageId]?.liked ? prev[imageId].count - 1 : prev[imageId].count + 1
+      }
+    }));
+    try {
+      const res = await fetch(`${API_URL}/api/images/${imageId}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setLikeStatus(prev => ({
+          ...prev,
+          [imageId]: {
+            liked: data.liked_by_user,
+            count: data.like_count
+          }
+        }));
+      }
+    } catch (err) {
+      // Revert optimistic update on error
+      setLikeStatus(prev => ({
+        ...prev,
+        [imageId]: {
+          ...prev[imageId],
+          liked: !prev[imageId]?.liked,
+          count: prev[imageId]?.liked ? prev[imageId].count + 1 : prev[imageId].count - 1
+        }
+      }));
+    }
+  };
+
   const renderImage = (image) => {
     const isVisible = visibleImages.has(image.id.toString());
+    const like = likeStatus[image.id] || { liked: false, count: 0 };
     
     return (
       <div 
@@ -338,6 +398,30 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
             />
           )}
         </div>
+        {/* Heart/like button for Explore tab, logged-in users only */}
+        {activeTab === 'explore' && user && (
+          <button
+            className={`like-heart-btn${like.liked ? ' liked' : ''}`}
+            onClick={e => handleToggleLike(e, image.id)}
+            aria-label={like.liked ? 'Unlike' : 'Like'}
+            tabIndex={0}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="28"
+              height="28"
+              fill={like.liked ? '#e0245e' : 'none'}
+              stroke="#fff"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.25))' }}
+            >
+              <path d="M12 21s-6.2-5.3-8.5-8.1C1.2 10.1 1.5 6.6 4.4 4.9c2.1-1.2 4.7-0.5 6.1 1.3C11.9 4.4 14.5 3.7 16.6 4.9c2.9 1.7 3.2 5.2 0.9 8C18.2 15.7 12 21 12 21z" />
+            </svg>
+            <span className="like-count">{like.count}</span>
+          </button>
+        )}
         <div className="hover-overlay">
           <div className="creator-info">
             <span className="creator-handle">{image.creator_handle}</span>

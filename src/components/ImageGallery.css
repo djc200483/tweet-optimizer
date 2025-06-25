@@ -109,6 +109,7 @@
   transition: transform 0.2s ease;
   background-color: #1e2028;
   overflow: hidden;
+  position: relative;
 }
 
 .image-item:hover {
@@ -432,6 +433,15 @@
     padding: 1px 4px;
     font-size: 0.7rem;
     margin-left: 6px;
+  }
+
+  .like-heart-btn {
+    right: 8px;
+    bottom: 8px;
+    padding: 4px 6px 4px 6px;
+  }
+  .like-heart-btn .like-count {
+    font-size: 0.95rem;
   }
 }
 
@@ -802,5 +812,55 @@
 
   .image-item {
     margin-bottom: 1px;
+  }
+}
+
+.like-heart-btn {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(30,32,40,0.85);
+  border: none;
+  border-radius: 50%;
+  padding: 6px 8px 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+.like-heart-btn svg {
+  display: block;
+  transition: fill 0.2s;
+}
+
+.like-heart-btn .like-count {
+  color: #fff;
+  font-size: 1rem;
+  margin-left: 6px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+
+.like-heart-btn.liked svg {
+  fill: #e0245e !important;
+  stroke: #e0245e !important;
+}
+
+.like-heart-btn:focus {
+  outline: 2px solid #e0245e;
+}
+
+@media (max-width: 768px) {
+  .like-heart-btn {
+    right: 8px;
+    bottom: 8px;
+    padding: 4px 6px 4px 6px;
+  }
+  .like-heart-btn .like-count {
+    font-size: 0.95rem;
   }
 } 

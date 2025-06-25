@@ -435,19 +435,13 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
             aria-label={like.liked ? 'Unlike' : 'Like'}
             tabIndex={0}
           >
-            <svg
-              viewBox="0 0 24 24"
-              width="28"
-              height="28"
+            <HeartIcon
+              width={18}
+              height={18}
               fill={like.liked ? '#e0245e' : 'none'}
               stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.25))' }}
-            >
-              <path d="M12 21s-6.2-5.3-8.5-8.1C1.2 10.1 1.5 6.6 4.4 4.9c2.1-1.2 4.7-0.5 6.1 1.3C11.9 4.4 14.5 3.7 16.6 4.9c2.9 1.7 3.2 5.2 0.9 8C18.2 15.7 12 21 12 21z" />
-            </svg>
+              style={{ display: 'block' }}
+            />
             <span className="like-count">{like.count}</span>
           </button>
         )}

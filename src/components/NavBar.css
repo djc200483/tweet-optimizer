@@ -10,6 +10,7 @@
   height: 56px;
   display: flex;
   align-items: center;
+  border-bottom: 1.5px solid rgba(255,255,255,0.10);
 }
 
 .navbar-content {

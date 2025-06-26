@@ -96,7 +96,7 @@ export default function Home({ onSelectFeature, isLoggedIn }) {
     <div className="home-container">
       <div className="home-description">
         <h2 style={{ fontSize: '2.8rem' }}>Welcome to EchoSphere</h2>
-        <p>Your AI-powered platform for crafting engaging and impactful posts, prompts, images and videos</p>
+        <p>An all-in-one AI platform for creating eye-catching images, engaging videos, and impactful written content</p>
       </div>
       
       <div className="content-tabs">

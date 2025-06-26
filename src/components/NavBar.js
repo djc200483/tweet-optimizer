@@ -31,7 +31,7 @@ export default function NavBar() {
   const handleWrittenTools = () => {
     setDropdownOpen(false);
     if (user && token) {
-      navigate('/?tab=written');
+      navigate('/writing-tools');
     } else {
       setShowLoginModal(true);
     }

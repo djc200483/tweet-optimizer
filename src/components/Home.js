@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import RandomGallery from './RandomGallery';
 
-export default function Home({ onSelectFeature, isLoggedIn }) {
-  const [activeTab, setActiveTab] = useState('imagery');
+export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
+  const [activeTab, setActiveTab] = useState(initialTab || 'imagery');
   const [expandedCard, setExpandedCard] = useState(null);
   const [hasLoggedOutUserClicked, setHasLoggedOutUserClicked] = useState(false);
 

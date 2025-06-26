@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './NavBar.css';
 
 export default function NavBar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const closeTimeout = useRef(null);
+  const navigate = useNavigate();
 
   const handleMouseEnter = () => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
@@ -12,6 +14,16 @@ export default function NavBar() {
 
   const handleMouseLeave = () => {
     closeTimeout.current = setTimeout(() => setDropdownOpen(false), 120);
+  };
+
+  const handleVisualTools = () => {
+    setDropdownOpen(false);
+    navigate('/image-generator');
+  };
+
+  const handleWrittenTools = () => {
+    setDropdownOpen(false);
+    navigate('/?tab=written');
   };
 
   return (
@@ -29,8 +41,8 @@ export default function NavBar() {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <button className="navbar-dropdown-item">Visual Tools</button>
-              <button className="navbar-dropdown-item">Written Tools</button>
+              <button className="navbar-dropdown-item" onClick={handleVisualTools}>Visual Tools</button>
+              <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Written Tools</button>
             </div>
           )}
         </div>

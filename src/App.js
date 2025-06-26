@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/auth/AuthContext';
 import Auth from './components/auth/Auth';
 import ResetPassword from './components/auth/ResetPassword';
@@ -22,6 +22,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 function AppContent() {
   const { token, user, logout, isAuthLoading, authError, isAdmin } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [showAuth, setShowAuth] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [tweet, setTweet] = useState('');
@@ -390,6 +391,26 @@ function AppContent() {
   };
 
   const isImageGeneratorPage = location.pathname === '/image-generator';
+
+  // Sync currentFeature with route
+  useEffect(() => {
+    if (location.pathname === '/image-generator') {
+      if (!user || !token) {
+        // Not authenticated, redirect to login
+        setCurrentFeature(null);
+        setShowAuth(true);
+        navigate('/');
+      } else {
+        setCurrentFeature('imageGenerator');
+      }
+    } else if (location.pathname === '/') {
+      const params = new URLSearchParams(location.search);
+      if (params.get('tab') === 'written') {
+        setCurrentFeature(null); // Home
+        setActiveTab('written');
+      }
+    }
+  }, [location, user, token, navigate]);
 
   return (
     <>

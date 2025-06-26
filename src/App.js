@@ -14,6 +14,7 @@ import ImageGenerator from './components/ImageGenerator';
 import EvergreenContent from './components/EvergreenContent';
 import Home from './components/Home';
 import LoadingSpinner from './components/LoadingSpinner';
+import NavBar from './components/NavBar';
 import './App.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -391,54 +392,57 @@ function AppContent() {
   const isImageGeneratorPage = location.pathname === '/image-generator';
 
   return (
-    <div className="App">
-      {apiError && (
-        <div className="api-error-banner">
-          API Error: {apiError}
-        </div>
-      )}
-      {authError && (
-        <div className="auth-error-banner">
-          {authError}
-        </div>
-      )}
-      {isAuthLoading ? (
-        <div className="auth-loading">
-          <LoadingSpinner />
-          <p>Loading...</p>
-        </div>
-      ) : (
-        <div className="app-content">
-          {showAuth ? (
-            <Auth onClose={() => setShowAuth(false)} />
-          ) : user?.is_admin ? (
-            <div className="admin-container">
-              <button className="logout-button" onClick={handleLogout}>Logout</button>
-              <Admin />
-            </div>
-          ) : (
-            <>
-              {user && token && currentFeature !== 'imageGenerator' ? (
-                <div className="auth-header">
-                  <span className="user-handle">{displayHandle}</span>
-                  <button className="logout-button" onClick={handleLogout}>
-                    Logout
+    <>
+      <NavBar />
+      <div className="App">
+        {apiError && (
+          <div className="api-error-banner">
+            API Error: {apiError}
+          </div>
+        )}
+        {authError && (
+          <div className="auth-error-banner">
+            {authError}
+          </div>
+        )}
+        {isAuthLoading ? (
+          <div className="auth-loading">
+            <LoadingSpinner />
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <div className="app-content">
+            {showAuth ? (
+              <Auth onClose={() => setShowAuth(false)} />
+            ) : user?.is_admin ? (
+              <div className="admin-container">
+                <button className="logout-button" onClick={handleLogout}>Logout</button>
+                <Admin />
+              </div>
+            ) : (
+              <>
+                {user && token && currentFeature !== 'imageGenerator' ? (
+                  <div className="auth-header">
+                    <span className="user-handle">{displayHandle}</span>
+                    <button className="logout-button" onClick={handleLogout}>
+                      Logout
+                    </button>
+                  </div>
+                ) : !user && !token && currentFeature !== 'imageGenerator' ? (
+                  <button 
+                    className="auth-toggle-button"
+                    onClick={() => setShowAuth(true)}
+                  >
+                    Login/Register
                   </button>
-                </div>
-              ) : !user && !token && currentFeature !== 'imageGenerator' ? (
-                <button 
-                  className="auth-toggle-button"
-                  onClick={() => setShowAuth(true)}
-                >
-                  Login/Register
-                </button>
-              ) : null}
-              {renderFeature()}
-            </>
-          )}
-        </div>
-      )}
-    </div>
+                ) : null}
+                {renderFeature()}
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 

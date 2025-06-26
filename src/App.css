@@ -8,6 +8,7 @@ body {
 
 .App {
   text-align: center;
+  padding-top: 56px;
 }
 
 .input-container {

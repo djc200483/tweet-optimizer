@@ -2648,18 +2648,16 @@ body {
 
 .featured-gallery-title {
   font-size: 1.6rem;
-  font-weight: 600;
   background: linear-gradient(135deg, #00c2ff, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0 0 20px 20px;
-  text-align: left;
-  font-family: inherit;
+  font-weight: 600;
   line-height: 1.2;
+  font-family: inherit;
+  text-align: left;
   display: block;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .featured-gallery-title::before {

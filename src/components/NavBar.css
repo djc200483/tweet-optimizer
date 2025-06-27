@@ -7,7 +7,7 @@
   background: rgba(24, 26, 32, 0.98);
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   padding: 0;
-  height: auto;
+  height: 120px;
   display: flex;
   align-items: center;
   border-bottom: 1.5px solid rgba(255,255,255,0.10);
@@ -19,7 +19,7 @@
   margin: 0;
   display: flex;
   align-items: center;
-  height: auto;
+  height: 120px;
   padding: 0 24px;
   justify-content: flex-start;
 }
@@ -162,8 +162,7 @@
 .navbar-logo {
   height: 110px;
   width: auto;
-  margin-right: 28px;
-  margin-left: 0;
+  margin: 5px 28px 5px 0;
   display: inline-block;
   object-fit: contain;
   align-self: center;

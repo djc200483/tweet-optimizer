@@ -42,7 +42,9 @@ export default function NavBar() {
     <>
       <nav className="navbar">
         <div className="navbar-content">
-          <img src={logo} alt="Site Logo" className="navbar-logo" />
+          <button className="navbar-logo-btn" onClick={() => navigate('/')} tabIndex={0} aria-label="Go to Home">
+            <img src={logo} alt="Site Logo" className="navbar-logo" />
+          </button>
           <div
             className="navbar-item navbar-dropdown"
             onMouseEnter={handleMouseEnter}

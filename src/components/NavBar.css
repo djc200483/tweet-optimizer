@@ -6,8 +6,8 @@
   z-index: 100;
   background: rgba(24, 26, 32, 0.98);
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  padding: 0 0;
-  height: 120px;
+  padding: 0;
+  height: auto;
   display: flex;
   align-items: center;
   border-bottom: 1.5px solid rgba(255,255,255,0.10);
@@ -19,8 +19,8 @@
   margin: 0;
   display: flex;
   align-items: center;
-  height: 120px;
-  padding: 0 32px;
+  height: auto;
+  padding: 0 24px;
   justify-content: flex-start;
 }
 
@@ -167,4 +167,18 @@
   display: inline-block;
   object-fit: contain;
   align-self: center;
+}
+
+.navbar-logo-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo-btn:focus {
+  outline: 2px solid #a855f7;
 } 

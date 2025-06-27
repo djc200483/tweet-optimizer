@@ -2539,7 +2539,18 @@ body {
   width: 0;
   display: none;
 }
+
 .visual-tools-flex > *:last-child {
+  min-width: 0;
+  flex: 1;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Add specific styling for RandomGallery to ensure it takes full width */
+.visual-tools-flex .image-gallery {
   min-width: 0;
   flex: 1;
   width: 100%;

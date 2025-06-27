@@ -215,7 +215,6 @@ function AppContent() {
   };
 
   const renderFeature = () => {
-    console.log('Rendering feature:', currentFeature);
     switch(currentFeature) {
       case 'auth':
         return (

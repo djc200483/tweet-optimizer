@@ -2718,3 +2718,35 @@ body {
 
 /* Remove the old .featured-gallery-title style if present */
 .featured-gallery-title { display: none !important; }
+
+.gallery-svg-title {
+  margin: 32px 0 24px 0;
+  text-align: left;
+  line-height: 1.2;
+  display: block;
+  height: 40px;
+  width: 100%;
+  padding-left: 24px;
+}
+.gallery-svg-title svg {
+  display: block;
+  width: 140px;
+  height: 40px;
+}
+.gallery-svg-title svg text {
+  font-size: 30px;
+}
+@media (max-width: 768px) {
+  .gallery-svg-title {
+    margin: 20px 0 16px 0;
+    height: 26px;
+    padding-left: 12px;
+  }
+  .gallery-svg-title svg {
+    width: 90px;
+    height: 26px;
+  }
+  .gallery-svg-title svg text {
+    font-size: 20px !important;
+  }
+}

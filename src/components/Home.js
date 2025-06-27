@@ -132,10 +132,21 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
                     <stop offset="1" stopColor="#a855f7"/>
                   </linearGradient>
                 </defs>
-                <text x="0" y="30" font-family="inherit" font-weight="600" font-size="32" fill="url(#featuredGradient)" alignment-baseline="middle">Featured Images</text>
+                <text x="0" y="30" font-family="inherit" font-weight="600" font-size="30" fill="url(#featuredGradient)" alignment-baseline="middle">Featured Images</text>
               </svg>
             </div>
             <FeaturedGallery />
+            <div className="gallery-svg-title">
+              <svg width="auto" height="40" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                <defs>
+                  <linearGradient id="galleryGradient" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#00c2ff"/>
+                    <stop offset="1" stopColor="#a855f7"/>
+                  </linearGradient>
+                </defs>
+                <text x="0" y="30" font-family="inherit" font-weight="600" font-size="30" fill="url(#galleryGradient)" alignment-baseline="middle">Gallery</text>
+              </svg>
+            </div>
             <RandomGallery />
           </>
         ) : (

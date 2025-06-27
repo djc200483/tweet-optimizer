@@ -80,8 +80,66 @@
 
 .navbar-dropdown-item:hover,
 .navbar-dropdown-item:focus {
-  background: rgba(255,255,255,0.10);
-  color: #cccccc;
+  background-color: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.navbar-dropdown-submenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-dropdown-submenu span {
+  flex: 1;
+}
+
+.navbar-subdropdown-menu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background: rgba(30, 32, 40, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 160px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 1002;
+  animation: fadeInSubmenu 0.2s ease;
+}
+
+@keyframes fadeInSubmenu {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mobile-menu-submenu-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-submenu {
+  background: rgba(255, 255, 255, 0.05);
+  margin-left: 20px;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-submenu-item {
+  padding-left: 30px !important;
+  font-size: 0.95rem;
+  color: #e0e0e0;
+}
+
+.mobile-submenu-item:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 @media (max-width: 700px) {

@@ -17,10 +17,13 @@ function useIsMobile() {
 
 export default function NavBar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const closeTimeout = useRef(null);
+  const resourcesCloseTimeout = useRef(null);
   const navigate = useNavigate();
   const { user, token, logout } = useAuth();
   const isMobile = useIsMobile();
@@ -31,11 +34,25 @@ export default function NavBar() {
     setDropdownOpen(true);
   };
   const handleMouseLeave = () => {
-    closeTimeout.current = setTimeout(() => setDropdownOpen(false), 120);
+    closeTimeout.current = setTimeout(() => {
+      setDropdownOpen(false);
+      setResourcesDropdownOpen(false);
+    }, 120);
   };
+  
+  const handleResourcesMouseEnter = () => {
+    if (resourcesCloseTimeout.current) clearTimeout(resourcesCloseTimeout.current);
+    setResourcesDropdownOpen(true);
+  };
+  const handleResourcesMouseLeave = () => {
+    resourcesCloseTimeout.current = setTimeout(() => setResourcesDropdownOpen(false), 120);
+  };
+  
   const handleVisualTools = () => {
     setDropdownOpen(false);
+    setResourcesDropdownOpen(false);
     setIsMobileMenuOpen(false);
+    setMobileResourcesOpen(false);
     if (user && token) {
       navigate('/image-generator');
     } else {
@@ -44,7 +61,9 @@ export default function NavBar() {
   };
   const handleWrittenTools = () => {
     setDropdownOpen(false);
+    setResourcesDropdownOpen(false);
     setIsMobileMenuOpen(false);
+    setMobileResourcesOpen(false);
     if (user && token) {
       navigate('/writing-tools');
     } else {
@@ -62,6 +81,9 @@ export default function NavBar() {
   };
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+  const toggleMobileResources = () => {
+    setMobileResourcesOpen(!mobileResourcesOpen);
   };
 
   // --- Render ---
@@ -82,7 +104,7 @@ export default function NavBar() {
               </button>
             </div>
           ) : (
-            // --- DESKTOP NAVBAR (original layout) ---
+            // --- DESKTOP NAVBAR (multi-level dropdown) ---
             <>
               <div
                 className="navbar-item navbar-dropdown"
@@ -96,8 +118,19 @@ export default function NavBar() {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <button className="navbar-dropdown-item" onClick={handleVisualTools}>Visual Tools</button>
-                    <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Writing Tools</button>
+                    <div
+                      className="navbar-dropdown-item navbar-dropdown-submenu"
+                      onMouseEnter={handleResourcesMouseEnter}
+                      onMouseLeave={handleResourcesMouseLeave}
+                    >
+                      <span>Resources ▸</span>
+                      {resourcesDropdownOpen && (
+                        <div className="navbar-subdropdown-menu">
+                          <button className="navbar-dropdown-item" onClick={handleVisualTools}>Visual Tools</button>
+                          <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Writing Tools</button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -127,12 +160,19 @@ export default function NavBar() {
             </div>
             <div className="mobile-menu-section">
               <div className="mobile-menu-item mobile-menu-section-title">Product</div>
-              <button className="mobile-menu-item" onClick={handleVisualTools}>
-                Visual Tools
+              <button className="mobile-menu-item mobile-menu-submenu-toggle" onClick={toggleMobileResources}>
+                Resources {mobileResourcesOpen ? '▾' : '▸'}
               </button>
-              <button className="mobile-menu-item" onClick={handleWrittenTools}>
-                Writing Tools
-              </button>
+              {mobileResourcesOpen && (
+                <div className="mobile-submenu">
+                  <button className="mobile-menu-item mobile-submenu-item" onClick={handleVisualTools}>
+                    Visual Tools
+                  </button>
+                  <button className="mobile-menu-item mobile-submenu-item" onClick={handleWrittenTools}>
+                    Writing Tools
+                  </button>
+                </div>
+              )}
               {user && token ? (
                 <button className="mobile-menu-item mobile-menu-auth" onClick={handleLogout}>
                   Logout

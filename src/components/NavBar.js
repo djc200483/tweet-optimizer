@@ -133,8 +133,6 @@ export default function NavBar() {
               <button className="mobile-menu-item" onClick={handleWrittenTools}>
                 Writing Tools
               </button>
-            </div>
-            <div className="mobile-menu-section">
               {user && token ? (
                 <button className="mobile-menu-item mobile-menu-auth" onClick={handleLogout}>
                   Logout

@@ -45,47 +45,55 @@ export default function Auth({ onClose }) {
     }
   };
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="auth-container">
-      <button 
-        className="back-home-button"
-        onClick={onClose}
-      >
-        ← Back to Home
-      </button>
-      
-      {currentForm === 'login' && (
-        <Login 
-          onToggleForm={handleFormToggle}
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          onSubmit={handleSubmit}
-          error={error}
-        />
-      )}
-      
-      {currentForm === 'register' && (
-        <Register 
-          onToggleForm={handleFormToggle}
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          x_handle={x_handle}
-          setXHandle={setXHandle}
-          onSubmit={handleSubmit}
-          error={error}
-        />
-      )}
-      
-      {currentForm === 'forgot' && (
-        <div className="auth-form">
-          <h2>Forgot Password</h2>
-          <ForgotPassword onToggleForm={() => handleFormToggle('login')} />
-        </div>
-      )}
+    <div className="auth-overlay" onClick={handleOverlayClick}>
+      <div className="auth-container">
+        <button 
+          className="back-home-button"
+          onClick={onClose}
+        >
+          ← Back to Home
+        </button>
+        
+        {currentForm === 'login' && (
+          <Login 
+            onToggleForm={handleFormToggle}
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            onSubmit={handleSubmit}
+            error={error}
+          />
+        )}
+        
+        {currentForm === 'register' && (
+          <Register 
+            onToggleForm={handleFormToggle}
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            x_handle={x_handle}
+            setXHandle={setXHandle}
+            onSubmit={handleSubmit}
+            error={error}
+          />
+        )}
+        
+        {currentForm === 'forgot' && (
+          <div className="auth-form">
+            <h2>Forgot Password</h2>
+            <ForgotPassword onToggleForm={() => handleFormToggle('login')} />
+          </div>
+        )}
+      </div>
     </div>
   );
 } 

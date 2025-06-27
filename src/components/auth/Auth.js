@@ -8,7 +8,12 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function Auth({ onClose }) {
   const [currentForm, setCurrentForm] = useState('login');
-  const { setOnClose } = useAuth();
+  const { setOnClose, login } = useAuth();
+  const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [x_handle, setXHandle] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     setOnClose(() => onClose);
@@ -17,6 +22,27 @@ export default function Auth({ onClose }) {
 
   const handleFormToggle = (form) => {
     setCurrentForm(form);
+    setError('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const result = await login(email, password);
+      if (!result.success) {
+        setError(result.error || 'Authentication failed. Please try again.');
+        return;
+      }
+      onClose();
+    } catch (error) {
+      console.error('Auth error:', error);
+      setError('Connection failed. Please check your internet connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -31,12 +57,26 @@ export default function Auth({ onClose }) {
       {currentForm === 'login' && (
         <Login 
           onToggleForm={handleFormToggle}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          onSubmit={handleSubmit}
+          error={error}
         />
       )}
       
       {currentForm === 'register' && (
         <Register 
           onToggleForm={handleFormToggle}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          x_handle={x_handle}
+          setXHandle={setXHandle}
+          onSubmit={handleSubmit}
+          error={error}
         />
       )}
       

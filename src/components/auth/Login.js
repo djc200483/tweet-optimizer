@@ -3,12 +3,9 @@ import { useAuth } from './AuthContext';
 import { Link } from 'react-router-dom';
 import LoadingSpinner from '../LoadingSpinner';
 
-export default function Login({ onToggleForm }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+export default function Login({ onToggleForm, email, setEmail, password, setPassword, onSubmit, error }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { login, clearAuthError } = useAuth();
+  const { clearAuthError } = useAuth();
 
   // Check if this is admin login attempt
   const isAdminEmail = process.env.REACT_APP_ADMIN_EMAIL && 
@@ -16,19 +13,13 @@ export default function Login({ onToggleForm }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
 
     try {
       console.log('Login attempt:', { email, isAdmin: isAdminEmail });
-      const result = await login(email, password);
-      
-      if (!result.success) {
-        setError(result.error || 'Login failed');
-      }
+      await onSubmit(e);
     } catch (err) {
       console.error('Login error:', err);
-      setError('Connection failed. Please check your internet connection.');
     } finally {
       setIsLoading(false);
     }

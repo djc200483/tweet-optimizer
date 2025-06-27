@@ -404,11 +404,23 @@ function AppContent() {
       } else {
         setCurrentFeature('imageGenerator');
       }
+    } else if (location.pathname === '/writing-tools') {
+      if (!user || !token) {
+        // Not authenticated, redirect to login
+        setCurrentFeature(null);
+        setShowAuth(true);
+        navigate('/');
+      } else {
+        setCurrentFeature(null); // Home with written tools tab
+        setActiveTab('written');
+      }
     } else if (location.pathname === '/') {
+      setCurrentFeature(null); // Always reset to home
       const params = new URLSearchParams(location.search);
       if (params.get('tab') === 'written') {
-        setCurrentFeature(null); // Home
         setActiveTab('written');
+      } else {
+        setActiveTab('home');
       }
     }
   }, [location, user, token, navigate]);

@@ -230,6 +230,10 @@
 
 /* Mobile Styles - Only apply on mobile devices */
 @media (max-width: 768px) {
+  .navbar-content {
+    justify-content: space-between;
+  }
+
   .navbar-desktop {
     display: none;
   }
@@ -237,6 +241,7 @@
   .navbar-mobile {
     display: flex;
     align-items: center;
+    margin-left: auto;
   }
 
   .burger-menu-btn {
@@ -377,6 +382,9 @@
     margin: 0 20px;
     border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
+    width: auto;
+    min-width: 120px;
+    max-width: 200px;
   }
 
   .mobile-menu-auth:hover {

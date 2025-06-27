@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import LoadingSpinner from '../LoadingSpinner';
+import FeaturedGalleryManager from './FeaturedGalleryManager';
 import './Admin.css';
 
 export default function Admin() {
@@ -10,6 +11,7 @@ export default function Admin() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [showFeaturedGalleryManager, setShowFeaturedGalleryManager] = useState(false);
   const { token } = useAuth();
 
   useEffect(() => {
@@ -222,6 +224,30 @@ export default function Admin() {
       >
         Refresh Explore Cache
       </button>
+
+      <div className="admin-section">
+        <h2>Featured Gallery Management</h2>
+        <div className="featured-gallery-controls">
+          <button 
+            className="manage-featured-gallery-btn"
+            onClick={() => setShowFeaturedGalleryManager(true)}
+            style={{
+              background: 'linear-gradient(135deg, #00c2ff, #a855f7)',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '12px',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              marginBottom: '20px',
+              boxShadow: '0 4px 15px rgba(0, 194, 255, 0.3)'
+            }}
+          >
+            Manage Featured Images
+          </button>
+        </div>
+      </div>
+
       <h2>Manage Allowed Users</h2>
       
       {error && <div className="admin-error">{error}</div>}
@@ -342,6 +368,15 @@ export default function Admin() {
           </table>
         )}
       </div>
+
+      <FeaturedGalleryManager 
+        isOpen={showFeaturedGalleryManager}
+        onClose={() => setShowFeaturedGalleryManager(false)}
+        onSave={() => {
+          setSuccess('Featured gallery updated successfully!');
+          setShowFeaturedGalleryManager(false);
+        }}
+      />
     </div>
   );
 } 

@@ -906,3 +906,23 @@ app.get('/api/images', authMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Error fetching images' });
   }
 });
+
+// Public featured gallery endpoint (no auth required)
+app.get('/api/featured-gallery', async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.aspect_ratio, gi.created_at,
+             u.x_handle as creator_handle, fgi.position
+      FROM featured_gallery_images fgi
+      JOIN generated_images gi ON fgi.image_id = gi.id
+      LEFT JOIN users u ON gi.user_id = u.id
+      WHERE fgi.gallery_id = 1
+      ORDER BY fgi.position ASC
+    `);
+    
+    res.json({ images: result.rows });
+  } catch (error) {
+    console.error('Error fetching featured gallery:', error);
+    res.status(500).json({ error: 'Error fetching featured gallery' });
+  }
+});

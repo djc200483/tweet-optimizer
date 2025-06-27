@@ -154,4 +154,100 @@ router.delete('/delete-user-images-by-handle/:x_handle', authMiddleware, async (
     }
 });
 
+// Featured Gallery Management Endpoints
+
+// Get available images from last 20 days for selection
+router.get('/available-images', async (req, res) => {
+  try {
+    const { page = 1, limit = 50, search = '' } = req.query;
+    const offset = (page - 1) * limit;
+    
+    let query = `
+      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.aspect_ratio, gi.created_at,
+             u.x_handle as creator_handle
+      FROM generated_images gi
+      LEFT JOIN users u ON gi.user_id = u.id
+      WHERE gi.created_at >= NOW() - INTERVAL '20 days'
+        AND gi.is_private = false
+    `;
+    
+    const queryParams = [];
+    
+    if (search) {
+      query += ` AND gi.prompt ILIKE $${queryParams.length + 1}`;
+      queryParams.push(`%${search}%`);
+    }
+    
+    query += ` ORDER BY gi.created_at DESC LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+    queryParams.push(limit, offset);
+    
+    const result = await db.query(query, queryParams);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching available images:', error);
+    res.status(500).json({ error: 'Error fetching available images' });
+  }
+});
+
+// Get current featured gallery
+router.get('/featured-gallery', async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.aspect_ratio, gi.created_at,
+             u.x_handle as creator_handle, fgi.position
+      FROM featured_gallery_images fgi
+      JOIN generated_images gi ON fgi.image_id = gi.id
+      LEFT JOIN users u ON gi.user_id = u.id
+      WHERE fgi.gallery_id = 1
+      ORDER BY fgi.position ASC
+    `);
+    
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching featured gallery:', error);
+    res.status(500).json({ error: 'Error fetching featured gallery' });
+  }
+});
+
+// Update featured gallery
+router.post('/featured-gallery', async (req, res) => {
+  try {
+    const { imageIds } = req.body; // Array of image IDs in order
+    
+    if (!Array.isArray(imageIds) || imageIds.length > 10) {
+      return res.status(400).json({ error: 'Invalid image selection. Maximum 10 images allowed.' });
+    }
+    
+    // Start transaction
+    await db.query('BEGIN');
+    
+    try {
+      // Clear existing featured gallery
+      await db.query('DELETE FROM featured_gallery_images WHERE gallery_id = 1');
+      
+      // Insert new selections
+      for (let i = 0; i < imageIds.length; i++) {
+        await db.query(
+          'INSERT INTO featured_gallery_images (gallery_id, image_id, position) VALUES (1, $1, $2)',
+          [imageIds[i], i + 1]
+        );
+      }
+      
+      // Update the gallery timestamp
+      await db.query(
+        'UPDATE featured_gallery SET updated_at = NOW() WHERE id = 1'
+      );
+      
+      await db.query('COMMIT');
+      res.json({ message: 'Featured gallery updated successfully' });
+    } catch (error) {
+      await db.query('ROLLBACK');
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error updating featured gallery:', error);
+    res.status(500).json({ error: 'Error updating featured gallery' });
+  }
+});
+
 module.exports = router; 

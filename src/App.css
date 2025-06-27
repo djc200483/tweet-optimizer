@@ -2655,10 +2655,13 @@ body {
   background-clip: text;
   color: transparent;
   margin: 0 0 20px 0;
-  text-align: left;
+  text-align: left !important;
   font-family: inherit;
   line-height: 1.2;
-  display: inline-block;
+  display: block;
+  width: 100%;
+  padding-left: 20px;
+  box-sizing: border-box;
   /* Additional properties for better desktop support */
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;

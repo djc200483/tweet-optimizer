@@ -33,7 +33,7 @@
 .navbar-link {
   background: none;
   border: none;
-  color: #e0e0e0;
+  color: #a0a0b0;
   font-size: 0.98rem;
   font-weight: 400;
   cursor: pointer;
@@ -46,7 +46,7 @@
 .navbar-link:hover,
 .navbar-link:focus {
   background: rgba(255,255,255,0.08);
-  color: #e0e0e0;
+  color: #a0a0b0;
 }
 
 .navbar-dropdown-menu {
@@ -62,13 +62,13 @@
   display: flex;
   flex-direction: column;
   z-index: 200;
-  color: #e0e0e0;
+  color: #a0a0b0;
 }
 
 .navbar-dropdown-item {
   background: none;
   border: none;
-  color: #e0e0e0;
+  color: #a0a0b0;
   font-size: 0.93rem;
   font-weight: 400;
   text-align: left;
@@ -81,7 +81,7 @@
 .navbar-dropdown-item:hover,
 .navbar-dropdown-item:focus {
   background: rgba(255,255,255,0.10);
-  color: #e0e0e0;
+  color: #a0a0b0;
 }
 
 @media (max-width: 700px) {

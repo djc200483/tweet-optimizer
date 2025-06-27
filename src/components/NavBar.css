@@ -16,8 +16,7 @@
 
 .navbar-content {
   width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
+  margin: 0;
   display: flex;
   align-items: center;
   height: 56px;
@@ -161,7 +160,7 @@
 }
 
 .navbar-logo {
-  height: 44px;
+  height: 88px;
   width: auto;
   margin-right: 28px;
   margin-left: 0;

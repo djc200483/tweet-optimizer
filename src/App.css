@@ -2647,9 +2647,12 @@ body {
 }
 
 .featured-gallery-title {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 600;
-  color: #ffffff;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0 0 20px 0;
   text-align: left;
   font-family: inherit;

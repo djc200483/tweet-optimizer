@@ -64,7 +64,7 @@ export default function Login({ onToggleForm, email, setEmail, password, setPass
           className="auth-button"
           disabled={isLoading}
         >
-          {isLoading ? <LoadingSpinner /> : 'Login'}
+          {isLoading ? <LoadingSpinner size="small" /> : 'Login'}
         </button>
       </form>
 

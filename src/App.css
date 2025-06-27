@@ -2649,11 +2649,6 @@ body {
 .featured-gallery-title {
   font-size: 1.6rem;
   font-weight: 600;
-  background: linear-gradient(135deg, #00c2ff, #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
   margin: 0 0 20px 0;
   text-align: left !important;
   font-family: inherit;
@@ -2662,12 +2657,25 @@ body {
   width: 100%;
   padding-left: 20px;
   box-sizing: border-box;
-  /* Additional properties for better desktop support */
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  /* Force hardware acceleration */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  position: relative;
+  color: transparent;
+}
+
+.featured-gallery-title::before {
+  content: "Featured Images";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 @media (max-width: 768px) {

@@ -105,6 +105,7 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
             <div className="tab-description">
               <button
                 className="tab-button active"
+                style={{ height: '38px' }}
                 onClick={() => {
                   if (isLoggedIn) {
                     onSelectFeature('imageGenerator');
@@ -117,7 +118,7 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
                   }
                 }}
               >
-                {!isLoggedIn && hasLoggedOutUserClicked ? 'Log in' : 'Generate ✨'}
+                {!isLoggedIn && hasLoggedOutUserClicked ? 'Log in' : 'Generate'}
               </button>
             </div>
             <div className="visual-tools-flex">

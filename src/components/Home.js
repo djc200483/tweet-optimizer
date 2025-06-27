@@ -105,7 +105,6 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
             <div className="tab-description">
               <button
                 className="tab-button active"
-                style={{ height: '38px' }}
                 onClick={() => {
                   if (isLoggedIn) {
                     onSelectFeature('imageGenerator');

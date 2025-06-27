@@ -9,6 +9,7 @@ export default function NavBar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const closeTimeout = useRef(null);
   const navigate = useNavigate();
   const { user, token, logout } = useAuth();
@@ -24,6 +25,7 @@ export default function NavBar() {
 
   const handleVisualTools = () => {
     setDropdownOpen(false);
+    setIsMobileMenuOpen(false);
     if (user && token) {
       navigate('/image-generator');
     } else {
@@ -33,6 +35,7 @@ export default function NavBar() {
 
   const handleWrittenTools = () => {
     setDropdownOpen(false);
+    setIsMobileMenuOpen(false);
     if (user && token) {
       navigate('/writing-tools');
     } else {
@@ -43,6 +46,16 @@ export default function NavBar() {
   const handleLogout = () => {
     logout();
     navigate('/');
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleMobileLogin = () => {
+    setIsMobileMenuOpen(false);
+    setShowAuth(true);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
@@ -52,36 +65,84 @@ export default function NavBar() {
           <button className="navbar-logo-btn" onClick={() => navigate('/')} tabIndex={0} aria-label="Go to Home">
             <img src={logo} alt="Site Logo" className="navbar-logo" />
           </button>
-          <div
-            className="navbar-item navbar-dropdown"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <button className="navbar-link">Product ▾</button>
-            {dropdownOpen && (
-              <div
-                className="navbar-dropdown-menu"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <button className="navbar-dropdown-item" onClick={handleVisualTools}>Visual Tools</button>
-                <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Writing Tools</button>
-              </div>
-            )}
+          
+          {/* Desktop Navigation */}
+          <div className="navbar-desktop">
+            <div
+              className="navbar-item navbar-dropdown"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <button className="navbar-link">Product ▾</button>
+              {dropdownOpen && (
+                <div
+                  className="navbar-dropdown-menu"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <button className="navbar-dropdown-item" onClick={handleVisualTools}>Visual Tools</button>
+                  <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Writing Tools</button>
+                </div>
+              )}
+            </div>
+            <div className="navbar-auth">
+              {user && token ? (
+                <button className="navbar-logout-btn" onClick={handleLogout}>
+                  Logout
+                </button>
+              ) : (
+                <button className="navbar-login-btn" onClick={() => setShowAuth(true)}>
+                  Login/Register
+                </button>
+              )}
+            </div>
           </div>
-          <div className="navbar-auth">
-            {user && token ? (
-              <button className="navbar-logout-btn" onClick={handleLogout}>
-                Logout
-              </button>
-            ) : (
-              <button className="navbar-login-btn" onClick={() => setShowAuth(true)}>
-                Login/Register
-              </button>
-            )}
+
+          {/* Mobile Burger Menu */}
+          <div className="navbar-mobile">
+            <button className="burger-menu-btn" onClick={toggleMobileMenu} aria-label="Toggle menu">
+              <span className={`burger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+              <span className={`burger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+              <span className={`burger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+            </button>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-menu-header">
+              <span className="mobile-menu-title">Menu</span>
+              <button className="mobile-menu-close" onClick={() => setIsMobileMenuOpen(false)}>&times;</button>
+            </div>
+            
+            <div className="mobile-menu-section">
+              <div className="mobile-menu-item mobile-menu-section-title">Product</div>
+              <button className="mobile-menu-item" onClick={handleVisualTools}>
+                Visual Tools
+              </button>
+              <button className="mobile-menu-item" onClick={handleWrittenTools}>
+                Writing Tools
+              </button>
+            </div>
+            
+            <div className="mobile-menu-section">
+              {user && token ? (
+                <button className="mobile-menu-item mobile-menu-auth" onClick={handleLogout}>
+                  Logout
+                </button>
+              ) : (
+                <button className="mobile-menu-item mobile-menu-auth" onClick={handleMobileLogin}>
+                  Login/Register
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {showLoginModal && (
         <div className="navbar-modal-overlay">
           <div className="navbar-modal">

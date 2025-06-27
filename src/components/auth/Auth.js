@@ -55,10 +55,11 @@ export default function Auth({ onClose }) {
     <div className="auth-overlay" onClick={handleOverlayClick}>
       <div className="auth-container">
         <button 
-          className="back-home-button"
+          className="auth-modal-close"
           onClick={onClose}
+          aria-label="Close"
         >
-          ← Back to Home
+          &times;
         </button>
         
         {currentForm === 'login' && (

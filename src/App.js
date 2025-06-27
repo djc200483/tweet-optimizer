@@ -384,14 +384,10 @@ function AppContent() {
     console.log('Auth state:', { user, isAdmin });
   }, [user, isAdmin]);
 
-  const displayHandle = user?.x_handle?.replace(/^@@/, '@').replace(/^@/, '');
-
   const handleLogout = () => {
     logout();
     setCurrentFeature(null); // Return to home page
   };
-
-  const isImageGeneratorPage = location.pathname === '/image-generator';
 
   // Sync currentFeature with route
   useEffect(() => {
@@ -455,21 +451,6 @@ function AppContent() {
               </div>
             ) : (
               <>
-                {user && token && currentFeature !== 'imageGenerator' ? (
-                  <div className="auth-header">
-                    <span className="user-handle">{displayHandle}</span>
-                    <button className="logout-button" onClick={handleLogout}>
-                      Logout
-                    </button>
-                  </div>
-                ) : !user && !token && currentFeature !== 'imageGenerator' ? (
-                  <button 
-                    className="auth-toggle-button"
-                    onClick={() => setShowAuth(true)}
-                  >
-                    Login/Register
-                  </button>
-                ) : null}
                 {renderFeature()}
               </>
             )}

@@ -99,21 +99,6 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
         <p>An all-in-one AI platform for creating eye-catching images, engaging videos, and impactful written content</p>
       </div>
       
-      <div className="content-tabs">
-        <button 
-          className={`tab-button ${activeTab === 'imagery' ? 'active' : ''}`}
-          onClick={() => setActiveTab('imagery')}
-        >
-          Visual Tools
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'written' ? 'active' : ''}`}
-          onClick={() => setActiveTab('written')}
-        >
-          Writing Tools
-        </button>
-      </div>
-
       <div className="tab-content">
         {activeTab === 'imagery' ? (
           <>

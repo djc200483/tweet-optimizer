@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
+import Auth from './auth/Auth';
 import logo from '../assets/logo.png';
 import './NavBar.css';
 
@@ -9,7 +10,7 @@ export default function NavBar() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const closeTimeout = useRef(null);
   const navigate = useNavigate();
-  const { user, token } = useAuth();
+  const { user, token, logout } = useAuth();
 
   const handleMouseEnter = () => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
@@ -38,6 +39,11 @@ export default function NavBar() {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -58,24 +64,25 @@ export default function NavBar() {
                 onMouseLeave={handleMouseLeave}
               >
                 <button className="navbar-dropdown-item" onClick={handleVisualTools}>Visual Tools</button>
-                <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Written Tools</button>
+                <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Writing Tools</button>
               </div>
+            )}
+          </div>
+          <div className="navbar-auth">
+            {user && token ? (
+              <button className="navbar-logout-btn" onClick={handleLogout}>
+                Logout
+              </button>
+            ) : (
+              <button className="navbar-login-btn" onClick={() => setShowLoginModal(true)}>
+                Login/Register
+              </button>
             )}
           </div>
         </div>
       </nav>
       {showLoginModal && (
-        <div className="navbar-modal-overlay">
-          <div className="navbar-modal">
-            <div className="navbar-modal-header">
-              <span className="navbar-modal-title">Login Required</span>
-              <button className="navbar-modal-close" onClick={() => setShowLoginModal(false)}>&times;</button>
-            </div>
-            <div className="navbar-modal-body">
-              <p>You must be logged in to access this area. Please log in or register to continue.</p>
-            </div>
-          </div>
-        </div>
+        <Auth onClose={() => setShowLoginModal(false)} />
       )}
     </>
   );

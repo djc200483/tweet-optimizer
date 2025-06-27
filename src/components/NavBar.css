@@ -184,4 +184,46 @@
 
 .navbar-logo-btn:focus {
   outline: none;
+}
+
+.navbar-auth {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-login-btn {
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #00c2ff, #a855f7);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.navbar-login-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.navbar-logout-btn {
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #e0245e, #a855f7);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(224, 36, 94, 0.3);
+}
+
+.navbar-logout-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
 } 

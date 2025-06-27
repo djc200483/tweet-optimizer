@@ -8,6 +8,7 @@ import './NavBar.css';
 export default function NavBar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const closeTimeout = useRef(null);
   const navigate = useNavigate();
   const { user, token, logout } = useAuth();
@@ -74,7 +75,7 @@ export default function NavBar() {
                 Logout
               </button>
             ) : (
-              <button className="navbar-login-btn" onClick={() => setShowLoginModal(true)}>
+              <button className="navbar-login-btn" onClick={() => setShowAuth(true)}>
                 Login/Register
               </button>
             )}
@@ -82,7 +83,20 @@ export default function NavBar() {
         </div>
       </nav>
       {showLoginModal && (
-        <Auth onClose={() => setShowLoginModal(false)} />
+        <div className="navbar-modal-overlay">
+          <div className="navbar-modal">
+            <div className="navbar-modal-header">
+              <span className="navbar-modal-title">Login Required</span>
+              <button className="navbar-modal-close" onClick={() => setShowLoginModal(false)}>&times;</button>
+            </div>
+            <div className="navbar-modal-body">
+              <p>You must be logged in to access this area. Please log in or register to continue.</p>
+            </div>
+          </div>
+        </div>
+      )}
+      {showAuth && (
+        <Auth onClose={() => setShowAuth(false)} />
       )}
     </>
   );

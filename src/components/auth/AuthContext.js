@@ -27,18 +27,21 @@ export const AuthProvider = ({ children }) => {
           }
         });
         
+        if (!response.ok) {
+          throw new Error('Token verification failed');
+        }
+        
         const data = await response.json();
         
         if (data.user) {
           setUser(data.user);
+          setAuthError(null);
         } else {
-          setAuthError('Session expired. Please login again.');
-          localStorage.removeItem('token');
-          setToken(null);
-          setUser(null);
+          throw new Error('No user data received');
         }
       } catch (error) {
-        setAuthError('Authentication error. Please login again.');
+        console.error('Token verification error:', error);
+        setAuthError('Session expired. Please login again.');
         localStorage.removeItem('token');
         setToken(null);
         setUser(null);
@@ -48,12 +51,17 @@ export const AuthProvider = ({ children }) => {
     };
 
     verifyToken();
-  }, [token]);
+  }, []); // Only run on mount, not on every token change
 
   const login = async (email, password) => {
     try {
       setIsAuthLoading(true);
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+      setAuthError(null);
+      
+      const apiUrl = process.env.REACT_APP_API_URL;
+      console.log('Login attempt with API URL:', apiUrl);
+      
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -62,7 +70,9 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
       });
       
+      console.log('Login response status:', response.status);
       const data = await response.json();
+      console.log('Login response data:', data);
       
       if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
@@ -71,12 +81,15 @@ export const AuthProvider = ({ children }) => {
         setAuthError(null);
         return { success: true };
       } else {
-        setAuthError(data.error);
-        return { success: false, error: data.error };
+        const errorMessage = data.error || 'Login failed';
+        setAuthError(errorMessage);
+        return { success: false, error: errorMessage };
       }
     } catch (error) {
-      setAuthError(error.message);
-      return { success: false, error: error.message };
+      console.error('Login error:', error);
+      const errorMessage = error.message || 'Connection failed. Please check your internet connection.';
+      setAuthError(errorMessage);
+      return { success: false, error: errorMessage };
     } finally {
       setIsAuthLoading(false);
     }

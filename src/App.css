@@ -2630,3 +2630,35 @@ body {
   margin: 0 auto 12px auto;
   display: block;
 }
+
+/* Featured Gallery Styles */
+.featured-gallery {
+  width: 100%;
+  margin: 20px 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.featured-gallery-section {
+  flex: 1;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.featured-gallery-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  text-align: left;
+  font-family: inherit;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .featured-gallery-title {
+    font-size: 1.5rem;
+    margin: 0 0 15px 0;
+  }
+}

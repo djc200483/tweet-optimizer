@@ -123,7 +123,10 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
             </div>
             <div className="visual-tools-flex">
               {renderFeatureCards(imageryFeatures, true)}
-              <FeaturedGallery />
+              <div className="featured-gallery-section">
+                <h2 className="featured-gallery-title">Featured Images</h2>
+                <FeaturedGallery />
+              </div>
             </div>
             <RandomGallery />
           </>

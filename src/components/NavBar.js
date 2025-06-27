@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
+import logo from '../assets/logo.png';
 import './NavBar.css';
 
 export default function NavBar() {
@@ -41,6 +42,7 @@ export default function NavBar() {
     <>
       <nav className="navbar">
         <div className="navbar-content">
+          <img src={logo} alt="Site Logo" className="navbar-logo" />
           <div
             className="navbar-item navbar-dropdown"
             onMouseEnter={handleMouseEnter}

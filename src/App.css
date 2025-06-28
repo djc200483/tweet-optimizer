@@ -2758,23 +2758,50 @@ body {
   }
 }
 
-html, body, *::-webkit-scrollbar {
+/* Remove global scrollbar selectors */
+
+body::-webkit-scrollbar,
+.main-content::-webkit-scrollbar,
+.left-toolbar::-webkit-scrollbar,
+.toolbar-scroll-content::-webkit-scrollbar,
+.gallery-wrapper::-webkit-scrollbar,
+.image-gallery::-webkit-scrollbar {
   width: 8px;
   background: transparent;
 }
-*::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb,
+.main-content::-webkit-scrollbar-thumb,
+.left-toolbar::-webkit-scrollbar-thumb,
+.toolbar-scroll-content::-webkit-scrollbar-thumb,
+.gallery-wrapper::-webkit-scrollbar-thumb,
+.image-gallery::-webkit-scrollbar-thumb {
   background: #39393d;
   border-radius: 6px;
 }
-*::-webkit-scrollbar-thumb:hover {
+body::-webkit-scrollbar-thumb:hover,
+.main-content::-webkit-scrollbar-thumb:hover,
+.left-toolbar::-webkit-scrollbar-thumb:hover,
+.toolbar-scroll-content::-webkit-scrollbar-thumb:hover,
+.gallery-wrapper::-webkit-scrollbar-thumb:hover,
+.image-gallery::-webkit-scrollbar-thumb:hover {
   background: #505055;
 }
-*::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track,
+.main-content::-webkit-scrollbar-track,
+.left-toolbar::-webkit-scrollbar-track,
+.toolbar-scroll-content::-webkit-scrollbar-track,
+.gallery-wrapper::-webkit-scrollbar-track,
+.image-gallery::-webkit-scrollbar-track {
   background: transparent;
 }
 
 /* For Firefox */
-html, body, * {
+body,
+.main-content,
+.left-toolbar,
+.toolbar-scroll-content,
+.gallery-wrapper,
+.image-gallery {
   scrollbar-width: thin;
   scrollbar-color: #39393d transparent;
 }

@@ -1221,4 +1221,24 @@
 /* Adjust gap between buttons and gallery */
 .gallery-tabs {
   margin-bottom: 20px;
+}
+
+/* Universal fix: always allow the toolbar to scroll */
+.left-toolbar {
+  overflow-y: auto !important;
+  max-height: 100vh !important;
+}
+
+@media (max-width: 1024px) {
+  .left-toolbar {
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .left-toolbar {
+    max-height: 60vh !important;
+    overflow-y: auto !important;
+  }
 } 

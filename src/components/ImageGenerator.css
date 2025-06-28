@@ -1270,4 +1270,25 @@
 .toolbar-section, .toolbar-label, .model-select-container, .prompt-input-wrapper, .prompt-textarea, .image-upload-container, .image-upload-box, .image-preview-container {
   max-width: 100%;
   box-sizing: border-box;
+}
+
+.toolbar-scroll-content::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+.toolbar-scroll-content::-webkit-scrollbar-thumb {
+  background: #39393d;
+  border-radius: 6px;
+}
+.toolbar-scroll-content::-webkit-scrollbar-thumb:hover {
+  background: #505055;
+}
+.toolbar-scroll-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* For Firefox */
+.toolbar-scroll-content {
+  scrollbar-width: thin;
+  scrollbar-color: #39393d transparent;
 } 

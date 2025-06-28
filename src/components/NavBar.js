@@ -59,6 +59,17 @@ export default function NavBar() {
       setShowLoginModal(true);
     }
   };
+  const handleImageEnhance = () => {
+    setDropdownOpen(false);
+    setResourcesDropdownOpen(false);
+    setIsMobileMenuOpen(false);
+    setMobileResourcesOpen(false);
+    if (user && token) {
+      navigate('/image-enhance');
+    } else {
+      setShowLoginModal(true);
+    }
+  };
   const handleWrittenTools = () => {
     setDropdownOpen(false);
     setResourcesDropdownOpen(false);
@@ -126,8 +137,9 @@ export default function NavBar() {
                       <span>Resources ▸</span>
                       {resourcesDropdownOpen && (
                         <div className="navbar-subdropdown-menu">
-                          <button className="navbar-dropdown-item" onClick={handleVisualTools}>Visual Tools</button>
-                          <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Writing Tools</button>
+                          <button className="navbar-dropdown-item" onClick={handleVisualTools}>Generate</button>
+                          <button className="navbar-dropdown-item" onClick={handleImageEnhance}>Enhance Image</button>
+                          <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Enhance Posts</button>
                         </div>
                       )}
                     </div>
@@ -166,10 +178,13 @@ export default function NavBar() {
               {mobileResourcesOpen && (
                 <div className="mobile-submenu">
                   <button className="mobile-menu-item mobile-submenu-item" onClick={handleVisualTools}>
-                    Visual Tools
+                    Generate
+                  </button>
+                  <button className="mobile-menu-item mobile-submenu-item" onClick={handleImageEnhance}>
+                    Enhance Image
                   </button>
                   <button className="mobile-menu-item mobile-submenu-item" onClick={handleWrittenTools}>
-                    Writing Tools
+                    Enhance Posts
                   </button>
                 </div>
               )}

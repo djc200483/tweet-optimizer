@@ -651,192 +651,180 @@ export default function ImageGenerator() {
   return (
     <div className="optimizer-container image-generator-page">
       <div className="left-toolbar">
-        <div className="toolbar-section">
-          <h3>Generation Type</h3>
-          <div className="model-select-container">
-            <div
-              className="model-select-header"
-              onClick={() => setIsGenerationTypeDropdownOpen(!isGenerationTypeDropdownOpen)}
-            >
-              {generationType === 'text-to-image' ? 'Text to Image' : generationType === 'image-to-image' ? 'Image to Image' : generationType === 'image-to-prompt' ? 'Image to Prompt' : 'Image to Video'}
-            </div>
-            {isGenerationTypeDropdownOpen && (
-              <div className="model-dropdown">
-                <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Text to Image</div>
-                <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
-                <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); }}>Image to Prompt</div>
-                <div className="model-option disabled">Text to Video (coming soon)</div>
-                <div className="model-option disabled">Image to Video (coming soon)</div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {generationType === 'image-to-image' && (
+        <div className="toolbar-scroll-content">
           <div className="toolbar-section">
-            <h3>Source Image</h3>
-            <div className="image-upload-container">
-              {!sourceImagePreview ? (
-                <div className="image-upload-box">
-                  <input
-                    type="file"
-                    accept=".webp,.jpg,.jpeg,.png"
-                    onChange={handleImageUpload}
-                    className="image-upload-input"
-                    id="image-upload"
-                  />
-                  <label htmlFor="image-upload" className="image-upload-label">
-                    <span>Click to upload image</span>
-                    <span className="image-upload-hint">WebP, JPG, or PNG</span>
-                  </label>
-                </div>
-              ) : (
-                <div className="image-preview-container">
-                  <img 
-                    src={sourceImagePreview} 
-                    alt="Source" 
-                    className="image-preview"
-                  />
-                  <button 
-                    onClick={handleRemoveImage}
-                    className="remove-image-button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {generationType !== 'image-to-prompt' && (
-          <div className="toolbar-section">
-            <h3>Prompt</h3>
-            <div className="prompt-input-wrapper">
-              <textarea
-                ref={textareaRef}
-                value={prompt}
-                onChange={handlePromptChange}
-                onKeyDown={handleKeyDown}
-                onWheel={handleWheel}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                placeholder="Enter your image prompt here..."
-                className="prompt-textarea with-supercharge"
-                rows={4}
-                disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
-                style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
-              />
-              <button
-                className="supercharge-button-inline"
-                style={{ right: '130px' }}
-                onClick={handleAssistant}
-              >
-                Assistant
-              </button>
-              <button
-                onClick={handleSupercharge}
-                className="supercharge-button-inline"
-                disabled={isSuperchargeLoading || !prompt}
-              >
-                {isSuperchargeLoading ? <LoadingSpinner size="inline" /> : 'Supercharge'}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {generationType === 'image-to-prompt' && (
-          <div className="toolbar-section">
-            <h3>Source Image</h3>
-            <div className="image-upload-container">
-              {!sourceImagePreview ? (
-                <div className="image-upload-box">
-                  <input
-                    type="file"
-                    accept=".webp,.jpg,.jpeg,.png"
-                    onChange={handleSourceImageChange}
-                    className="image-upload-input"
-                    id="image-upload"
-                  />
-                  <label htmlFor="image-upload" className="image-upload-label">
-                    <span>Click to upload image</span>
-                    <span className="image-upload-hint">WebP, JPG, or PNG</span>
-                  </label>
-                </div>
-              ) : (
-                <div className="image-preview-container">
-                  <img 
-                    src={sourceImagePreview} 
-                    alt="Source" 
-                    className="image-preview"
-                  />
-                  <button 
-                    onClick={handleRemoveImage}
-                    className="remove-image-button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {generationType === 'image-to-prompt' && (
-          <div className="toolbar-section">
-            <h3>Prompt Output</h3>
-            <div className="prompt-output-container" style={{ fontSize: '11px', minHeight: '150px', height: '150px' }}>
-              {generatedPrompt ? (
-                <div className="prompt-text" style={{ fontSize: '12px', position: 'relative' }}>
-                  {generatedPrompt}
-                  <div className="copy-btn-container">
-                    <button onClick={handleCopyPrompt} className={`copy-button small ${isCopied ? 'copied' : ''}`}> 
-                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '5px'}}>
-                        <rect x="7" y="7" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
-                        <rect x="4" y="4" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
-                      </svg>
-                      {isCopied ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="prompt-placeholder">Generated prompt will appear here</div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {generationType !== 'image-to-prompt' && (
-          <div className="toolbar-section">
-            <label className="toolbar-label">Model</label>
+            <h3>Generation Type</h3>
             <div className="model-select-container">
               <div
                 className="model-select-header"
-                onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+                onClick={() => setIsGenerationTypeDropdownOpen(!isGenerationTypeDropdownOpen)}
               >
-                {models.find(m => m.value === selectedModel)?.label || 'Select Model'}
+                {generationType === 'text-to-image' ? 'Text to Image' : generationType === 'image-to-image' ? 'Image to Image' : generationType === 'image-to-prompt' ? 'Image to Prompt' : 'Image to Video'}
               </div>
-              {isModelDropdownOpen && (
+              {isGenerationTypeDropdownOpen && (
                 <div className="model-dropdown">
-                  {models.map(model => (
-                    <div
-                      key={model.value}
-                      className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
-                      onMouseDown={e => {
-                        e.preventDefault();
-                        setSelectedModel(model.value);
-                        if (model.value === 'flux-kontext-apps/portrait-series') {
-                          setSelectedAspectRatio('');
-                        } else if (model.value === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
-                          setSelectedAspectRatio('1:1');
-                        } else {
-                          setSelectedAspectRatio(aspectRatios[model.value][0].value);
-                        }
-                        setIsModelDropdownOpen(false);
-                      }}
-                      tabIndex={0}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter' || e.key === ' ') {
+                  <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Text to Image</div>
+                  <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
+                  <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); }}>Image to Prompt</div>
+                  <div className="model-option disabled">Text to Video (coming soon)</div>
+                  <div className="model-option disabled">Image to Video (coming soon)</div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {generationType === 'image-to-image' && (
+            <div className="toolbar-section">
+              <h3>Source Image</h3>
+              <div className="image-upload-container">
+                {!sourceImagePreview ? (
+                  <div className="image-upload-box">
+                    <input
+                      type="file"
+                      accept=".webp,.jpg,.jpeg,.png"
+                      onChange={handleImageUpload}
+                      className="image-upload-input"
+                      id="image-upload"
+                    />
+                    <label htmlFor="image-upload" className="image-upload-label">
+                      <span>Click to upload image</span>
+                      <span className="image-upload-hint">WebP, JPG, or PNG</span>
+                    </label>
+                  </div>
+                ) : (
+                  <div className="image-preview-container">
+                    <img 
+                      src={sourceImagePreview} 
+                      alt="Source" 
+                      className="image-preview"
+                    />
+                    <button 
+                      onClick={handleRemoveImage}
+                      className="remove-image-button"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {generationType !== 'image-to-prompt' && (
+            <div className="toolbar-section">
+              <h3>Prompt</h3>
+              <div className="prompt-input-wrapper">
+                <textarea
+                  ref={textareaRef}
+                  value={prompt}
+                  onChange={handlePromptChange}
+                  onKeyDown={handleKeyDown}
+                  onWheel={handleWheel}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  placeholder="Enter your image prompt here..."
+                  className="prompt-textarea with-supercharge"
+                  rows={4}
+                  disabled={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series'}
+                  style={generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' ? { background: '#23242b', color: '#888' } : {}}
+                />
+                <button
+                  className="supercharge-button-inline"
+                  style={{ right: '130px' }}
+                  onClick={handleAssistant}
+                >
+                  Assistant
+                </button>
+                <button
+                  onClick={handleSupercharge}
+                  className="supercharge-button-inline"
+                  disabled={isSuperchargeLoading || !prompt}
+                >
+                  {isSuperchargeLoading ? <LoadingSpinner size="inline" /> : 'Supercharge'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {generationType === 'image-to-prompt' && (
+            <div className="toolbar-section">
+              <h3>Source Image</h3>
+              <div className="image-upload-container">
+                {!sourceImagePreview ? (
+                  <div className="image-upload-box">
+                    <input
+                      type="file"
+                      accept=".webp,.jpg,.jpeg,.png"
+                      onChange={handleSourceImageChange}
+                      className="image-upload-input"
+                      id="image-upload"
+                    />
+                    <label htmlFor="image-upload" className="image-upload-label">
+                      <span>Click to upload image</span>
+                      <span className="image-upload-hint">WebP, JPG, or PNG</span>
+                    </label>
+                  </div>
+                ) : (
+                  <div className="image-preview-container">
+                    <img 
+                      src={sourceImagePreview} 
+                      alt="Source" 
+                      className="image-preview"
+                    />
+                    <button 
+                      onClick={handleRemoveImage}
+                      className="remove-image-button"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {generationType === 'image-to-prompt' && (
+            <div className="toolbar-section">
+              <h3>Prompt Output</h3>
+              <div className="prompt-output-container" style={{ fontSize: '11px', minHeight: '150px', height: '150px' }}>
+                {generatedPrompt ? (
+                  <div className="prompt-text" style={{ fontSize: '12px', position: 'relative' }}>
+                    {generatedPrompt}
+                    <div className="copy-btn-container">
+                      <button onClick={handleCopyPrompt} className={`copy-button small ${isCopied ? 'copied' : ''}`}> 
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '5px'}}>
+                          <rect x="7" y="7" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
+                          <rect x="4" y="4" width="9" height="9" rx="2" stroke="white" strokeWidth="1.5"/>
+                        </svg>
+                        {isCopied ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="prompt-placeholder">Generated prompt will appear here</div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {generationType !== 'image-to-prompt' && (
+            <div className="toolbar-section">
+              <label className="toolbar-label">Model</label>
+              <div className="model-select-container">
+                <div
+                  className="model-select-header"
+                  onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+                >
+                  {models.find(m => m.value === selectedModel)?.label || 'Select Model'}
+                </div>
+                {isModelDropdownOpen && (
+                  <div className="model-dropdown">
+                    {models.map(model => (
+                      <div
+                        key={model.value}
+                        className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
+                        onMouseDown={e => {
+                          e.preventDefault();
                           setSelectedModel(model.value);
                           if (model.value === 'flux-kontext-apps/portrait-series') {
                             setSelectedAspectRatio('');
@@ -846,139 +834,152 @@ export default function ImageGenerator() {
                             setSelectedAspectRatio(aspectRatios[model.value][0].value);
                           }
                           setIsModelDropdownOpen(false);
-                        }
-                      }}
-                      role="option"
-                      aria-selected={model.value === selectedModel}
-                    >
-                      <div className="model-label">{model.label}</div>
-                      {model.description && (
-                        <div className="model-description">{model.description}</div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Portrait Series background color dropdown */}
-        {generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' && (
-          <div className="toolbar-section">
-            <h3>Background Color</h3>
-            <div className="model-select-container">
-              <div
-                className="model-select-header"
-                ref={backgroundHeaderRef}
-                onClick={openBackgroundDropdown}
-              >
-                {portraitBackgroundColors.find(opt => opt.value === portraitBackground)?.label}
+                        }}
+                        tabIndex={0}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setSelectedModel(model.value);
+                            if (model.value === 'flux-kontext-apps/portrait-series') {
+                              setSelectedAspectRatio('');
+                            } else if (model.value === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
+                              setSelectedAspectRatio('1:1');
+                            } else {
+                              setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                            }
+                            setIsModelDropdownOpen(false);
+                          }
+                        }}
+                        role="option"
+                        aria-selected={model.value === selectedModel}
+                      >
+                        <div className="model-label">{model.label}</div>
+                        {model.description && (
+                          <div className="model-description">{model.description}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              {isBackgroundDropdownOpen && ReactDOM.createPortal(
+            </div>
+          )}
+
+          {/* Portrait Series background color dropdown */}
+          {generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series' && (
+            <div className="toolbar-section">
+              <h3>Background Color</h3>
+              <div className="model-select-container">
                 <div
-                  className="model-dropdown"
-                  style={{
-                    position: 'absolute',
-                    top: backgroundDropdownPos.top,
-                    left: backgroundDropdownPos.left,
-                    width: backgroundDropdownPos.width,
-                    zIndex: 3000
-                  }}
+                  className="model-select-header"
+                  ref={backgroundHeaderRef}
+                  onClick={openBackgroundDropdown}
                 >
-                  {portraitBackgroundColors.map(opt => (
-                    <div
-                      key={opt.value}
-                      className={`model-option${portraitBackground === opt.value ? ' selected' : ''}`}
-                      onMouseDown={() => { setPortraitBackground(opt.value); setIsBackgroundDropdownOpen(false); }}
-                    >
-                      {opt.label}
-                    </div>
-                  ))}
-                </div>,
-                document.body
-              )}
-            </div>
-          </div>
-        )}
-
-        {generationType !== 'image-to-prompt' && (
-          <div className="toolbar-section">
-            <label className="toolbar-label">Aspect Ratio</label>
-            <div className="model-select-container">
-              <div
-                className="model-select-header"
-                onClick={() => {
-                  if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
-                      !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe')) {
-                    setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
-                  }
-                }}
-                style={(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') || 
-                       (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') ? 
-                       { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
-              >
-                {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
-              </div>
-              {isAspectRatioDropdownOpen && 
-               !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
-               !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') && (
-                <div className="model-dropdown">
-                  {aspectRatios[selectedModel]?.map(ratio => (
-                    <div
-                      key={ratio.value}
-                      className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
-                      onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
-                    >
-                      {ratio.label}
-                    </div>
-                  ))}
+                  {portraitBackgroundColors.find(opt => opt.value === portraitBackground)?.label}
                 </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Show style dropdown only for recraft-ai/recraft-v3 in text-to-image */}
-        {generationType === 'text-to-image' && selectedModel === 'recraft-ai/recraft-v3' && (
-          <div className="toolbar-section">
-            <h3>Style</h3>
-            <div className="model-select-container">
-              <div
-                className="model-select-header"
-                onClick={() => setIsStyleDropdownOpen(!isStyleDropdownOpen)}
-              >
-                {recraftStyles.find(opt => opt.value === selectedStyle)?.label || 'Select Style'}
+                {isBackgroundDropdownOpen && ReactDOM.createPortal(
+                  <div
+                    className="model-dropdown"
+                    style={{
+                      position: 'absolute',
+                      top: backgroundDropdownPos.top,
+                      left: backgroundDropdownPos.left,
+                      width: backgroundDropdownPos.width,
+                      zIndex: 3000
+                    }}
+                  >
+                    {portraitBackgroundColors.map(opt => (
+                      <div
+                        key={opt.value}
+                        className={`model-option${portraitBackground === opt.value ? ' selected' : ''}`}
+                        onMouseDown={() => { setPortraitBackground(opt.value); setIsBackgroundDropdownOpen(false); }}
+                      >
+                        {opt.label}
+                      </div>
+                    ))}
+                  </div>,
+                  document.body
+                )}
               </div>
-              {isStyleDropdownOpen && (
-                <div className="model-dropdown">
-                  {recraftStyles.map(opt => (
-                    <div
-                      key={opt.value}
-                      className={`model-option${selectedStyle === opt.value ? ' selected' : ''}`}
-                      onMouseDown={() => { setSelectedStyle(opt.value); setIsStyleDropdownOpen(false); }}
-                    >
-                      {opt.label}
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          </div>
-        )}
+          )}
 
-        <button
-          onClick={handleGenerateWithFlux}
-          disabled={isGenerateLoading || (generationType === 'image-to-prompt' && !sourceImage)}
-          className="generate-flux-button"
-        >
-          {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate'}
-        </button>
+          {generationType !== 'image-to-prompt' && (
+            <div className="toolbar-section">
+              <label className="toolbar-label">Aspect Ratio</label>
+              <div className="model-select-container">
+                <div
+                  className="model-select-header"
+                  onClick={() => {
+                    if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
+                        !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe')) {
+                      setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
+                    }
+                  }}
+                  style={(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') || 
+                         (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') ? 
+                         { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
+                >
+                  {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
+                </div>
+                {isAspectRatioDropdownOpen && 
+                 !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
+                 !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') && (
+                  <div className="model-dropdown">
+                    {aspectRatios[selectedModel]?.map(ratio => (
+                      <div
+                        key={ratio.value}
+                        className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
+                        onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
+                      >
+                        {ratio.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Show style dropdown only for recraft-ai/recraft-v3 in text-to-image */}
+          {generationType === 'text-to-image' && selectedModel === 'recraft-ai/recraft-v3' && (
+            <div className="toolbar-section">
+              <h3>Style</h3>
+              <div className="model-select-container">
+                <div
+                  className="model-select-header"
+                  onClick={() => setIsStyleDropdownOpen(!isStyleDropdownOpen)}
+                >
+                  {recraftStyles.find(opt => opt.value === selectedStyle)?.label || 'Select Style'}
+                </div>
+                {isStyleDropdownOpen && (
+                  <div className="model-dropdown">
+                    {recraftStyles.map(opt => (
+                      <div
+                        key={opt.value}
+                        className={`model-option${selectedStyle === opt.value ? ' selected' : ''}`}
+                        onMouseDown={() => { setSelectedStyle(opt.value); setIsStyleDropdownOpen(false); }}
+                      >
+                        {opt.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="toolbar-footer">
+          <button
+            onClick={handleGenerateWithFlux}
+            disabled={isGenerateLoading || (generationType === 'image-to-prompt' && !sourceImage)}
+            className="generate-flux-button"
+          >
+            {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate'}
+          </button>
+        </div>
       </div>
-
       <div className="main-content">
         {error && <div className="error-message">{error}</div>}
-
         <div className="gallery-wrapper">
           <ImageGallery 
             userId={user.id} 

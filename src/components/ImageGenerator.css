@@ -1248,4 +1248,23 @@
     max-height: 60vh !important;
     overflow-y: auto !important;
   }
+}
+
+.left-toolbar {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 48px);
+}
+
+.toolbar-scroll-content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.toolbar-footer {
+  flex-shrink: 0;
+  padding-top: 12px;
+  background: rgba(30,32,40,0.95);
+  /* Optional: add a border or shadow for separation */
 } 

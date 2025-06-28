@@ -363,7 +363,7 @@
   flex-direction: column;
   gap: 20px;
   position: relative;
-  height: 100vh;
+  height: calc(100vh - 48px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow-y: auto;
   overflow-x: visible;
@@ -467,7 +467,7 @@
 .main-content {
   flex: 1;
   min-width: 0;
-  height: 100vh;
+  height: calc(100vh - 48px);
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;

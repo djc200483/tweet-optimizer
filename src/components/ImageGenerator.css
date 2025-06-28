@@ -341,6 +341,7 @@
   }
 }
 
+/* --- DESKTOP/LAPTOP: Independent scrolling for toolbar and gallery --- */
 .optimizer-container.image-generator-page {
   display: flex;
   gap: 24px;
@@ -362,12 +363,11 @@
   flex-direction: column;
   gap: 20px;
   position: relative;
-  height: fit-content;
+  height: 100vh;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: visible;
-  flex-shrink: 0;
   overflow-y: auto;
-  max-height: 100vh;
+  overflow-x: visible;
+  flex-shrink: 0;
 }
 
 .toolbar-section {
@@ -467,6 +467,7 @@
 .main-content {
   flex: 1;
   min-width: 0;
+  height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -506,26 +507,32 @@
   margin-top: 0;
 }
 
+/* --- MOBILE: Toolbar fully visible, gallery scrolls below --- */
 @media (max-width: 1024px) {
   .optimizer-container.image-generator-page {
     flex-direction: column;
-    padding: 16px;
+    padding: 12px;
     width: 100%;
-    margin-top: 60px;
-    overflow-x: hidden;
+    margin-top: 50px;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
     box-sizing: border-box;
   }
-
   .left-toolbar {
     width: 100%;
-    position: relative;
-    top: 0;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    position: static;
     margin-bottom: 24px;
+    padding: 16px;
   }
-
   .main-content {
     width: 100%;
-    overflow-x: hidden;
+    height: auto;
+    min-height: 0;
+    overflow-y: visible;
     box-sizing: border-box;
   }
 }

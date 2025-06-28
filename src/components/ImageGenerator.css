@@ -355,19 +355,11 @@
 }
 
 .left-toolbar {
-  width: 300px;
-  background: rgba(30, 32, 40, 0.95);
-  border-radius: 12px;
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  position: relative;
   height: calc(100vh - 48px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow-y: auto;
-  overflow-x: visible;
-  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 300px;
 }
 
 .toolbar-section {
@@ -1254,12 +1246,17 @@
   display: flex;
   flex-direction: column;
   height: calc(100vh - 48px);
+  box-sizing: border-box;
+  width: 300px;
 }
 
 .toolbar-scroll-content {
   flex: 1 1 auto;
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .toolbar-footer {
@@ -1267,4 +1264,10 @@
   padding-top: 12px;
   background: rgba(30,32,40,0.95);
   /* Optional: add a border or shadow for separation */
+}
+
+/* Ensure toolbar-section and children do not exceed width */
+.toolbar-section, .toolbar-label, .model-select-container, .prompt-input-wrapper, .prompt-textarea, .image-upload-container, .image-upload-box, .image-preview-container {
+  max-width: 100%;
+  box-sizing: border-box;
 } 

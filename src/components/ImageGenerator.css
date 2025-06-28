@@ -345,11 +345,11 @@
   display: flex;
   gap: 24px;
   padding: 24px;
-  min-height: 100vh;
+  height: 100vh;
   background: #1a1b1f;
   width: 98%;
   margin: 40px auto 0;
-  overflow: visible;
+  overflow: hidden;
   box-sizing: border-box;
 }
 

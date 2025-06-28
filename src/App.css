@@ -1,9 +1,16 @@
 /* Staging environment test comment */
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #1a1b1f;
   color: #ffffff;
-  margin: 0;
-  padding: 0;
 }
 
 .App {

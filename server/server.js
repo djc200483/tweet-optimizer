@@ -22,7 +22,8 @@ const adminRoutes = require('./routes/admin');
 const imageRoutes = require('./routes/images');
 const authMiddleware = require('./middleware/auth');
 const migrate = require('./db/migrate');
-// const axios = require('axios');  // Commented out for now
+const sharp = require('sharp');
+const axios = require('axios');
 
 // Run migrations on startup
 console.log('Running database migrations...');
@@ -966,9 +967,28 @@ app.post('/enhance-image', authMiddleware, async (req, res) => {
       throw new Error(finalPrediction.error || 'Image enhancement failed');
     }
     let enhancedUrl = Array.isArray(finalPrediction.output) ? finalPrediction.output[0] : finalPrediction.output;
-    // Upload enhanced image to S3
+    // Download the original image buffer (already have it as 'buffer')
+    // Download the enhanced image buffer
+    const enhancedImageResponse = await axios({
+      method: 'get',
+      url: enhancedUrl,
+      responseType: 'arraybuffer',
+      timeout: 20000
+    });
+    const enhancedBuffer = Buffer.from(enhancedImageResponse.data);
+
+    // Get original image dimensions
+    const originalMeta = await sharp(buffer).metadata();
+    const { width: origWidth, height: origHeight } = originalMeta;
+
+    // Resize/crop the enhanced image to match the original's dimensions
+    const resizedEnhancedBuffer = await sharp(enhancedBuffer)
+      .resize(origWidth, origHeight, { fit: 'cover' })
+      .toBuffer();
+
+    // Upload the resized enhanced image to S3 instead of the raw enhanced image
     const enhKey = `user-enhance/${userId}/${timestamp}-enhanced.png`;
-    const enhS3Result = await uploadImageToS3(enhancedUrl, enhKey);
+    const enhS3Result = await uploadImageBufferToS3(resizedEnhancedBuffer, enhKey);
     if (!enhS3Result.success) {
       return res.status(500).json({ error: 'Failed to upload enhanced image to S3', details: enhS3Result.error });
     }

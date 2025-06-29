@@ -66,9 +66,6 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
     };
   }, [isDragging]);
 
-  // Set a fixed aspect ratio (e.g., 1:1 or 4:3) for the container
-  const aspectRatio = 1; // square by default, can be adjusted
-
   return (
     <div
       ref={containerRef}
@@ -76,7 +73,7 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
         position: 'relative',
         width: '100%',
         maxWidth: '600px',
-        aspectRatio: aspectRatio,
+        height: '600px', // Fixed height for pixel-perfect overlay
         background: '#111',
         borderRadius: '8px',
         overflow: 'hidden',
@@ -93,7 +90,7 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           left: 0,
           width: '100%',
           height: '100%',
-          objectFit: 'cover',
+          objectFit: 'fill',
           zIndex: 1,
         }}
         draggable={false}
@@ -119,7 +116,7 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
             left: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
+            objectFit: 'fill',
             zIndex: 2,
           }}
           draggable={false}

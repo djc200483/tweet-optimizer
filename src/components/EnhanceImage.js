@@ -201,8 +201,8 @@ export default function EnhanceImage() {
         <div className="main-content">
           {error && <div className="error-message">{error}</div>}
           <div className="gallery-wrapper">
-            {originalS3 && enhancedS3 && imagesLoaded && (
-              <div className="generated-images-container">
+            <div className="generated-images-container">
+              {originalS3 && enhancedS3 && imagesLoaded ? (
                 <div style={{ position: 'relative', width: '100%', height: 600 }}>
                   {/* Before Label */}
                   <div style={{
@@ -234,8 +234,22 @@ export default function EnhanceImage() {
                     style={{ width: '100%', height: 600 }}
                   />
                 </div>
-              </div>
-            )}
+              ) : (
+                <div style={{
+                  width: '100%',
+                  height: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#888',
+                  fontSize: 24,
+                  background: 'rgba(255,255,255,0.02)',
+                  borderRadius: 12
+                }}>
+                  Output will appear here
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

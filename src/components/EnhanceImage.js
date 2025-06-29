@@ -203,7 +203,7 @@ export default function EnhanceImage() {
           <div className="gallery-wrapper">
             {/* Before/After slider */}
             {originalS3 && enhancedS3 && typeof originalS3 === 'string' && typeof enhancedS3 === 'string' && imagesLoaded && (
-              <div className="enhance-slider-wrapper">
+              <div style={{ maxWidth: 600, margin: '40px auto', position: 'relative' }}>
                 {/* Before Label */}
                 <div style={{
                   position: 'absolute',

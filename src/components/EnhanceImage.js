@@ -202,36 +202,38 @@ export default function EnhanceImage() {
           {error && <div className="error-message">{error}</div>}
           <div className="gallery-wrapper">
             {originalS3 && enhancedS3 && imagesLoaded && (
-              <div style={{ width: '100%', maxWidth: 800, margin: '20px auto', position: 'relative' }}>
-                {/* Before Label */}
-                <div style={{
-                  position: 'absolute',
-                  top: 16,
-                  left: 16,
-                  background: 'rgba(0,0,0,0.7)',
-                  color: '#fff',
-                  padding: '5px 12px',
-                  borderRadius: 6,
-                  fontSize: 16,
-                  zIndex: 10
-                }}>Before</div>
-                {/* After Label */}
-                <div style={{
-                  position: 'absolute',
-                  top: 16,
-                  right: 16,
-                  background: 'rgba(0,0,0,0.7)',
-                  color: '#fff',
-                  padding: '5px 12px',
-                  borderRadius: 6,
-                  fontSize: 16,
-                  zIndex: 10
-                }}>After</div>
-                <ReactCompareSlider
-                  itemOne={<ReactCompareSliderImage src={originalS3} alt="Before" />}
-                  itemTwo={<ReactCompareSliderImage src={enhancedS3} alt="After" />}
-                  style={{ width: '100%', height: 600 }}
-                />
+              <div className="generated-images-container">
+                <div style={{ position: 'relative', width: '100%', height: 600 }}>
+                  {/* Before Label */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 16,
+                    left: 16,
+                    background: 'rgba(0,0,0,0.7)',
+                    color: '#fff',
+                    padding: '5px 12px',
+                    borderRadius: 6,
+                    fontSize: 16,
+                    zIndex: 10
+                  }}>Before</div>
+                  {/* After Label */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 16,
+                    right: 16,
+                    background: 'rgba(0,0,0,0.7)',
+                    color: '#fff',
+                    padding: '5px 12px',
+                    borderRadius: 6,
+                    fontSize: 16,
+                    zIndex: 10
+                  }}>After</div>
+                  <ReactCompareSlider
+                    itemOne={<ReactCompareSliderImage src={originalS3} alt="Before" />}
+                    itemTwo={<ReactCompareSliderImage src={enhancedS3} alt="After" />}
+                    style={{ width: '100%', height: 600 }}
+                  />
+                </div>
               </div>
             )}
           </div>

@@ -199,47 +199,17 @@ export default function EnhanceImage() {
         {error && <div className="error-message">{error}</div>}
         <div className="gallery-wrapper">
           {/* Before/After slider */}
-          {originalS3 && enhancedS3 && (
-            <div style={{ maxWidth: 600, margin: '40px auto' }}>
-              {imagesLoaded ? (
+          {originalS3 && enhancedS3 && typeof originalS3 === 'string' && typeof enhancedS3 === 'string' && (
+            <>
+              {console.log('CompareImage leftImage:', originalS3)}
+              {console.log('CompareImage rightImage:', enhancedS3)}
+              <div style={{ maxWidth: 600, margin: '40px auto' }}>
                 <CompareImage
                   leftImage={originalS3}
                   rightImage={enhancedS3}
-                  leftImageLabel="Before"
-                  rightImageLabel="After"
-                  sliderLineWidth={3}
-                  sliderLineColor="#fff"
-                  handleSize={48}
-                  aspectRatio="auto"
-                  fullscreenLabel="Fullscreen"
                 />
-              ) : (
-                <div style={{ 
-                  textAlign: 'center', 
-                  padding: '40px', 
-                  color: '#fff',
-                  background: '#23242b',
-                  borderRadius: '8px'
-                }}>
-                  <div style={{ marginBottom: '20px' }}>Loading comparison...</div>
-                  <div style={{ 
-                    width: '40px', 
-                    height: '40px', 
-                    border: '4px solid #333', 
-                    borderTop: '4px solid #fff', 
-                    borderRadius: '50%', 
-                    animation: 'spin 1s linear infinite',
-                    margin: '0 auto'
-                  }}></div>
-                  <style>{`
-                    @keyframes spin {
-                      0% { transform: rotate(0deg); }
-                      100% { transform: rotate(360deg); }
-                    }
-                  `}</style>
-                </div>
-              )}
-            </div>
+              </div>
+            </>
           )}
         </div>
       </div>

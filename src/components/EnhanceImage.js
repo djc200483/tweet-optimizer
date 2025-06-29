@@ -84,7 +84,11 @@ export default function EnhanceImage() {
       setEnhancedS3(data.enhanced);
       setEnhancedImage(data.enhanced);
     } catch (err) {
-      setError(err.message || 'Failed to enhance image.');
+      let msg = err.message || 'Failed to enhance image.';
+      if (msg.includes('has a total number of pixels') && msg.includes('Resize input image and try again')) {
+        msg = 'Image must have Square Dimensions';
+      }
+      setError(msg);
     } finally {
       setIsLoading(false);
     }

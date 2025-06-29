@@ -29,7 +29,8 @@ async function uploadImageToS3(imageUrl, key) {
             responseType: 'arraybuffer',
             // Add timeout and better error handling
             timeout: 10000,
-            maxContentLength: 10 * 1024 * 1024 // 10MB max
+            maxContentLength: 100 * 1024 * 1024, // 100MB max
+            maxBodyLength: 100 * 1024 * 1024 // 100MB max
         });
 
         const imageBuffer = Buffer.from(response.data);

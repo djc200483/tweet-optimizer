@@ -9,51 +9,65 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
   const containerRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
+  const updateSliderPosition = (clientX) => {
+    if (!containerRef.current) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const percentage = (x / rect.width) * 100;
+    setSliderPosition(Math.max(0, Math.min(100, percentage)));
+  };
+
   const handleMouseDown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsDragging(true);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    updateSliderPosition(e.clientX);
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging || !containerRef.current) return;
-    
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = (x / rect.width) * 100;
-    setSliderPosition(Math.max(0, Math.min(100, percentage)));
+    if (!isDragging) return;
+    e.preventDefault();
+    updateSliderPosition(e.clientX);
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
   };
 
   const handleTouchStart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsDragging(true);
+    updateSliderPosition(e.touches[0].clientX);
   };
 
   const handleTouchMove = (e) => {
-    if (!isDragging || !containerRef.current) return;
-    
-    const rect = containerRef.current.getBoundingClientRect();
-    const touch = e.touches[0];
-    const x = touch.clientX - rect.left;
-    const percentage = (x / rect.width) * 100;
-    setSliderPosition(Math.max(0, Math.min(100, percentage)));
+    if (!isDragging) return;
+    e.preventDefault();
+    updateSliderPosition(e.touches[0].clientX);
   };
 
   const handleTouchEnd = () => {
     setIsDragging(false);
   };
 
+  // Add global event listeners
   useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
+    }
+
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, []);
+  }, [isDragging]);
 
   return (
     <div 
@@ -64,13 +78,8 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
         maxWidth: '600px',
         height: 'auto',
         overflow: 'hidden',
-        borderRadius: '8px',
-        cursor: 'col-resize'
+        borderRadius: '8px'
       }}
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
     >
       {/* Before Image (Background) */}
       <img
@@ -98,7 +107,7 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           src={afterImage}
           alt="After"
           style={{
-            width: `${100 / (sliderPosition / 100)}%`,
+            width: '100%',
             height: 'auto',
             display: 'block'
           }}
@@ -115,8 +124,11 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           height: '100%',
           backgroundColor: '#fff',
           cursor: 'col-resize',
-          transform: 'translateX(-50%)'
+          transform: 'translateX(-50%)',
+          zIndex: 10
         }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
       >
         <div
           style={{
@@ -135,7 +147,9 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
             color: '#fff',
             fontSize: '18px',
             fontWeight: 'bold',
-            cursor: 'col-resize'
+            cursor: 'col-resize',
+            userSelect: 'none',
+            touchAction: 'none'
           }}
         >
           ↔
@@ -152,7 +166,8 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           color: '#fff',
           padding: '5px 10px',
           borderRadius: '4px',
-          fontSize: '14px'
+          fontSize: '14px',
+          zIndex: 5
         }}
       >
         Before
@@ -166,7 +181,8 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           color: '#fff',
           padding: '5px 10px',
           borderRadius: '4px',
-          fontSize: '14px'
+          fontSize: '14px',
+          zIndex: 5
         }}
       >
         After
@@ -188,18 +204,32 @@ export default function EnhanceImage() {
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
   // Check if both images are loaded
-  React.useEffect(() => {
+  useEffect(() => {
     if (originalS3 && enhancedS3) {
-      const img1 = new Image();
-      const img2 = new Image();
+      setImagesLoaded(false); // Reset loading state
       
-      img1.onload = () => {
-        img2.onload = () => {
-          setImagesLoaded(true);
-        };
-        img2.src = enhancedS3;
+      // Load images in parallel
+      const loadImage = (src) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+          img.src = src;
+        });
       };
-      img1.src = originalS3;
+
+      // Load both images simultaneously
+      Promise.all([
+        loadImage(originalS3),
+        loadImage(enhancedS3)
+      ])
+      .then(() => {
+        setImagesLoaded(true);
+      })
+      .catch((error) => {
+        console.error('Image loading error:', error);
+        setImagesLoaded(false);
+      });
     } else {
       setImagesLoaded(false);
     }
@@ -219,6 +249,7 @@ export default function EnhanceImage() {
     setEnhancedImage(null);
     setOriginalS3(null);
     setEnhancedS3(null);
+    setImagesLoaded(false);
   };
 
   const handleRemoveImage = () => {
@@ -228,6 +259,7 @@ export default function EnhanceImage() {
     setEnhancedImage(null);
     setOriginalS3(null);
     setEnhancedS3(null);
+    setImagesLoaded(false);
   };
 
   const handleGenerate = async () => {
@@ -240,6 +272,7 @@ export default function EnhanceImage() {
     setEnhancedImage(null);
     setOriginalS3(null);
     setEnhancedS3(null);
+    setImagesLoaded(false);
     try {
       // Convert image to base64
       const base64 = await new Promise((resolve, reject) => {
@@ -270,6 +303,7 @@ export default function EnhanceImage() {
         throw new Error(err.error || 'Failed to enhance image');
       }
       const data = await response.json();
+      console.log('Setting images:', { original: data.original, enhanced: data.enhanced });
       setOriginalS3(data.original);
       setEnhancedS3(data.enhanced);
       setEnhancedImage(data.enhanced);
@@ -357,12 +391,39 @@ export default function EnhanceImage() {
         {error && <div className="error-message">{error}</div>}
         <div className="gallery-wrapper">
           {/* Before/After slider */}
-          {imagesLoaded && originalS3 && enhancedS3 && (
+          {originalS3 && enhancedS3 && (
             <div style={{ maxWidth: 600, margin: '40px auto' }}>
-              <BeforeAfterSlider 
-                beforeImage={originalS3}
-                afterImage={enhancedS3}
-              />
+              {imagesLoaded ? (
+                <BeforeAfterSlider 
+                  beforeImage={originalS3}
+                  afterImage={enhancedS3}
+                />
+              ) : (
+                <div style={{ 
+                  textAlign: 'center', 
+                  padding: '40px', 
+                  color: '#fff',
+                  background: '#23242b',
+                  borderRadius: '8px'
+                }}>
+                  <div style={{ marginBottom: '20px' }}>Loading comparison...</div>
+                  <div style={{ 
+                    width: '40px', 
+                    height: '40px', 
+                    border: '4px solid #333', 
+                    borderTop: '4px solid #fff', 
+                    borderRadius: '50%', 
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto'
+                  }}></div>
+                  <style>{`
+                    @keyframes spin {
+                      0% { transform: rotate(0deg); }
+                      100% { transform: rotate(360deg); }
+                    }
+                  `}</style>
+                </div>
+              )}
             </div>
           )}
         </div>

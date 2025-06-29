@@ -134,7 +134,7 @@ export default function EnhanceImage() {
         <div className="left-toolbar">
           <div className="toolbar-scroll-content">
             <div className="toolbar-section">
-              <h3>Enhance Image</h3>
+              <h3 style={{ textAlign: 'center', width: '100%' }}>Enhance Image</h3>
               <div className="image-upload-container">
                 {!sourceImagePreview ? (
                   <div className="image-upload-box">
@@ -159,7 +159,7 @@ export default function EnhanceImage() {
               </div>
             </div>
             <div className="toolbar-section">
-              <label className="toolbar-label">Model</label>
+              <label className="toolbar-label" style={{ display: 'block', textAlign: 'center', width: '100%' }}>Model</label>
               <div className="model-select-header" style={{ background: '#23242b', color: '#aaa', cursor: 'not-allowed' }}>
                 NightmareAI
               </div>

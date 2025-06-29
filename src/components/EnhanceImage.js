@@ -11,7 +11,6 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
 
   const updateSliderPosition = (clientX) => {
     if (!containerRef.current) return;
-    
     const rect = containerRef.current.getBoundingClientRect();
     const x = clientX - rect.left;
     const percentage = (x / rect.width) * 100;
@@ -52,7 +51,6 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
     setIsDragging(false);
   };
 
-  // Add global event listeners
   useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
@@ -60,7 +58,6 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
       document.addEventListener('touchmove', handleTouchMove);
       document.addEventListener('touchend', handleTouchEnd);
     }
-
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
@@ -69,16 +66,21 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
     };
   }, [isDragging]);
 
+  // Set a fixed aspect ratio (e.g., 1:1 or 4:3) for the container
+  const aspectRatio = 1; // square by default, can be adjusted
+
   return (
-    <div 
+    <div
       ref={containerRef}
       style={{
         position: 'relative',
         width: '100%',
         maxWidth: '600px',
-        height: 'auto',
+        aspectRatio: aspectRatio,
+        background: '#111',
+        borderRadius: '8px',
         overflow: 'hidden',
-        borderRadius: '8px'
+        userSelect: 'none',
       }}
     >
       {/* Before Image (Background) */}
@@ -86,12 +88,16 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
         src={beforeImage}
         alt="Before"
         style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
           width: '100%',
-          height: 'auto',
-          display: 'block'
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 1,
         }}
+        draggable={false}
       />
-      
       {/* After Image (Overlay) */}
       <div
         style={{
@@ -100,20 +106,25 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           left: 0,
           width: `${sliderPosition}%`,
           height: '100%',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          zIndex: 2,
         }}
       >
         <img
           src={afterImage}
           alt="After"
           style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
             width: '100%',
-            height: 'auto',
-            display: 'block'
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 2,
           }}
+          draggable={false}
         />
       </div>
-      
       {/* Slider Handle */}
       <div
         style={{
@@ -125,7 +136,7 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           backgroundColor: '#fff',
           cursor: 'col-resize',
           transform: 'translateX(-50%)',
-          zIndex: 10
+          zIndex: 10,
         }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
@@ -149,13 +160,13 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
             fontWeight: 'bold',
             cursor: 'col-resize',
             userSelect: 'none',
-            touchAction: 'none'
+            touchAction: 'none',
+            zIndex: 11,
           }}
         >
           ↔
         </div>
       </div>
-      
       {/* Labels */}
       <div
         style={{
@@ -167,7 +178,7 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           padding: '5px 10px',
           borderRadius: '4px',
           fontSize: '14px',
-          zIndex: 5
+          zIndex: 20,
         }}
       >
         Before
@@ -182,7 +193,7 @@ function BeforeAfterSlider({ beforeImage, afterImage }) {
           padding: '5px 10px',
           borderRadius: '4px',
           fontSize: '14px',
-          zIndex: 5
+          zIndex: 20,
         }}
       >
         After

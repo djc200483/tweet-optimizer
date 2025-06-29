@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './ImageGenerator.css';
-import CompareImage from 'react-compare-image';
+import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -199,17 +199,14 @@ export default function EnhanceImage() {
         {error && <div className="error-message">{error}</div>}
         <div className="gallery-wrapper">
           {/* Before/After slider */}
-          {originalS3 && enhancedS3 && typeof originalS3 === 'string' && typeof enhancedS3 === 'string' && (
-            <>
-              {console.log('CompareImage leftImage:', originalS3)}
-              {console.log('CompareImage rightImage:', enhancedS3)}
-              <div style={{ maxWidth: 600, margin: '40px auto' }}>
-                <CompareImage
-                  leftImage={originalS3}
-                  rightImage={enhancedS3}
-                />
-              </div>
-            </>
+          {originalS3 && enhancedS3 && typeof originalS3 === 'string' && typeof enhancedS3 === 'string' && imagesLoaded && (
+            <div style={{ maxWidth: 600, margin: '40px auto' }}>
+              <ReactCompareSlider
+                itemOne={<ReactCompareSliderImage src={originalS3} alt="Before" />}
+                itemTwo={<ReactCompareSliderImage src={enhancedS3} alt="After" />}
+                style={{ width: '100%', height: 600 }}
+              />
+            </div>
           )}
         </div>
       </div>

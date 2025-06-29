@@ -130,7 +130,7 @@ export default function EnhanceImage() {
   return (
     <>
       <NavBar />
-      <div className="enhance-card-container">
+      <div className="optimizer-container image-generator-page">
         <div className="left-toolbar">
           <div className="toolbar-scroll-content">
             <div className="toolbar-section">

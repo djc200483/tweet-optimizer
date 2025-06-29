@@ -1,203 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import './ImageGenerator.css';
+import CompareImage from 'react-compare-image';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
-
-// Custom Before/After Slider Component
-function BeforeAfterSlider({ beforeImage, afterImage }) {
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const containerRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const updateSliderPosition = (clientX) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const percentage = (x / rect.width) * 100;
-    setSliderPosition(Math.max(0, Math.min(100, percentage)));
-  };
-
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-    updateSliderPosition(e.clientX);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    updateSliderPosition(e.clientX);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleTouchStart = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-    updateSliderPosition(e.touches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    updateSliderPosition(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
-
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('touchend', handleTouchEnd);
-    }
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isDragging]);
-
-  return (
-    <div
-      ref={containerRef}
-      style={{
-        position: 'relative',
-        width: '100%',
-        maxWidth: '600px',
-        height: '600px', // Fixed height for pixel-perfect overlay
-        background: '#111',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        userSelect: 'none',
-      }}
-    >
-      {/* Before Image (Background) */}
-      <img
-        src={beforeImage}
-        alt="Before"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'fill',
-          zIndex: 1,
-        }}
-        draggable={false}
-      />
-      {/* After Image (Overlay) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: `${sliderPosition}%`,
-          height: '100%',
-          overflow: 'hidden',
-          zIndex: 2,
-        }}
-      >
-        <img
-          src={afterImage}
-          alt="After"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'fill',
-            zIndex: 2,
-          }}
-          draggable={false}
-        />
-      </div>
-      {/* Slider Handle */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: `${sliderPosition}%`,
-          width: '4px',
-          height: '100%',
-          backgroundColor: '#fff',
-          cursor: 'col-resize',
-          transform: 'translateX(-50%)',
-          zIndex: 10,
-        }}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '40px',
-            height: '40px',
-            backgroundColor: '#23242b',
-            border: '3px solid #fff',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            cursor: 'col-resize',
-            userSelect: 'none',
-            touchAction: 'none',
-            zIndex: 11,
-          }}
-        >
-          ↔
-        </div>
-      </div>
-      {/* Labels */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '10px',
-          left: '10px',
-          backgroundColor: 'rgba(0,0,0,0.7)',
-          color: '#fff',
-          padding: '5px 10px',
-          borderRadius: '4px',
-          fontSize: '14px',
-          zIndex: 20,
-        }}
-      >
-        Before
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          backgroundColor: 'rgba(0,0,0,0.7)',
-          color: '#fff',
-          padding: '5px 10px',
-          borderRadius: '4px',
-          fontSize: '14px',
-          zIndex: 20,
-        }}
-      >
-        After
-      </div>
-    </div>
-  );
-}
 
 export default function EnhanceImage() {
   const [sourceImage, setSourceImage] = useState(null);
@@ -212,21 +17,17 @@ export default function EnhanceImage() {
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
   // Check if both images are loaded
-  useEffect(() => {
+  React.useEffect(() => {
     if (originalS3 && enhancedS3) {
       setImagesLoaded(false); // Reset loading state
-      
-      // Load images in parallel
       const loadImage = (src) => {
         return new Promise((resolve, reject) => {
-          const img = new Image();
+          const img = new window.Image();
           img.onload = () => resolve(img);
           img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
           img.src = src;
         });
       };
-
-      // Load both images simultaneously
       Promise.all([
         loadImage(originalS3),
         loadImage(enhancedS3)
@@ -311,7 +112,6 @@ export default function EnhanceImage() {
         throw new Error(err.error || 'Failed to enhance image');
       }
       const data = await response.json();
-      console.log('Setting images:', { original: data.original, enhanced: data.enhanced });
       setOriginalS3(data.original);
       setEnhancedS3(data.enhanced);
       setEnhancedImage(data.enhanced);
@@ -402,9 +202,16 @@ export default function EnhanceImage() {
           {originalS3 && enhancedS3 && (
             <div style={{ maxWidth: 600, margin: '40px auto' }}>
               {imagesLoaded ? (
-                <BeforeAfterSlider 
-                  beforeImage={originalS3}
-                  afterImage={enhancedS3}
+                <CompareImage
+                  leftImage={originalS3}
+                  rightImage={enhancedS3}
+                  leftImageLabel="Before"
+                  rightImageLabel="After"
+                  sliderLineWidth={3}
+                  sliderLineColor="#fff"
+                  handleSize={48}
+                  aspectRatio="auto"
+                  fullscreenLabel="Fullscreen"
                 />
               ) : (
                 <div style={{ 

@@ -200,7 +200,31 @@ export default function EnhanceImage() {
         <div className="gallery-wrapper">
           {/* Before/After slider */}
           {originalS3 && enhancedS3 && typeof originalS3 === 'string' && typeof enhancedS3 === 'string' && imagesLoaded && (
-            <div style={{ maxWidth: 600, margin: '40px auto' }}>
+            <div style={{ maxWidth: 600, margin: '40px auto', position: 'relative' }}>
+              {/* Before Label */}
+              <div style={{
+                position: 'absolute',
+                top: 16,
+                left: 16,
+                background: 'rgba(0,0,0,0.7)',
+                color: '#fff',
+                padding: '5px 12px',
+                borderRadius: 6,
+                fontSize: 16,
+                zIndex: 10
+              }}>Before</div>
+              {/* After Label */}
+              <div style={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                background: 'rgba(0,0,0,0.7)',
+                color: '#fff',
+                padding: '5px 12px',
+                borderRadius: 6,
+                fontSize: 16,
+                zIndex: 10
+              }}>After</div>
               <ReactCompareSlider
                 itemOne={<ReactCompareSliderImage src={originalS3} alt="Before" />}
                 itemTwo={<ReactCompareSliderImage src={enhancedS3} alt="After" />}

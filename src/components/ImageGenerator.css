@@ -360,6 +360,7 @@
   height: calc(100vh - 48px);
   box-sizing: border-box;
   width: 300px;
+  padding: 0 16px 0 0;
 }
 
 .toolbar-section {
@@ -367,6 +368,7 @@
   max-width: 100%;
   box-sizing: border-box;
   overflow: visible;
+  padding: 16px 0;
 }
 
 .toolbar-section h3 {

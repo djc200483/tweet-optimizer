@@ -130,7 +130,7 @@ export default function EnhanceImage() {
   return (
     <>
       <NavBar />
-      <div className="optimizer-container image-generator-page">
+      <div className="enhance-card-container">
         <div className="left-toolbar">
           <div className="toolbar-scroll-content">
             <div className="toolbar-section">
@@ -202,7 +202,7 @@ export default function EnhanceImage() {
           {error && <div className="error-message">{error}</div>}
           <div className="gallery-wrapper">
             <div className="generated-images-container">
-              {originalS3 && enhancedS3 && imagesLoaded ? (
+              {originalS3 && enhancedS3 && imagesLoaded && (
                 <div style={{ position: 'relative', width: '100%', height: 600 }}>
                   {/* Before Label */}
                   <div style={{
@@ -233,20 +233,6 @@ export default function EnhanceImage() {
                     itemTwo={<ReactCompareSliderImage src={enhancedS3} alt="After" />}
                     style={{ width: '100%', height: 600 }}
                   />
-                </div>
-              ) : (
-                <div style={{
-                  width: '100%',
-                  height: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#888',
-                  fontSize: 24,
-                  background: 'rgba(255,255,255,0.02)',
-                  borderRadius: 12
-                }}>
-                  Output will appear here
                 </div>
               )}
             </div>

@@ -1307,4 +1307,18 @@
   .enhance-slider-wrapper {
     margin: 20px auto;
   }
+}
+
+.enhance-card-container {
+  background-color: #1a1b1f;
+  border-radius: 20px;
+  padding: 25px;
+  margin: 40px auto 0 auto;
+  max-width: 1200px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 95%;
+  display: flex;
+  gap: 24px;
+  min-height: 600px;
 } 

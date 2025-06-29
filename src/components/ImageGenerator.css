@@ -1291,4 +1291,20 @@
 .toolbar-scroll-content {
   scrollbar-width: thin;
   scrollbar-color: #39393d transparent;
+}
+
+.gallery-wrapper .masonry-grid {
+  width: 100%;
+}
+
+.enhance-slider-wrapper {
+  max-width: 600px;
+  margin: 40px auto;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .enhance-slider-wrapper {
+    margin: 20px auto;
+  }
 } 

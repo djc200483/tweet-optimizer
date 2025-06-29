@@ -1,8 +1,179 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './ImageGenerator.css';
-import CompareImage from 'react-compare-image';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
+// Custom Before/After Slider Component
+function BeforeAfterSlider({ beforeImage, afterImage }) {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const containerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !containerRef.current) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = (x / rect.width) * 100;
+    setSliderPosition(Math.max(0, Math.min(100, percentage)));
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleTouchStart = (e) => {
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging || !containerRef.current) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const touch = e.touches[0];
+    const x = touch.clientX - rect.left;
+    const percentage = (x / rect.width) * 100;
+    setSliderPosition(Math.max(0, Math.min(100, percentage)));
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
+  return (
+    <div 
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '600px',
+        height: 'auto',
+        overflow: 'hidden',
+        borderRadius: '8px',
+        cursor: 'col-resize'
+      }}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Before Image (Background) */}
+      <img
+        src={beforeImage}
+        alt="Before"
+        style={{
+          width: '100%',
+          height: 'auto',
+          display: 'block'
+        }}
+      />
+      
+      {/* After Image (Overlay) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: `${sliderPosition}%`,
+          height: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <img
+          src={afterImage}
+          alt="After"
+          style={{
+            width: `${100 / (sliderPosition / 100)}%`,
+            height: 'auto',
+            display: 'block'
+          }}
+        />
+      </div>
+      
+      {/* Slider Handle */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: `${sliderPosition}%`,
+          width: '4px',
+          height: '100%',
+          backgroundColor: '#fff',
+          cursor: 'col-resize',
+          transform: 'translateX(-50%)'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '40px',
+            height: '40px',
+            backgroundColor: '#23242b',
+            border: '3px solid #fff',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            cursor: 'col-resize'
+          }}
+        >
+          ↔
+        </div>
+      </div>
+      
+      {/* Labels */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '10px',
+          left: '10px',
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          color: '#fff',
+          padding: '5px 10px',
+          borderRadius: '4px',
+          fontSize: '14px'
+        }}
+      >
+        Before
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          color: '#fff',
+          padding: '5px 10px',
+          borderRadius: '4px',
+          fontSize: '14px'
+        }}
+      >
+        After
+      </div>
+    </div>
+  );
+}
 
 export default function EnhanceImage() {
   const [sourceImage, setSourceImage] = useState(null);
@@ -188,40 +359,10 @@ export default function EnhanceImage() {
           {/* Before/After slider */}
           {imagesLoaded && originalS3 && enhancedS3 && (
             <div style={{ maxWidth: 600, margin: '40px auto' }}>
-              {(() => {
-                try {
-                  return (
-                    <CompareImage
-                      leftImage={originalS3}
-                      rightImage={enhancedS3}
-                      leftImageLabel="Before"
-                      rightImageLabel="After"
-                      sliderLineWidth={3}
-                      sliderLineColor="#fff"
-                      handleSize={48}
-                      aspectRatio="auto"
-                      fullscreenLabel="Fullscreen"
-                    />
-                  );
-                } catch (err) {
-                  console.error('CompareImage error:', err);
-                  return (
-                    <div style={{ color: '#fff', textAlign: 'center', padding: '20px' }}>
-                      <p>Error loading comparison slider. Showing images side by side:</p>
-                      <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-                        <div>
-                          <h4>Before</h4>
-                          <img src={originalS3} alt="Original" style={{ maxWidth: '100%', height: 'auto' }} />
-                        </div>
-                        <div>
-                          <h4>After</h4>
-                          <img src={enhancedS3} alt="Enhanced" style={{ maxWidth: '100%', height: 'auto' }} />
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
-              })()}
+              <BeforeAfterSlider 
+                beforeImage={originalS3}
+                afterImage={enhancedS3}
+              />
             </div>
           )}
         </div>

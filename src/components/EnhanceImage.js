@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './ImageGenerator.css';
-import CompareImage from 'react-compare-image'; // npm install react-compare-image
+import CompareImage from 'react-compare-image';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -14,6 +14,25 @@ export default function EnhanceImage() {
   const [faceEnhance, setFaceEnhance] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Check if both images are loaded
+  React.useEffect(() => {
+    if (originalS3 && enhancedS3) {
+      const img1 = new Image();
+      const img2 = new Image();
+      
+      img1.onload = () => {
+        img2.onload = () => {
+          setImagesLoaded(true);
+        };
+        img2.src = enhancedS3;
+      };
+      img1.src = originalS3;
+    } else {
+      setImagesLoaded(false);
+    }
+  }, [originalS3, enhancedS3]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -167,22 +186,42 @@ export default function EnhanceImage() {
         {error && <div className="error-message">{error}</div>}
         <div className="gallery-wrapper">
           {/* Before/After slider */}
-          {originalS3 && enhancedS3 && (
+          {imagesLoaded && originalS3 && enhancedS3 && (
             <div style={{ maxWidth: 600, margin: '40px auto' }}>
-              <CompareImage
-                leftImage={originalS3}
-                rightImage={enhancedS3}
-                leftImageLabel="Before"
-                rightImageLabel="After"
-                sliderLineWidth={3}
-                sliderLineColor="#fff"
-                handleSize={48}
-                handle={() => (
-                  <div style={{ width: 48, height: 48, background: '#23242b', borderRadius: '50%', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: 24 }}>↔</div>
-                )}
-                aspectRatio="auto"
-                fullscreenLabel="Fullscreen"
-              />
+              {(() => {
+                try {
+                  return (
+                    <CompareImage
+                      leftImage={originalS3}
+                      rightImage={enhancedS3}
+                      leftImageLabel="Before"
+                      rightImageLabel="After"
+                      sliderLineWidth={3}
+                      sliderLineColor="#fff"
+                      handleSize={48}
+                      aspectRatio="auto"
+                      fullscreenLabel="Fullscreen"
+                    />
+                  );
+                } catch (err) {
+                  console.error('CompareImage error:', err);
+                  return (
+                    <div style={{ color: '#fff', textAlign: 'center', padding: '20px' }}>
+                      <p>Error loading comparison slider. Showing images side by side:</p>
+                      <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
+                        <div>
+                          <h4>Before</h4>
+                          <img src={originalS3} alt="Original" style={{ maxWidth: '100%', height: 'auto' }} />
+                        </div>
+                        <div>
+                          <h4>After</h4>
+                          <img src={enhancedS3} alt="Enhanced" style={{ maxWidth: '100%', height: 'auto' }} />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              })()}
             </div>
           )}
         </div>

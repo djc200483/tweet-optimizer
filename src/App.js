@@ -16,6 +16,7 @@ import Home from './components/Home';
 import LoadingSpinner from './components/LoadingSpinner';
 import NavBar from './components/NavBar';
 import WritingToolsPage from './components/WritingToolsPage';
+import EnhanceImage from './components/EnhanceImage';
 import './App.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -468,6 +469,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/writing-tools" element={<WritingToolsPage />} />
+          <Route path="/image-enhance" element={<EnhanceImage />} />
           <Route path="/*" element={<AppContent />} />
         </Routes>
       </AuthProvider>

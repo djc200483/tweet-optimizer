@@ -926,3 +926,64 @@ app.get('/api/featured-gallery', async (req, res) => {
     res.status(500).json({ error: 'Error fetching featured gallery' });
   }
 });
+
+// Enhance Image endpoint
+app.post('/enhance-image', authMiddleware, async (req, res) => {
+  try {
+    const { imageBase64, scale = 7, face_enhance = false } = req.body;
+    const userId = req.user.id;
+    if (!imageBase64) {
+      return res.status(400).json({ error: 'No image provided' });
+    }
+    if (!process.env.REPLICATE_API_TOKEN) {
+      throw new Error('Replicate API Token is not configured');
+    }
+    // Upload original image to S3
+    const buffer = Buffer.from(imageBase64, 'base64');
+    const timestamp = Date.now();
+    const origKey = `user-enhance/${userId}/${timestamp}-orig.png`;
+    const origS3Result = await uploadImageBufferToS3(buffer, origKey);
+    if (!origS3Result.success) {
+      return res.status(500).json({ error: 'Failed to upload original image to S3', details: origS3Result.error });
+    }
+    // Call Replicate model
+    const replicateInput = {
+      image: `data:image/png;base64,${imageBase64}`,
+      scale: Number(scale),
+      face_enhance: !!face_enhance
+    };
+    const predictionInput = {
+      version: 'nightmareai/real-esrgan:f121d640bd286e1fdc67f9799164c1d5be36ff74576ee11c803ae5b665dd46aa',
+      input: replicateInput
+    };
+    const prediction = await replicate.predictions.create(predictionInput);
+    let finalPrediction = await replicate.predictions.get(prediction.id);
+    while (finalPrediction.status !== 'succeeded' && finalPrediction.status !== 'failed') {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      finalPrediction = await replicate.predictions.get(prediction.id);
+    }
+    if (finalPrediction.status === 'failed') {
+      throw new Error(finalPrediction.error || 'Image enhancement failed');
+    }
+    let enhancedUrl = Array.isArray(finalPrediction.output) ? finalPrediction.output[0] : finalPrediction.output;
+    // Upload enhanced image to S3
+    const enhKey = `user-enhance/${userId}/${timestamp}-enhanced.png`;
+    const enhS3Result = await uploadImageToS3(enhancedUrl, enhKey);
+    if (!enhS3Result.success) {
+      return res.status(500).json({ error: 'Failed to upload enhanced image to S3', details: enhS3Result.error });
+    }
+    // Save to database (like other generated images)
+    const dbResult = await db.query(
+      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [userId, '[ENHANCE]', enhancedUrl, enhS3Result.s3Url, 'original']
+    );
+    res.json({
+      original: origS3Result.s3Url,
+      enhanced: enhS3Result.s3Url,
+      db: dbResult.rows[0]
+    });
+  } catch (error) {
+    console.error('Enhance image error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});

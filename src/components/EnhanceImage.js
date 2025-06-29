@@ -80,6 +80,7 @@ export default function EnhanceImage() {
         throw new Error(err.error || 'Failed to enhance image');
       }
       const data = await response.json();
+      console.log('Enhance API response:', data);
       setOriginalS3(data.original);
       setEnhancedS3(data.enhanced);
       setEnhancedImage(data.enhanced);

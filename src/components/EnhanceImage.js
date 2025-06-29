@@ -201,9 +201,8 @@ export default function EnhanceImage() {
         <div className="main-content">
           {error && <div className="error-message">{error}</div>}
           <div className="gallery-wrapper">
-            {/* Before/After slider */}
-            {originalS3 && enhancedS3 && typeof originalS3 === 'string' && typeof enhancedS3 === 'string' && imagesLoaded && (
-              <div style={{ maxWidth: 600, margin: '40px auto', position: 'relative' }}>
+            {originalS3 && enhancedS3 && imagesLoaded && (
+              <div style={{ width: '100%', maxWidth: 800, margin: '20px auto', position: 'relative' }}>
                 {/* Before Label */}
                 <div style={{
                   position: 'absolute',

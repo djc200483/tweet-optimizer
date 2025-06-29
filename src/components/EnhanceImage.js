@@ -80,7 +80,6 @@ export default function EnhanceImage() {
         throw new Error(err.error || 'Failed to enhance image');
       }
       const data = await response.json();
-      console.log('Enhance API response:', data);
       setOriginalS3(data.original);
       setEnhancedS3(data.enhanced);
       setEnhancedImage(data.enhanced);
@@ -178,7 +177,9 @@ export default function EnhanceImage() {
                 sliderLineWidth={3}
                 sliderLineColor="#fff"
                 handleSize={48}
-                handle={<div style={{ width: 48, height: 48, background: '#23242b', borderRadius: '50%', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: 24 }}>↔</div>}
+                handle={() => (
+                  <div style={{ width: 48, height: 48, background: '#23242b', borderRadius: '50%', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: 24 }}>↔</div>
+                )}
                 aspectRatio="auto"
                 fullscreenLabel="Fullscreen"
               />

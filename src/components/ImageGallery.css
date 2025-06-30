@@ -906,6 +906,7 @@
   overflow: hidden;
   position: relative;
   border-radius: 8px;
+  aspect-ratio: 3/4;
 }
 
 .featured-image-item:hover {
@@ -914,9 +915,11 @@
 
 .featured-image-placeholder {
   width: 100%;
+  height: 100%;
   background-color: #1e2028;
   overflow: hidden;
   border-radius: 8px;
+  aspect-ratio: 3/4;
 }
 
 .featured-gallery-arrow {

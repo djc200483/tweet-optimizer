@@ -187,6 +187,12 @@ export default function Admin() {
     alert('Explore cache cleared! The next visit to Explore will fetch fresh images.');
   };
 
+  const handleRefreshFeaturedGalleryCache = () => {
+    localStorage.removeItem('featured_gallery_cache');
+    localStorage.removeItem('featured_gallery_cache_timestamp');
+    alert('Featured Gallery cache cleared! The next visit to the homepage will fetch fresh featured images.');
+  };
+
   const sortedUsers = useMemo(() => {
     const activeUsers = allowedUsers
       .filter(user => user.is_active)
@@ -219,10 +225,29 @@ export default function Admin() {
           fontSize: '1rem',
           cursor: 'pointer',
           marginBottom: '20px',
+          marginRight: '10px',
           boxShadow: '0 4px 15px rgba(0, 194, 255, 0.3)'
         }}
       >
         Refresh Explore Cache
+      </button>
+
+      <button
+        className="refresh-featured-gallery-cache-button"
+        onClick={handleRefreshFeaturedGalleryCache}
+        style={{
+          background: 'linear-gradient(135deg, #00c2ff, #a855f7)',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          borderRadius: '12px',
+          fontSize: '1rem',
+          cursor: 'pointer',
+          marginBottom: '20px',
+          boxShadow: '0 4px 15px rgba(0, 194, 255, 0.3)'
+        }}
+      >
+        Refresh Featured Gallery Cache
       </button>
 
       <div className="admin-section">

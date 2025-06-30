@@ -138,7 +138,6 @@ export default function NavBar() {
                       {resourcesDropdownOpen && (
                         <div className="navbar-subdropdown-menu">
                           <button className="navbar-dropdown-item" onClick={handleVisualTools}>Generate</button>
-                          <button className="navbar-dropdown-item" onClick={handleImageEnhance}>Enhance Image</button>
                           <button className="navbar-dropdown-item" onClick={handleWrittenTools}>Enhance Posts</button>
                         </div>
                       )}
@@ -179,9 +178,6 @@ export default function NavBar() {
                 <div className="mobile-submenu">
                   <button className="mobile-menu-item mobile-submenu-item" onClick={handleVisualTools}>
                     Generate
-                  </button>
-                  <button className="mobile-menu-item mobile-submenu-item" onClick={handleImageEnhance}>
-                    Enhance Image
                   </button>
                   <button className="mobile-menu-item mobile-submenu-item" onClick={handleWrittenTools}>
                     Enhance Posts

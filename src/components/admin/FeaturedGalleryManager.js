@@ -121,6 +121,10 @@ export default function FeaturedGalleryManager({ isOpen, onClose, onSave }) {
         throw new Error(data.error || 'Failed to update gallery');
       }
 
+      // Clear the featured gallery cache
+      localStorage.removeItem('featured_gallery_cache');
+      localStorage.removeItem('featured_gallery_cache_timestamp');
+
       setSuccess('Featured gallery updated successfully!');
       fetchCurrentGallery();
       if (onSave) onSave();

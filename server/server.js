@@ -724,6 +724,11 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
         aspect_ratio: aspectRatio,
         seed: Math.floor(Math.random() * 1000000)
       };
+      
+      // Add safety_tolerance for flux-1.1-pro-ultra model
+      if (model === 'black-forest-labs/flux-1.1-pro-ultra') {
+        replicateInput.safety_tolerance = 5;
+      }
     }
 
     // Add style parameter for recraft-ai/recraft-v3

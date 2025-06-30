@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RandomGallery from './RandomGallery';
 import FeaturedGallery from './FeaturedGallery';
+import FloatingStars from './FloatingStars';
 
 export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
   const [activeTab, setActiveTab] = useState(initialTab || 'imagery');
@@ -97,6 +98,7 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
 
   return (
     <div className="home-container">
+      <FloatingStars />
       <div className="home-description">
         <h2 style={{ fontSize: '2.8rem' }}>Welcome to EchoSphere</h2>
         <p>An all-in-one AI platform for creating eye-catching images, engaging videos, and impactful written content</p>

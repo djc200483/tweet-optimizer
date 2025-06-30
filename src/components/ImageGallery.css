@@ -113,7 +113,7 @@
 }
 
 .image-item:hover {
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
 
 .image-placeholder {
@@ -887,13 +887,13 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   padding: 0 10px;
 }
 
 .featured-gallery-images {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   flex: 1;
   overflow: hidden;
 }
@@ -909,7 +909,7 @@
 }
 
 .featured-image-item:hover {
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
 
 .featured-image-placeholder {

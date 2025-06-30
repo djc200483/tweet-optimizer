@@ -26,11 +26,11 @@ export default function FloatingStars() {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.5;
-        this.speedY = (Math.random() - 0.5) * 0.5;
-        this.opacity = Math.random() * 0.8 + 0.2;
-        this.twinkleSpeed = Math.random() * 0.02 + 0.01;
+        this.size = Math.random() * 1 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.4 + 0.1;
+        this.twinkleSpeed = Math.random() * 0.01 + 0.005;
         this.twinkleOffset = Math.random() * Math.PI * 2;
       }
 
@@ -38,8 +38,8 @@ export default function FloatingStars() {
         this.x += this.speedX;
         this.y += this.speedY;
         
-        // Twinkle effect
-        this.opacity = 0.2 + 0.6 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
+        // Twinkle effect - more subtle
+        this.opacity = 0.1 + 0.3 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
 
         // Wrap around edges
         if (this.x < -10) this.x = canvas.width + 10;
@@ -52,23 +52,23 @@ export default function FloatingStars() {
         ctx.save();
         ctx.globalAlpha = this.opacity;
         
-        // Create gradient for star glow
+        // Create gradient for star glow - reduced glow
         const gradient = ctx.createRadialGradient(
           this.x, this.y, 0,
-          this.x, this.y, this.size * 3
+          this.x, this.y, this.size * 2
         );
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)');
-        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.3)');
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.4)');
+        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.1)');
         gradient.addColorStop(1, 'rgba(100, 150, 255, 0)');
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
         ctx.fill();
         
-        // Bright center
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        // Bright center - reduced brightness
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -79,7 +79,7 @@ export default function FloatingStars() {
 
     // Create stars
     const stars = [];
-    const numStars = Math.min(100, Math.floor((canvas.width * canvas.height) / 10000));
+    const numStars = Math.min(30, Math.floor((canvas.width * canvas.height) / 50000));
     
     for (let i = 0; i < numStars; i++) {
       stars.push(new Star());

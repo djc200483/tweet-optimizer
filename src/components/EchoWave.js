@@ -20,10 +20,6 @@ export default function EchoWave() {
     // Ring class
     class Ring {
       constructor() {
-        this.reset();
-      }
-
-      reset() {
         this.x = canvas.width / 2;
         this.y = canvas.height / 2;
         this.radius = 0;
@@ -33,6 +29,14 @@ export default function EchoWave() {
         this.fadeSpeed = 0.02;
         this.thickness = 2;
         this.color = 'rgba(0, 194, 255, 0.6)'; // Matches your app's blue theme
+      }
+
+      reset() {
+        this.x = canvas.width / 2;
+        this.y = canvas.height / 2;
+        this.radius = 0;
+        this.maxRadius = Math.max(canvas.width, canvas.height) * 0.8;
+        this.opacity = 0.8;
       }
 
       update() {

@@ -52,29 +52,10 @@ export default function FeaturedGallery() {
         className="featured-image-item"
         onClick={() => setSelectedImage(image)}
       >
-        <div 
-          className="featured-image-placeholder"
-          style={{ 
-            width: '100%',
-            backgroundColor: '#1e2028',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            paddingBottom: '150%', // 2:3 aspect ratio
-            position: 'relative'
-          }}
-        >
+        <div className="featured-image-placeholder">
           <img 
             src={image.s3_url || image.image_url}
             alt={image.prompt}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block'
-            }}
           />
         </div>
       </div>

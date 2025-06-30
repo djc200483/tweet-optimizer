@@ -248,8 +248,8 @@ export default function ImageGenerator() {
         });
         
         if (!response.ok) {
-          const err = await response.json();
-          throw new Error(err.error || 'Failed to enhance image');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to enhance image');
         }
         
         const data = await response.json();
@@ -285,7 +285,8 @@ export default function ImageGenerator() {
           }),
         });
         if (!response.ok) {
-          throw new Error('Failed to analyze image');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to analyze image');
         }
         const data = await response.json();
         setGeneratedPrompt(data.prompt);
@@ -332,7 +333,8 @@ export default function ImageGenerator() {
           body: JSON.stringify(payload),
         });
         if (!response.ok) {
-          throw new Error('Failed to generate image');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to generate image');
         }
         const data = await response.json();
         setGeneratedImages(data.images || []);

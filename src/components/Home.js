@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RandomGallery from './RandomGallery';
 import FeaturedGallery from './FeaturedGallery';
 
@@ -6,6 +7,7 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
   const [activeTab, setActiveTab] = useState(initialTab || 'imagery');
   const [expandedCard, setExpandedCard] = useState(null);
   const [hasLoggedOutUserClicked, setHasLoggedOutUserClicked] = useState(false);
+  const navigate = useNavigate();
 
   const writtenFeatures = [
     {
@@ -108,7 +110,7 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
                 className="tab-button active"
                 onClick={() => {
                   if (isLoggedIn) {
-                    onSelectFeature('imageGenerator');
+                    navigate('/image-generator');
                   } else {
                     if (hasLoggedOutUserClicked) {
                       onSelectFeature('auth');

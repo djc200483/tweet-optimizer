@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { useAuth } from './auth/AuthContext';
 import ImageGallery from './ImageGallery';
+import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
 import './ImageGenerator.css';
 import ReactDOM from 'react-dom';
 
@@ -36,6 +37,15 @@ export default function ImageGenerator() {
   const [assistantGeneratedPrompt, setAssistantGeneratedPrompt] = useState('');
   const [assistantCollapsedSections, setAssistantCollapsedSections] = useState({});
   const [assistantSelectionOrder, setAssistantSelectionOrder] = useState([]);
+
+  // Enhance functionality states
+  const [isEnhanceMode, setIsEnhanceMode] = useState(false);
+  const [enhancedImage, setEnhancedImage] = useState(null);
+  const [originalS3, setOriginalS3] = useState(null);
+  const [enhancedS3, setEnhancedS3] = useState(null);
+  const [scale, setScale] = useState(7);
+  const [faceEnhance, setFaceEnhance] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
@@ -197,10 +207,57 @@ export default function ImageGenerator() {
       return;
     }
 
+    if (isEnhanceMode && !sourceImage) {
+      setError('Please upload an image first');
+      return;
+    }
+
     try {
       setIsGenerateLoading(true);
       setError('');
-      if (generationType === 'image-to-prompt') {
+      
+      if (isEnhanceMode) {
+        // Handle enhance mode
+        setEnhancedImage(null);
+        setOriginalS3(null);
+        setEnhancedS3(null);
+        setImagesLoaded(false);
+        
+        // Convert image to base64
+        const base64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result.split(',')[1];
+            resolve(result);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(sourceImage);
+        });
+        
+        const response = await fetch(`${API_URL}/enhance-image`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            imageBase64: base64,
+            scale,
+            face_enhance: faceEnhance
+          })
+        });
+        
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.error || 'Failed to enhance image');
+        }
+        
+        const data = await response.json();
+        setOriginalS3(data.original);
+        setEnhancedS3(data.enhanced);
+        setEnhancedImage(data.enhanced);
+        setShowImageGrid(false); // Hide gallery, show slider instead
+      } else if (generationType === 'image-to-prompt') {
         let sourceImageBase64 = undefined;
         if (sourceImage) {
           // Read file as base64
@@ -284,7 +341,11 @@ export default function ImageGenerator() {
       }
     } catch (err) {
       console.error('Error:', err);
-      setError(generationType === 'image-to-prompt' ? 'Failed to analyze image. Please try again.' : 'Failed to generate image. Please try again.');
+      let msg = err.message || 'Failed to generate image. Please try again.';
+      if (isEnhanceMode && msg.includes('has a total number of pixels') && msg.includes('Resize input image and try again')) {
+        msg = 'Image must have Square Dimensions';
+      }
+      setError(msg);
     } finally {
       setIsGenerateLoading(false);
     }
@@ -648,6 +709,34 @@ export default function ImageGenerator() {
     }));
   };
 
+  // Check if both images are loaded for enhance mode
+  useEffect(() => {
+    if (originalS3 && enhancedS3) {
+      setImagesLoaded(false); // Reset loading state
+      const loadImage = (src) => {
+        return new Promise((resolve, reject) => {
+          const img = new window.Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+          img.src = src;
+        });
+      };
+      Promise.all([
+        loadImage(originalS3),
+        loadImage(enhancedS3)
+      ])
+      .then(() => {
+        setImagesLoaded(true);
+      })
+      .catch((error) => {
+        console.error('Image loading error:', error);
+        setImagesLoaded(false);
+      });
+    } else {
+      setImagesLoaded(false);
+    }
+  }, [originalS3, enhancedS3]);
+
   return (
     <div className="optimizer-container image-generator-page">
       <div className="left-toolbar">
@@ -663,15 +752,30 @@ export default function ImageGenerator() {
               </div>
               {isGenerationTypeDropdownOpen && (
                 <div className="model-dropdown">
-                  <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Text to Image</div>
+                  <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Text to Image</div>
                   <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
-                  <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); }}>Image to Prompt</div>
+                  <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Image to Prompt</div>
                   <div className="model-option disabled">Text to Video (coming soon)</div>
                   <div className="model-option disabled">Image to Video (coming soon)</div>
                 </div>
               )}
             </div>
           </div>
+
+          {/* Enhance checkbox - only show when Image to Image is selected */}
+          {generationType === 'image-to-image' && (
+            <div className="toolbar-section">
+              <label className="toolbar-label" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={isEnhanceMode}
+                  onChange={(e) => setIsEnhanceMode(e.target.checked)}
+                  style={{ marginRight: 8 }}
+                />
+                Enhance
+              </label>
+            </div>
+          )}
 
           {generationType === 'image-to-image' && (
             <div className="toolbar-section">
@@ -710,7 +814,8 @@ export default function ImageGenerator() {
             </div>
           )}
 
-          {generationType !== 'image-to-prompt' && (
+          {/* Show prompt only when not in enhance mode */}
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && (
             <div className="toolbar-section">
               <h3>Prompt</h3>
               <div className="prompt-input-wrapper">
@@ -744,6 +849,99 @@ export default function ImageGenerator() {
                 </button>
               </div>
             </div>
+          )}
+
+          {/* Show model selection only when not in enhance mode */}
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && (
+            <div className="toolbar-section">
+              <label className="toolbar-label">Model</label>
+              <div className="model-select-container">
+                <div
+                  className="model-select-header"
+                  onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+                >
+                  {models.find(m => m.value === selectedModel)?.label || 'Select Model'}
+                </div>
+                {isModelDropdownOpen && (
+                  <div className="model-dropdown">
+                    {models.map(model => (
+                      <div
+                        key={model.value}
+                        className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
+                        onMouseDown={e => {
+                          e.preventDefault();
+                          setSelectedModel(model.value);
+                          if (model.value === 'flux-kontext-apps/portrait-series') {
+                            setSelectedAspectRatio('');
+                          } else if (model.value === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
+                            setSelectedAspectRatio('1:1');
+                          } else {
+                            setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                          }
+                          setIsModelDropdownOpen(false);
+                        }}
+                        tabIndex={0}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setSelectedModel(model.value);
+                            if (model.value === 'flux-kontext-apps/portrait-series') {
+                              setSelectedAspectRatio('');
+                            } else if (model.value === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
+                              setSelectedAspectRatio('1:1');
+                            } else {
+                              setSelectedAspectRatio(aspectRatios[model.value][0].value);
+                            }
+                            setIsModelDropdownOpen(false);
+                          }
+                        }}
+                        role="option"
+                        aria-selected={model.value === selectedModel}
+                      >
+                        <div className="model-label">{model.label}</div>
+                        {model.description && (
+                          <div className="model-description">{model.description}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Show enhance-specific controls when in enhance mode */}
+          {isEnhanceMode && (
+            <>
+              <div className="toolbar-section">
+                <label className="toolbar-label" style={{ display: 'block', textAlign: 'center', width: '100%' }}>Model</label>
+                <div className="model-select-header" style={{ background: '#23242b', color: '#aaa', cursor: 'not-allowed' }}>
+                  NightmareAI
+                </div>
+              </div>
+              <div className="toolbar-section">
+                <label className="toolbar-label">Scale</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={10}
+                  value={scale}
+                  onChange={e => setScale(Number(e.target.value))}
+                  className="model-select-header"
+                  style={{ width: '100px', background: '#23242b', color: '#fff' }}
+                />
+              </div>
+              <div className="toolbar-section">
+                <label className="toolbar-label">
+                  <input
+                    type="checkbox"
+                    checked={faceEnhance}
+                    onChange={e => setFaceEnhance(e.target.checked)}
+                    style={{ marginRight: 8 }}
+                  />
+                  Face Enhance
+                </label>
+              </div>
+            </>
           )}
 
           {generationType === 'image-to-prompt' && (
@@ -807,55 +1005,36 @@ export default function ImageGenerator() {
             </div>
           )}
 
-          {generationType !== 'image-to-prompt' && (
+          {/* Show aspect ratio only when not in enhance mode */}
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && (
             <div className="toolbar-section">
-              <label className="toolbar-label">Model</label>
+              <label className="toolbar-label">Aspect Ratio</label>
               <div className="model-select-container">
                 <div
                   className="model-select-header"
-                  onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+                  onClick={() => {
+                    if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
+                        !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe')) {
+                      setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
+                    }
+                  }}
+                  style={(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') || 
+                         (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') ? 
+                         { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
                 >
-                  {models.find(m => m.value === selectedModel)?.label || 'Select Model'}
+                  {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
                 </div>
-                {isModelDropdownOpen && (
+                {isAspectRatioDropdownOpen && 
+                 !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
+                 !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') && (
                   <div className="model-dropdown">
-                    {models.map(model => (
+                    {aspectRatios[selectedModel]?.map(ratio => (
                       <div
-                        key={model.value}
-                        className={`model-option ${model.value === selectedModel ? 'selected' : ''}`}
-                        onMouseDown={e => {
-                          e.preventDefault();
-                          setSelectedModel(model.value);
-                          if (model.value === 'flux-kontext-apps/portrait-series') {
-                            setSelectedAspectRatio('');
-                          } else if (model.value === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
-                            setSelectedAspectRatio('1:1');
-                          } else {
-                            setSelectedAspectRatio(aspectRatios[model.value][0].value);
-                          }
-                          setIsModelDropdownOpen(false);
-                        }}
-                        tabIndex={0}
-                        onKeyDown={e => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            setSelectedModel(model.value);
-                            if (model.value === 'flux-kontext-apps/portrait-series') {
-                              setSelectedAspectRatio('');
-                            } else if (model.value === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
-                              setSelectedAspectRatio('1:1');
-                            } else {
-                              setSelectedAspectRatio(aspectRatios[model.value][0].value);
-                            }
-                            setIsModelDropdownOpen(false);
-                          }
-                        }}
-                        role="option"
-                        aria-selected={model.value === selectedModel}
+                        key={ratio.value}
+                        className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
+                        onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
                       >
-                        <div className="model-label">{model.label}</div>
-                        {model.description && (
-                          <div className="model-description">{model.description}</div>
-                        )}
+                        {ratio.label}
                       </div>
                     ))}
                   </div>
@@ -903,43 +1082,6 @@ export default function ImageGenerator() {
             </div>
           )}
 
-          {generationType !== 'image-to-prompt' && (
-            <div className="toolbar-section">
-              <label className="toolbar-label">Aspect Ratio</label>
-              <div className="model-select-container">
-                <div
-                  className="model-select-header"
-                  onClick={() => {
-                    if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
-                        !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe')) {
-                      setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
-                    }
-                  }}
-                  style={(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') || 
-                         (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') ? 
-                         { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
-                >
-                  {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
-                </div>
-                {isAspectRatioDropdownOpen && 
-                 !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
-                 !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') && (
-                  <div className="model-dropdown">
-                    {aspectRatios[selectedModel]?.map(ratio => (
-                      <div
-                        key={ratio.value}
-                        className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
-                        onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
-                      >
-                        {ratio.label}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* Show style dropdown only for recraft-ai/recraft-v3 in text-to-image */}
           {generationType === 'text-to-image' && selectedModel === 'recraft-ai/recraft-v3' && (
             <div className="toolbar-section">
@@ -971,22 +1113,59 @@ export default function ImageGenerator() {
         <div className="toolbar-footer">
           <button
             onClick={handleGenerateWithFlux}
-            disabled={isGenerateLoading || (generationType === 'image-to-prompt' && !sourceImage)}
+            disabled={isGenerateLoading || (generationType === 'image-to-prompt' && !sourceImage) || (isEnhanceMode && !sourceImage)}
             className="generate-flux-button"
           >
-            {isGenerateLoading ? <LoadingSpinner size="inline" /> : 'Generate'}
+            {isGenerateLoading ? (
+              <LoadingSpinner size="inline" />
+            ) : isEnhanceMode ? (
+              'Enhance'
+            ) : (
+              'Generate'
+            )}
           </button>
         </div>
       </div>
       <div className="main-content">
         {error && <div className="error-message">{error}</div>}
-        <div className="gallery-wrapper">
-          <ImageGallery 
-            userId={user.id} 
-            onUsePrompt={setPrompt} 
-            refreshTrigger={refreshTrigger}
-          />
-        </div>
+        
+        {/* Show before/after slider when in enhance mode and images are loaded */}
+        {isEnhanceMode && originalS3 && enhancedS3 && imagesLoaded && (
+          <div className="enhance-result-container" style={{ padding: '20px', textAlign: 'center' }}>
+            <h3 style={{ marginBottom: '20px', color: '#fff' }}>Before / After Comparison</h3>
+            <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+              <ReactCompareSlider
+                itemOne={<ReactCompareSliderImage src={originalS3} alt="Original" />}
+                itemTwo={<ReactCompareSliderImage src={enhancedS3} alt="Enhanced" />}
+                style={{
+                  width: '100%',
+                  height: '500px',
+                  borderRadius: '12px',
+                  overflow: 'hidden'
+                }}
+              />
+            </div>
+          </div>
+        )}
+        
+        {/* Show loading spinner when in enhance mode and images are not loaded */}
+        {isEnhanceMode && originalS3 && enhancedS3 && !imagesLoaded && (
+          <div className="enhance-loading-container" style={{ padding: '20px', textAlign: 'center' }}>
+            <LoadingSpinner />
+            <p style={{ marginTop: '10px', color: '#fff' }}>Loading comparison...</p>
+          </div>
+        )}
+        
+        {/* Show gallery when not in enhance mode or when enhance mode is not active */}
+        {(!isEnhanceMode || !originalS3 || !enhancedS3) && (
+          <div className="gallery-wrapper">
+            <ImageGallery 
+              userId={user.id} 
+              onUsePrompt={setPrompt} 
+              refreshTrigger={refreshTrigger}
+            />
+          </div>
+        )}
       </div>
       {isSuperchargeModalOpen && (
         <div className="supercharge-modal-overlay">

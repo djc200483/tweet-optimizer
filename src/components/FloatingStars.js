@@ -26,10 +26,10 @@ export default function FloatingStars() {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1 + 0.3;
+        this.size = Math.random() * 1.5 + 0.5;
         this.speedX = (Math.random() - 0.5) * 0.3;
         this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.4 + 0.1;
+        this.opacity = Math.random() * 0.6 + 0.3;
         this.twinkleSpeed = Math.random() * 0.01 + 0.005;
         this.twinkleOffset = Math.random() * Math.PI * 2;
       }
@@ -38,8 +38,8 @@ export default function FloatingStars() {
         this.x += this.speedX;
         this.y += this.speedY;
         
-        // Twinkle effect - more subtle
-        this.opacity = 0.1 + 0.3 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
+        // Twinkle effect - more visible
+        this.opacity = 0.3 + 0.5 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
 
         // Wrap around edges
         if (this.x < -10) this.x = canvas.width + 10;
@@ -87,8 +87,8 @@ export default function FloatingStars() {
 
     // Animation loop
     const animate = () => {
-      // Clear canvas with slight fade effect
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      // Clear canvas with minimal fade effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       // Update and draw stars

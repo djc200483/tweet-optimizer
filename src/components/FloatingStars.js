@@ -106,8 +106,9 @@ export default function FloatingStars() {
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: -1,
-        pointerEvents: 'none'
+        zIndex: 1,
+        pointerEvents: 'none',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)' // Red tint for debugging
       }}
     />
   );

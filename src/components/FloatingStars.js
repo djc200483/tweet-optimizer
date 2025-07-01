@@ -52,23 +52,23 @@ export default function FloatingStars() {
         ctx.save();
         ctx.globalAlpha = this.opacity;
         
-        // Create gradient for star glow - reduced glow
+        // Create gradient for star glow - brighter glow
         const gradient = ctx.createRadialGradient(
           this.x, this.y, 0,
-          this.x, this.y, this.size * 2
+          this.x, this.y, this.size * 3
         );
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
-        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.4)');
-        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.1)');
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)');
+        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.3)');
         gradient.addColorStop(1, 'rgba(100, 150, 255, 0)');
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
         ctx.fill();
         
-        // Bright center - reduced brightness
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        // Bright center - brighter
+        ctx.fillStyle = 'rgba(255, 255, 255, 1)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -87,9 +87,8 @@ export default function FloatingStars() {
 
     // Animation loop
     const animate = () => {
-      // Clear canvas with minimal fade effect
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Clear canvas completely to make it transparent
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Update and draw stars
       stars.forEach(star => {

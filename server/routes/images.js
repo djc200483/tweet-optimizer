@@ -5,6 +5,7 @@ const authMiddleware = require('../middleware/auth');
 const Replicate = require('replicate');
 const AWS = require('aws-sdk');
 const { uploadImageBufferToS3 } = require('../s3Service');
+const fetch = require('node-fetch');
 
 // Initialize Replicate
 const replicate = new Replicate({
@@ -217,22 +218,21 @@ router.get('/video-status/:predictionId', authMiddleware, async (req, res) => {
       // Video generation completed, save to database and S3
       const videoUrl = prediction.output;
       
-      // Upload to S3
+      // Upload to S3 using the same pattern as images
       const videoKey = `videos/${Date.now()}-${Math.random().toString(36).substring(7)}.mp4`;
       
       // Download video from Replicate and upload to S3
       const videoResponse = await fetch(videoUrl);
       const videoBuffer = await videoResponse.arrayBuffer();
       
-      await s3.upload({
-        Bucket: process.env.AWS_S3_BUCKET,
-        Key: videoKey,
-        Body: Buffer.from(videoBuffer),
-        ContentType: 'video/mp4',
-        ACL: 'public-read'
-      }).promise();
+      // Use the same S3 service pattern as images
+      const s3Result = await uploadImageBufferToS3(Buffer.from(videoBuffer), videoKey);
+      if (!s3Result.success) {
+        console.error('Failed to upload video to S3:', s3Result.error);
+        return res.status(500).json({ error: 'Failed to upload video to S3' });
+      }
       
-      const s3VideoUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${videoKey}`;
+      const s3VideoUrl = s3Result.s3Url;
       
       // Save to database
       const result = await db.query(

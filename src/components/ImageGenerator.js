@@ -47,6 +47,13 @@ export default function ImageGenerator() {
   const [faceEnhance, setFaceEnhance] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
+  // Video generation states
+  const [isVideoGenerationLoading, setIsVideoGenerationLoading] = useState(false);
+  const [videoPredictionId, setVideoPredictionId] = useState(null);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [videoRemaining, setVideoRemaining] = useState(4);
+  const [cameraFixed, setCameraFixed] = useState(false);
+
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
     { value: 'black-forest-labs/flux-1.1-pro', label: 'Flux 1.1 Pro', description: 'High-quality, fast text-to-image model balancing image fidelity with prompt accuracy.' },
@@ -202,156 +209,178 @@ export default function ImageGenerator() {
   }, []);
 
   const handleGenerateWithFlux = async () => {
-    if (generationType === 'image-to-prompt' && !sourceImage) {
-      setError('Please upload an image first');
+    if (!prompt.trim() && generationType !== 'image-to-prompt') {
+      setError('Please enter a prompt');
       return;
     }
 
-    if (isEnhanceMode && !sourceImage) {
-      setError('Please upload an image first');
+    if (generationType === 'image-to-image' && !sourceImage) {
+      setError('Please upload a source image');
       return;
     }
+
+    if (generationType === 'image-to-video' && !sourceImage) {
+      setError('Please upload a source image for video generation');
+      return;
+    }
+
+    setIsGenerateLoading(true);
+    setError('');
+    setGeneratedImages([]);
 
     try {
-      setIsGenerateLoading(true);
-      setError('');
-      
-      if (isEnhanceMode) {
-        // Handle enhance mode
-        setEnhancedImage(null);
-        setOriginalS3(null);
-        setEnhancedS3(null);
-        setImagesLoaded(false);
-        
-        // Convert image to base64
-        const base64 = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const result = reader.result.split(',')[1];
-            resolve(result);
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(sourceImage);
-        });
-        
-        const response = await fetch(`${API_URL}/enhance-image`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            imageBase64: base64,
-            scale,
-            face_enhance: faceEnhance
-          })
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to enhance image');
+      let requestBody = {
+        prompt: prompt.trim(),
+        model: selectedModel,
+        aspect_ratio: selectedAspectRatio,
+        style: selectedStyle
+      };
+
+      if (generationType === 'image-to-image') {
+        requestBody.generation_type = 'image-to-image';
+        requestBody.source_image = sourceImage;
+        if (selectedModel === 'flux-kontext-apps/portrait-series') {
+          requestBody.background_color = portraitBackground;
         }
-        
-        const data = await response.json();
-        setOriginalS3(data.original);
-        setEnhancedS3(data.enhanced);
-        setEnhancedImage(data.enhanced);
-        setShowImageGrid(false); // Hide gallery, show slider instead
       } else if (generationType === 'image-to-prompt') {
-        let sourceImageBase64 = undefined;
-        if (sourceImage) {
-          // Read file as base64
-          sourceImageBase64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              // Remove the data URL prefix
-              const base64 = reader.result.split(',')[1];
-              resolve(base64);
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(sourceImage);
-          });
-        }
-        // Call the analyze-image endpoint to get the prompt
-        const response = await fetch(`${API_URL}/analyze-image`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ 
-            imageBase64: sourceImageBase64
-          }),
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to analyze image');
-        }
-        const data = await response.json();
-        setGeneratedPrompt(data.prompt);
-        setShowImageGrid(false); // Reset image grid when new prompt is generated
+        requestBody.generation_type = 'image-to-prompt';
+        requestBody.source_image = sourceImage;
+      } else if (generationType === 'image-to-video') {
+        // Handle video generation
+        await handleVideoGeneration();
+        return;
       } else {
-        // text-to-image or image-to-image
-        const payload = {
-          prompt,
-          model: selectedModel,
-        };
-        
-        // Add aspectRatio for non-bytedance models
-        if (selectedModel !== 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
-          payload.aspectRatio = selectedAspectRatio;
-        }
-        
-        // Add bytedance-specific parameters
-        if (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') {
-          payload.width = 1024;
-          payload.height = 1024;
-          payload.seed = 0;
-          payload.num_outputs = 2;
-          payload.num_inference_steps = 4;
-        }
-        
-        if (generationType === 'image-to-image' && sourceImage) {
-          // Read file as base64
-          payload.sourceImageBase64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              const base64 = reader.result.split(',')[1];
-              resolve(base64);
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(sourceImage);
-          });
-        }
-        const response = await fetch(`${API_URL}/generate-image`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(payload),
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to generate image');
-        }
-        const data = await response.json();
-        setGeneratedImages(data.images || []);
-        setShowImageGrid(true);
-        setRefreshTrigger(prev => prev + 1); // Trigger a refresh in the gallery
+        requestBody.generation_type = 'text-to-image';
       }
+
+      const response = await fetch(`${API_URL}/api/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate image');
+      }
+
+      const data = await response.json();
+      setGeneratedImages(data.images || [data]);
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
-      console.error('Error:', err);
-      let msg = err.message || 'Failed to generate image. Please try again.';
-      if (isEnhanceMode && msg.includes('has a total number of pixels') && msg.includes('Resize input image and try again')) {
-        msg = 'Image must have Square Dimensions';
-      }
-      setError(msg);
+      console.error('Generation error:', err);
+      setError(err.message || 'Failed to generate image');
     } finally {
       setIsGenerateLoading(false);
     }
   };
+
+  const handleVideoGeneration = async () => {
+    setIsVideoGenerationLoading(true);
+    setError('');
+
+    try {
+      // Start video generation
+      const response = await fetch(`${API_URL}/api/images/generate-video`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          imageUrl: sourceImage,
+          prompt: prompt.trim(),
+          cameraFixed: cameraFixed
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to start video generation');
+      }
+
+      const data = await response.json();
+      setVideoPredictionId(data.prediction_id);
+      setVideoRemaining(data.remaining);
+
+      // Start polling for status
+      pollVideoStatus(data.prediction_id);
+    } catch (err) {
+      console.error('Video generation error:', err);
+      setError(err.message || 'Failed to start video generation');
+      setIsVideoGenerationLoading(false);
+    }
+  };
+
+  const pollVideoStatus = async (predictionId) => {
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/images/video-status/${predictionId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to check video status');
+        }
+
+        const data = await response.json();
+
+        if (data.status === 'completed') {
+          clearInterval(pollInterval);
+          setIsVideoGenerationLoading(false);
+          setVideoPredictionId(null);
+          setVideoProgress(0);
+          setRefreshTrigger(prev => prev + 1);
+          // Show success message or redirect to gallery
+          setError('Video generated successfully! Check your gallery.');
+        } else if (data.status === 'failed') {
+          clearInterval(pollInterval);
+          setIsVideoGenerationLoading(false);
+          setVideoPredictionId(null);
+          setVideoProgress(0);
+          setError(data.error || 'Video generation failed');
+        } else {
+          // Still processing
+          setVideoProgress(data.progress || 0);
+        }
+      } catch (err) {
+        clearInterval(pollInterval);
+        setIsVideoGenerationLoading(false);
+        setVideoPredictionId(null);
+        setVideoProgress(0);
+        setError('Failed to check video status');
+      }
+    }, 2000); // Poll every 2 seconds
+  };
+
+  const getRemainingVideoGenerations = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/images/video-remaining`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setVideoRemaining(data.remaining);
+      }
+    } catch (err) {
+      console.error('Failed to get remaining video generations:', err);
+    }
+  };
+
+  // Load remaining video generations on component mount
+  useEffect(() => {
+    if (token && generationType === 'image-to-video') {
+      getRemainingVideoGenerations();
+    }
+  }, [token, generationType]);
 
   const handleKeyDown = (e) => {
     // Prevent page scroll when using arrow keys in textarea
@@ -757,8 +786,7 @@ export default function ImageGenerator() {
                   <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Text to Image</div>
                   <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
                   <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Image to Prompt</div>
-                  <div className="model-option disabled">Text to Video (coming soon)</div>
-                  <div className="model-option disabled">Image to Video (coming soon)</div>
+                  <div className="model-option" onClick={() => { setGenerationType('image-to-video'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Image to Video</div>
                 </div>
               )}
             </div>
@@ -851,6 +879,43 @@ export default function ImageGenerator() {
                 </button>
               </div>
             </div>
+          )}
+
+          {/* Video-specific controls */}
+          {generationType === 'image-to-video' && (
+            <>
+              <div className="toolbar-section">
+                <label className="toolbar-label" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={cameraFixed}
+                    onChange={(e) => setCameraFixed(e.target.checked)}
+                    style={{ marginRight: 8 }}
+                  />
+                  Camera Fixed
+                </label>
+              </div>
+              <div className="toolbar-section">
+                <div className="video-info">
+                  <div className="video-remaining">
+                    Remaining videos today: {videoRemaining}/4
+                  </div>
+                  {videoPredictionId && (
+                    <div className="video-progress">
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ width: `${videoProgress}%` }}
+                        ></div>
+                      </div>
+                      <div className="progress-text">
+                        Generating video... {Math.round(videoProgress)}%
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
           )}
 
           {/* Show model selection only when not in enhance mode */}
@@ -1115,13 +1180,23 @@ export default function ImageGenerator() {
         <div className="toolbar-footer">
           <button
             onClick={handleGenerateWithFlux}
-            disabled={isGenerateLoading || (generationType === 'image-to-prompt' && !sourceImage) || (isEnhanceMode && !sourceImage)}
+            disabled={
+              isGenerateLoading || 
+              isVideoGenerationLoading ||
+              (generationType === 'image-to-prompt' && !sourceImage) || 
+              (isEnhanceMode && !sourceImage) ||
+              (generationType === 'image-to-video' && !sourceImage) ||
+              (generationType === 'image-to-video' && !prompt.trim()) ||
+              (generationType === 'image-to-video' && videoRemaining === 0)
+            }
             className="generate-flux-button"
           >
-            {isGenerateLoading ? (
+            {isGenerateLoading || isVideoGenerationLoading ? (
               <LoadingSpinner size="inline" />
             ) : isEnhanceMode ? (
               'Enhance'
+            ) : generationType === 'image-to-video' ? (
+              'Generate Video'
             ) : (
               'Generate'
             )}

@@ -2,6 +2,50 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const authMiddleware = require('../middleware/auth');
+const Replicate = require('replicate');
+const AWS = require('aws-sdk');
+
+// Initialize Replicate
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
+
+// Initialize AWS S3
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
+// Video generation rate limiting - 4 videos per day per user
+const videoGenerationCounts = new Map();
+
+// Reset video generation counts daily
+setInterval(() => {
+  videoGenerationCounts.clear();
+}, 24 * 60 * 60 * 1000); // 24 hours
+
+// Helper function to check video generation limit
+function checkVideoGenerationLimit(userId) {
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `${userId}-${today}`;
+  const count = videoGenerationCounts.get(key) || 0;
+  
+  if (count >= 4) {
+    return false;
+  }
+  
+  videoGenerationCounts.set(key, count + 1);
+  return true;
+}
+
+// Helper function to get remaining video generations
+function getRemainingVideoGenerations(userId) {
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `${userId}-${today}`;
+  const count = videoGenerationCounts.get(key) || 0;
+  return Math.max(0, 4 - count);
+}
 
 // Get user's personal images
 router.get('/my-images', authMiddleware, async (req, res) => {
@@ -87,17 +131,132 @@ router.get('/explore', async (req, res) => {
 // Save a new generated image
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { prompt, imageUrl, s3Key, isPrivate = false } = req.body;
+    const { prompt, imageUrl, s3Key, isPrivate = false, videoUrl = null } = req.body;
     
     const result = await db.query(
-      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, is_private) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [req.user.id, prompt, imageUrl, s3Key, isPrivate]
+      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [req.user.id, prompt, imageUrl, s3Key, videoUrl, isPrivate]
     );
     
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Error saving generated image:', error);
     res.status(500).json({ error: 'Failed to save generated image' });
+  }
+});
+
+// Generate video from image
+router.post('/generate-video', authMiddleware, async (req, res) => {
+  try {
+    const { imageUrl, prompt, cameraFixed = false } = req.body;
+    
+    // Check video generation limit
+    if (!checkVideoGenerationLimit(req.user.id)) {
+      return res.status(429).json({ 
+        error: 'Video generation limit reached. You can generate 4 videos per day.',
+        remaining: 0
+      });
+    }
+    
+    // Validate required fields
+    if (!imageUrl || !prompt) {
+      return res.status(400).json({ error: 'Image URL and prompt are required' });
+    }
+    
+    // Start video generation
+    console.log(`Starting video generation for user ${req.user.id}`);
+    
+    const prediction = await replicate.predictions.create({
+      version: "b4b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0", // You'll need to get the actual version ID
+      input: {
+        fps: 24,
+        image: imageUrl,
+        prompt: prompt,
+        duration: 5,
+        resolution: "720p",
+        camera_fixed: cameraFixed
+      },
+    });
+    
+    // Return prediction ID for polling
+    res.json({
+      prediction_id: prediction.id,
+      status: prediction.status,
+      remaining: getRemainingVideoGenerations(req.user.id)
+    });
+    
+  } catch (error) {
+    console.error('Error starting video generation:', error);
+    res.status(500).json({ error: 'Failed to start video generation' });
+  }
+});
+
+// Check video generation status
+router.get('/video-status/:predictionId', authMiddleware, async (req, res) => {
+  try {
+    const { predictionId } = req.params;
+    
+    const prediction = await replicate.predictions.get(predictionId);
+    
+    if (prediction.status === 'succeeded' && prediction.output) {
+      // Video generation completed, save to database and S3
+      const videoUrl = prediction.output;
+      
+      // Upload to S3
+      const videoKey = `videos/${Date.now()}-${Math.random().toString(36).substring(7)}.mp4`;
+      
+      // Download video from Replicate and upload to S3
+      const videoResponse = await fetch(videoUrl);
+      const videoBuffer = await videoResponse.arrayBuffer();
+      
+      await s3.upload({
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: videoKey,
+        Body: Buffer.from(videoBuffer),
+        ContentType: 'video/mp4',
+        ACL: 'public-read'
+      }).promise();
+      
+      const s3VideoUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${videoKey}`;
+      
+      // Save to database
+      const result = await db.query(
+        'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+        [req.user.id, prediction.input.prompt, prediction.input.image, prediction.input.image, s3VideoUrl, false]
+      );
+      
+      res.json({
+        status: 'completed',
+        video_url: s3VideoUrl,
+        image: result.rows[0]
+      });
+    } else if (prediction.status === 'failed') {
+      res.json({
+        status: 'failed',
+        error: prediction.error || 'Video generation failed'
+      });
+    } else {
+      // Still processing
+      res.json({
+        status: prediction.status,
+        progress: prediction.progress || 0
+      });
+    }
+    
+  } catch (error) {
+    console.error('Error checking video status:', error);
+    res.status(500).json({ error: 'Failed to check video status' });
+  }
+});
+
+// Get remaining video generations
+router.get('/video-remaining', authMiddleware, async (req, res) => {
+  try {
+    const remaining = getRemainingVideoGenerations(req.user.id);
+    res.json({ remaining });
+  } catch (error) {
+    console.error('Error getting remaining video generations:', error);
+    res.status(500).json({ error: 'Failed to get remaining video generations' });
   }
 });
 

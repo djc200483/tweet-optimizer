@@ -381,12 +381,30 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const renderImage = (image) => {
     const isVisible = visibleImages.has(image.id.toString());
     const like = likeStatus[image.id] || { liked: false, count: 0 };
+    const hasVideo = image.video_url;
     
     return (
       <div 
         key={image.id} 
         className="image-item"
         onClick={() => handleOpenModal(image)}
+        onMouseEnter={(e) => {
+          if (hasVideo) {
+            const videoElement = e.currentTarget.querySelector('video');
+            if (videoElement) {
+              videoElement.play().catch(err => console.log('Video play failed:', err));
+            }
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (hasVideo) {
+            const videoElement = e.currentTarget.querySelector('video');
+            if (videoElement) {
+              videoElement.pause();
+              videoElement.currentTime = 0;
+            }
+          }
+        }}
       >
         <div 
           className="image-placeholder"
@@ -399,21 +417,41 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
           }}
         >
           {isVisible ? (
-            <img 
-              src={image.s3_url || image.image_url}
-              alt={image.prompt}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'block',
-                opacity: 0,
-                transition: 'opacity 0.3s ease-in-out'
-              }}
-              onLoad={(e) => {
-                e.target.style.opacity = 1;
-                console.log(`Image loaded: ${image.id}`);
-              }}
-            />
+            <>
+              <img 
+                src={image.s3_url || image.image_url}
+                alt={image.prompt}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  display: hasVideo ? 'none' : 'block',
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease-in-out'
+                }}
+                onLoad={(e) => {
+                  e.target.style.opacity = 1;
+                  console.log(`Image loaded: ${image.id}`);
+                }}
+              />
+              {hasVideo && (
+                <video
+                  src={image.video_url}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block',
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease-in-out'
+                  }}
+                  onLoadStart={(e) => {
+                    e.target.style.opacity = 1;
+                  }}
+                  muted
+                  loop
+                  playsInline
+                />
+              )}
+            </>
           ) : (
             <div 
               style={{ 
@@ -523,15 +561,29 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
         <div className="image-modal" onClick={handleCloseModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-image-container">
-              <img 
-                src={selectedImage.s3_url || selectedImage.image_url} 
-                alt={selectedImage.prompt}
-                loading="lazy"
-              />
+              {selectedImage.video_url ? (
+                <video
+                  src={selectedImage.video_url}
+                  controls
+                  autoPlay
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    display: 'block'
+                  }}
+                />
+              ) : (
+                <img 
+                  src={selectedImage.s3_url || selectedImage.image_url} 
+                  alt={selectedImage.prompt}
+                  loading="lazy"
+                />
+              )}
             </div>
             <div className="modal-info">
               <div className="modal-header">
-                <div className="modal-title">Image Details</div>
+                <div className="modal-title">{selectedImage.video_url ? 'Video Details' : 'Image Details'}</div>
                 <div className="modal-header-actions">
                   <button 
                     className={`copy-button ${isCopied ? 'copied' : ''}`}
@@ -570,6 +622,12 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                   <span className="metadata-label">Aspect Ratio</span>
                   <span className="metadata-value">{selectedImage.aspect_ratio}</span>
                 </div>
+                {selectedImage.video_url && (
+                  <div className="metadata-item">
+                    <span className="metadata-label">Type</span>
+                    <span className="metadata-value">Video</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

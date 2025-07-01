@@ -29,8 +29,8 @@ export default function FloatingStars() {
         this.size = Math.random() * 1.5 + 0.5;
         this.speedX = (Math.random() - 0.5) * 0.3;
         this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.6 + 0.4;
-        this.twinkleSpeed = Math.random() * 0.01 + 0.005;
+        this.opacity = Math.random() * 0.3 + 0.7;
+        this.twinkleSpeed = Math.random() * 0.002 + 0.001;
         this.twinkleOffset = Math.random() * Math.PI * 2;
       }
 
@@ -38,8 +38,8 @@ export default function FloatingStars() {
         this.x += this.speedX;
         this.y += this.speedY;
         
-        // Twinkle effect
-        this.opacity = 0.4 + 0.4 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
+        // Very subtle twinkle effect
+        this.opacity = 0.7 + 0.2 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
 
         // Wrap around edges
         if (this.x < -10) this.x = canvas.width + 10;

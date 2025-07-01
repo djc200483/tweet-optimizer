@@ -79,7 +79,7 @@ export default function FloatingStars() {
 
     // Create stars
     const stars = [];
-    const numStars = Math.min(50, Math.floor((canvas.width * canvas.height) / 50000));
+    const numStars = Math.min(80, Math.floor((canvas.width * canvas.height) / 30000));
     
     console.log('Creating FloatingStars with', numStars, 'stars');
     

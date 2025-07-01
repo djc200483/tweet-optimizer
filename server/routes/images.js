@@ -167,7 +167,7 @@ router.post('/generate-video', authMiddleware, async (req, res) => {
     console.log(`Starting video generation for user ${req.user.id}`);
     
     const prediction = await replicate.predictions.create({
-      version: "b4b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0", // You'll need to get the actual version ID
+      version: "bytedance/seedance-1-lite",
       input: {
         fps: 24,
         image: imageUrl,

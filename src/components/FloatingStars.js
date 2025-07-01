@@ -26,10 +26,10 @@ export default function FloatingStars() {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1.5 + 0.5;
+        this.size = Math.random() * 3 + 2; // Much larger stars
         this.speedX = (Math.random() - 0.5) * 0.3;
         this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.6 + 0.3;
+        this.opacity = 1; // Full opacity
         this.twinkleSpeed = Math.random() * 0.01 + 0.005;
         this.twinkleOffset = Math.random() * Math.PI * 2;
       }
@@ -38,8 +38,8 @@ export default function FloatingStars() {
         this.x += this.speedX;
         this.y += this.speedY;
         
-        // Twinkle effect - more visible
-        this.opacity = 0.3 + 0.5 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
+        // No twinkle for now - just solid stars
+        this.opacity = 1;
 
         // Wrap around edges
         if (this.x < -10) this.x = canvas.width + 10;
@@ -52,23 +52,8 @@ export default function FloatingStars() {
         ctx.save();
         ctx.globalAlpha = this.opacity;
         
-        // Create gradient for star glow - brighter glow
-        const gradient = ctx.createRadialGradient(
-          this.x, this.y, 0,
-          this.x, this.y, this.size * 3
-        );
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)');
-        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.3)');
-        gradient.addColorStop(1, 'rgba(100, 150, 255, 0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Bright center - brighter
-        ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+        // Simple white star - no gradient
+        ctx.fillStyle = 'white';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -80,6 +65,8 @@ export default function FloatingStars() {
     // Create stars
     const stars = [];
     const numStars = Math.min(50, Math.floor((canvas.width * canvas.height) / 50000));
+    
+    console.log('Creating FloatingStars with', numStars, 'stars');
     
     for (let i = 0; i < numStars; i++) {
       stars.push(new Star());

@@ -121,8 +121,7 @@ export default function FloatingStars() {
         width: '100%',
         height: '100%',
         zIndex: -1,
-        pointerEvents: 'none',
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)'
+        pointerEvents: 'none'
       }}
     />
   );

@@ -26,10 +26,10 @@ export default function FloatingStars() {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 2; // Much larger stars
+        this.size = Math.random() * 1.5 + 0.5;
         this.speedX = (Math.random() - 0.5) * 0.3;
         this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = 1; // Full opacity
+        this.opacity = Math.random() * 0.6 + 0.4;
         this.twinkleSpeed = Math.random() * 0.01 + 0.005;
         this.twinkleOffset = Math.random() * Math.PI * 2;
       }
@@ -38,8 +38,8 @@ export default function FloatingStars() {
         this.x += this.speedX;
         this.y += this.speedY;
         
-        // No twinkle for now - just solid stars
-        this.opacity = 1;
+        // Twinkle effect
+        this.opacity = 0.4 + 0.4 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
 
         // Wrap around edges
         if (this.x < -10) this.x = canvas.width + 10;
@@ -52,8 +52,23 @@ export default function FloatingStars() {
         ctx.save();
         ctx.globalAlpha = this.opacity;
         
-        // Simple white star - no gradient
-        ctx.fillStyle = 'white';
+        // Create gradient for star glow
+        const gradient = ctx.createRadialGradient(
+          this.x, this.y, 0,
+          this.x, this.y, this.size * 2.5
+        );
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)');
+        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.2)');
+        gradient.addColorStop(1, 'rgba(100, 150, 255, 0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size * 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Bright center
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -107,8 +122,7 @@ export default function FloatingStars() {
         width: '100%',
         height: '100%',
         zIndex: 1,
-        pointerEvents: 'none',
-        backgroundColor: 'rgba(255, 0, 0, 0.1)' // Red tint for debugging
+        pointerEvents: 'none'
       }}
     />
   );

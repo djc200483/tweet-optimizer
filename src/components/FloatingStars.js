@@ -26,10 +26,10 @@ export default function FloatingStars() {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 0.7 + 0.2;
+        this.size = Math.random() * 0.85 + 0.25;
         this.speedX = (Math.random() - 0.5) * 0.3;
         this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.15 + 0.4;
+        this.opacity = Math.random() * 0.18 + 0.5;
         this.twinkleSpeed = Math.random() * 0.002 + 0.001;
         this.twinkleOffset = Math.random() * Math.PI * 2;
       }
@@ -39,7 +39,7 @@ export default function FloatingStars() {
         this.y += this.speedY;
         
         // Very subtle twinkle effect
-        this.opacity = 0.4 + 0.1 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
+        this.opacity = 0.5 + 0.12 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
 
         // Wrap around edges
         if (this.x < -10) this.x = canvas.width + 10;
@@ -52,23 +52,23 @@ export default function FloatingStars() {
         ctx.save();
         ctx.globalAlpha = this.opacity;
         
-        // Create gradient for star glow - even more subtle
+        // Create gradient for star glow - balanced
         const gradient = ctx.createRadialGradient(
           this.x, this.y, 0,
-          this.x, this.y, this.size * 1.8
+          this.x, this.y, this.size * 1.9
         );
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
-        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.3)');
-        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.05)');
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
+        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.4)');
+        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.08)');
         gradient.addColorStop(1, 'rgba(100, 150, 255, 0)');
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * 1.8, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.size * 1.9, 0, Math.PI * 2);
         ctx.fill();
         
-        // Bright center - more subtle
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        // Bright center - balanced
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();

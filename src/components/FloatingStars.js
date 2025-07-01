@@ -121,7 +121,7 @@ export default function FloatingStars() {
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 1,
+        zIndex: -1,
         pointerEvents: 'none'
       }}
     />

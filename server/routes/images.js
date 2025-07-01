@@ -163,6 +163,21 @@ router.post('/generate-video', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Image URL and prompt are required' });
     }
     
+    // Handle image upload if it's a base64 string (File object from frontend)
+    let processedImageUrl = imageUrl;
+    if (typeof imageUrl === 'string' && imageUrl.startsWith('data:')) {
+      // Decode base64 and upload to S3
+      const base64Data = imageUrl.split(',')[1];
+      const buffer = Buffer.from(base64Data, 'base64');
+      const timestamp = Date.now();
+      const key = `user-images/${req.user.id}/${timestamp}.png`;
+      const s3Result = await uploadImageBufferToS3(buffer, key);
+      if (!s3Result.success) {
+        return res.status(500).json({ error: 'Failed to upload image to S3', details: s3Result.error });
+      }
+      processedImageUrl = s3Result.s3Url;
+    }
+    
     // Start video generation
     console.log(`Starting video generation for user ${req.user.id}`);
     
@@ -170,7 +185,7 @@ router.post('/generate-video', authMiddleware, async (req, res) => {
       version: "bytedance/seedance-1-lite",
       input: {
         fps: 24,
-        image: imageUrl,
+        image: processedImageUrl,
         prompt: prompt,
         duration: 5,
         resolution: "720p",

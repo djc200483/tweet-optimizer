@@ -284,6 +284,22 @@ export default function ImageGenerator() {
     setError('');
 
     try {
+      // Convert source image to base64
+      const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            // Remove the data:image/jpeg;base64, prefix
+            const base64String = reader.result.split(',')[1];
+            resolve(base64String);
+          };
+          reader.onerror = (error) => reject(error);
+        });
+      };
+
+      const base64Image = await convertToBase64(sourceImage);
+
       // Start video generation
       const response = await fetch(`${API_URL}/api/images/generate-video`, {
         method: 'POST',
@@ -292,7 +308,7 @@ export default function ImageGenerator() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          imageUrl: sourceImage,
+          imageUrl: base64Image,
           prompt: prompt.trim(),
           cameraFixed: cameraFixed
         })

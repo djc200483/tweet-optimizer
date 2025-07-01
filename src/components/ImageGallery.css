@@ -6,7 +6,7 @@
   overflow-x: hidden;
   box-sizing: border-box;
   position: relative;
-  z-index: 10;
+  z-index: 100;
 }
 
 .gallery-tabs {
@@ -81,6 +81,8 @@
   width: calc(100% + 2px);
   box-sizing: border-box;
   overflow-x: hidden;
+  position: relative;
+  z-index: 100;
 }
 
 .masonry-grid_column {
@@ -881,15 +883,15 @@
   width: 100%;
   margin: 40px 0;
   position: relative;
-  z-index: 10;
+  z-index: 100;
 }
 
 .featured-gallery-container {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 0 10px;
+  position: relative;
+  z-index: 100;
 }
 
 .featured-gallery-images {

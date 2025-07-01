@@ -4,6 +4,7 @@ const db = require('../db');
 const authMiddleware = require('../middleware/auth');
 const Replicate = require('replicate');
 const AWS = require('aws-sdk');
+const { uploadImageBufferToS3 } = require('../s3Service');
 
 // Initialize Replicate
 const replicate = new Replicate({

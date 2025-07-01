@@ -165,10 +165,9 @@ router.post('/generate-video', authMiddleware, async (req, res) => {
     
     // Handle image upload if it's a base64 string (File object from frontend)
     let processedImageUrl = imageUrl;
-    if (typeof imageUrl === 'string' && imageUrl.startsWith('data:')) {
+    if (typeof imageUrl === 'string' && !imageUrl.startsWith('http')) {
       // Decode base64 and upload to S3
-      const base64Data = imageUrl.split(',')[1];
-      const buffer = Buffer.from(base64Data, 'base64');
+      const buffer = Buffer.from(imageUrl, 'base64');
       const timestamp = Date.now();
       const key = `user-images/${req.user.id}/${timestamp}.png`;
       const s3Result = await uploadImageBufferToS3(buffer, key);

@@ -61,7 +61,8 @@ export default function ImageGenerator() {
     { value: 'google/imagen-4', label: 'Imagen 4', description: 'Top-tier photorealism, sharp detail and typography.' },
     { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' },
     { value: 'recraft-ai/recraft-v3', label: 'Recraft V3', description: 'High-quality image generation with style control.' },
-    { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' }
+    { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' },
+    { value: 'bytedance/seedance-1-lite', label: 'bytedance', description: 'Video generation model' }
   ];
 
   const imageToImageModels = [
@@ -786,7 +787,12 @@ export default function ImageGenerator() {
                   <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Text to Image</div>
                   <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
                   <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Image to Prompt</div>
-                  <div className="model-option" onClick={() => { setGenerationType('image-to-video'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Image to Video</div>
+                  <div className="model-option" onClick={() => { 
+                    setGenerationType('image-to-video'); 
+                    setSelectedModel('bytedance/seedance-1-lite');
+                    setIsGenerationTypeDropdownOpen(false); 
+                    setIsEnhanceMode(false); 
+                  }}>Image to Video</div>
                 </div>
               )}
             </div>
@@ -807,7 +813,7 @@ export default function ImageGenerator() {
             </div>
           )}
 
-          {generationType === 'image-to-image' && (
+          {(generationType === 'image-to-image' || generationType === 'image-to-video') && (
             <div className="toolbar-section">
               <h3>Source Image</h3>
               <div className="image-upload-container">
@@ -918,8 +924,8 @@ export default function ImageGenerator() {
             </>
           )}
 
-          {/* Show model selection only when not in enhance mode */}
-          {generationType !== 'image-to-prompt' && !isEnhanceMode && (
+          {/* Show model selection only when not in enhance mode and not video generation */}
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && generationType !== 'image-to-video' && (
             <div className="toolbar-section">
               <label className="toolbar-label">Model</label>
               <div className="model-select-container">
@@ -972,6 +978,16 @@ export default function ImageGenerator() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Show locked model for video generation */}
+          {generationType === 'image-to-video' && (
+            <div className="toolbar-section">
+              <label className="toolbar-label">Model</label>
+              <div className="model-select-header" style={{ background: '#23242b', color: '#aaa', cursor: 'not-allowed' }}>
+                bytedance
               </div>
             </div>
           )}
@@ -1072,8 +1088,8 @@ export default function ImageGenerator() {
             </div>
           )}
 
-          {/* Show aspect ratio only when not in enhance mode */}
-          {generationType !== 'image-to-prompt' && !isEnhanceMode && (
+          {/* Show aspect ratio only when not in enhance mode and not video generation */}
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && generationType !== 'image-to-video' && (
             <div className="toolbar-section">
               <label className="toolbar-label">Aspect Ratio</label>
               <div className="model-select-container">

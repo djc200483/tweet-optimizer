@@ -141,7 +141,10 @@ export default function FeaturedGallery() {
         {showPrevArrow && (
           <button 
             className="featured-gallery-arrow featured-gallery-arrow-left"
-            onClick={handlePrevious}
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePrevious();
+            }}
             aria-label="Previous images"
           >
             ‹
@@ -155,7 +158,10 @@ export default function FeaturedGallery() {
         {showNextArrow && (
           <button 
             className="featured-gallery-arrow featured-gallery-arrow-right"
-            onClick={handleNext}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNext();
+            }}
             aria-label="Next images"
           >
             ›

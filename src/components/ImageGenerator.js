@@ -265,7 +265,7 @@ export default function ImageGenerator() {
         requestBody.generation_type = 'text-to-image';
       }
 
-      const response = await fetch(`${API_URL}/api/generate`, {
+      const response = await fetch(`${API_URL}/generate-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

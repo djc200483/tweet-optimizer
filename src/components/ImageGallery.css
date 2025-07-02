@@ -982,7 +982,6 @@
 .featured-videos {
   width: 100%;
   margin: 40px 0;
-  padding: 0 20px;
   position: relative;
   z-index: 100;
 }
@@ -993,9 +992,13 @@
   gap: 15px;
   position: relative;
   z-index: 100;
+  padding: 0 20px;
 }
 
 .featured-videos-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   background: rgba(30, 32, 40, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
@@ -1009,7 +1012,6 @@
   justify-content: center;
   transition: all 0.3s ease;
   z-index: 10;
-  flex-shrink: 0;
 }
 
 .featured-videos-arrow:hover {
@@ -1023,11 +1025,11 @@
 }
 
 .featured-videos-arrow-left {
-  left: -10px;
+  left: 10px;
 }
 
 .featured-videos-arrow-right {
-  right: -10px;
+  right: 10px;
 }
 
 .featured-videos-items {

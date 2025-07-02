@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../auth/AuthContext';
 import './Admin.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export default function FeaturedVideosManager() {
+  const { token } = useAuth();
   const [availableVideos, setAvailableVideos] = useState([]);
   const [featuredVideos, setFeaturedVideos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +21,7 @@ export default function FeaturedVideosManager() {
         `${API_URL}/admin/available-videos?page=${page}&limit=20&search=${encodeURIComponent(search)}`,
         {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            'Authorization': `Bearer ${token}`
           }
         }
       );
@@ -38,7 +40,7 @@ export default function FeaturedVideosManager() {
     try {
       const response = await fetch(`${API_URL}/admin/featured-videos`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+          'Authorization': `Bearer ${token}`
         }
       });
       
@@ -52,6 +54,8 @@ export default function FeaturedVideosManager() {
   };
 
   useEffect(() => {
+    if (!token) return;
+    
     const loadData = async () => {
       setLoading(true);
       await Promise.all([
@@ -61,7 +65,7 @@ export default function FeaturedVideosManager() {
       setLoading(false);
     };
     loadData();
-  }, []);
+  }, [token]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -123,7 +127,7 @@ export default function FeaturedVideosManager() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           imageIds: featuredVideos.map(v => v.id)

@@ -4,7 +4,7 @@ import './Admin.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-export default function FeaturedVideosManager() {
+export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
   const { token } = useAuth();
   const [availableVideos, setAvailableVideos] = useState([]);
   const [featuredVideos, setFeaturedVideos] = useState([]);
@@ -54,18 +54,18 @@ export default function FeaturedVideosManager() {
   };
 
   useEffect(() => {
-    if (!token) return;
-    
-    const loadData = async () => {
-      setLoading(true);
-      await Promise.all([
-        fetchAvailableVideos(),
-        fetchFeaturedVideos()
-      ]);
-      setLoading(false);
-    };
-    loadData();
-  }, [token]);
+    if (isOpen && token) {
+      const loadData = async () => {
+        setLoading(true);
+        await Promise.all([
+          fetchAvailableVideos(),
+          fetchFeaturedVideos()
+        ]);
+        setLoading(false);
+      };
+      loadData();
+    }
+  }, [isOpen, token]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -142,6 +142,8 @@ export default function FeaturedVideosManager() {
       localStorage.removeItem('featured_videos_cache');
       localStorage.removeItem('featured_videos_cache_timestamp');
       
+      if (onSave) onSave();
+      
     } catch (error) {
       console.error('Error saving featured videos:', error);
       setMessage('Error saving featured videos');
@@ -156,13 +158,18 @@ export default function FeaturedVideosManager() {
     setMessage('Cache cleared successfully');
   };
 
-  if (loading) {
-    return <div className="admin-section">Loading...</div>;
-  }
+  if (!isOpen) return null;
 
   return (
-    <div className="admin-section">
-      <h2>Featured Videos Manager</h2>
+    <div className="featured-videos-modal-overlay" onClick={onClose}>
+      <div className="featured-videos-modal" onClick={e => e.stopPropagation()}>
+        <div className="featured-videos-modal-header">
+          <h2>Manage Featured Videos</h2>
+          <button className="featured-videos-modal-close" onClick={onClose}>×</button>
+        </div>
+
+        <div className="featured-videos-modal-content">
+          {loading && <div className="admin-section">Loading...</div>}
       
       {message && (
         <div className={`admin-message ${message.includes('Error') ? 'error' : 'success'}`}>
@@ -301,6 +308,8 @@ export default function FeaturedVideosManager() {
               </button>
             </div>
           )}
+        </div>
+      </div>
         </div>
       </div>
     </div>

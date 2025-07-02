@@ -448,9 +448,14 @@ export default function Admin() {
         }}
       />
 
-      {showFeaturedVideosManager && (
-        <FeaturedVideosManager />
-      )}
+      <FeaturedVideosManager 
+        isOpen={showFeaturedVideosManager}
+        onClose={() => setShowFeaturedVideosManager(false)}
+        onSave={() => {
+          setSuccess('Featured videos updated successfully!');
+          setShowFeaturedVideosManager(false);
+        }}
+      />
     </div>
   );
 } 

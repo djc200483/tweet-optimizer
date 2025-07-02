@@ -120,12 +120,6 @@ export default function FeaturedVideos() {
             muted
             loop
             playsInline
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block'
-            }}
           />
         </div>
       </div>
@@ -193,12 +187,6 @@ export default function FeaturedVideos() {
                 src={selectedVideo.video_url}
                 controls
                 autoPlay
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  objectFit: 'contain',
-                  display: 'block'
-                }}
               />
             </div>
             <div className="modal-info">

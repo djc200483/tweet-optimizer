@@ -1159,3 +1159,40 @@
     font-size: 18px;
   }
 }
+
+/* Video play button overlay for My Images gallery */
+.video-play-overlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+}
+
+.video-play-overlay:hover {
+  background: rgba(0, 0, 0, 0.5);
+  transform: scale(1.1);
+}
+
+/* Mobile responsive for video play overlay */
+@media (max-width: 768px) {
+  .video-play-overlay {
+    width: 32px;
+    height: 32px;
+    top: 6px;
+    left: 6px;
+  }
+  
+  .video-play-overlay svg {
+    width: 20px;
+    height: 20px;
+  }
+}

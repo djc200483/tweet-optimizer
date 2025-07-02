@@ -413,7 +413,8 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
             width: '100%',
             backgroundColor: '#1e2028',
             borderRadius: '8px',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            position: 'relative'
           }}
         >
           {isVisible ? (
@@ -449,6 +450,22 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                   loop
                   playsInline
                 />
+              )}
+              {/* Play button overlay for videos in My Images gallery */}
+              {hasVideo && activeTab === 'my-images' && (
+                <div className="video-play-overlay">
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    fill="white" 
+                    width="24" 
+                    height="24"
+                    style={{
+                      filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'
+                    }}
+                  >
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
               )}
             </>
           ) : (

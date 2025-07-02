@@ -1402,11 +1402,11 @@
 
 /* Ensure video controls are visible in gallery */
 .image-item video::-webkit-media-controls {
-  background: rgba(0, 0, 0, 0.5);
+  background: transparent;
 }
 
 .image-item video::-webkit-media-controls-panel {
-  background: rgba(0, 0, 0, 0.5);
+  background: transparent;
 }
 
 /* Main content styles */

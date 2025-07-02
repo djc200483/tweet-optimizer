@@ -1005,7 +1005,7 @@
   }
 }
 
-/* Video styles */
+/* Video styles - comprehensive fix */
 .image-item video {
   width: 100%;
   height: auto;
@@ -1013,35 +1013,50 @@
   object-fit: cover;
   border-radius: 8px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
   background-color: transparent;
+  filter: none;
+  opacity: 1;
 }
 
-/* Ensure videos are not affected by hover overlay */
+/* Ensure video container has transparent background */
+.image-item:has(video) .image-placeholder {
+  background-color: transparent !important;
+}
+
+/* Remove hover overlay for video items */
 .image-item:has(video) .hover-overlay {
   pointer-events: none;
-  background: none;
+  background: none !important;
 }
 
+/* Only show light overlay on hover for videos */
 .image-item:has(video):hover .hover-overlay {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)) !important;
+  pointer-events: auto;
 }
 
+/* Ensure video controls are completely transparent */
+.image-item video::-webkit-media-controls,
+.modal-image-container video::-webkit-media-controls {
+  background: transparent !important;
+}
+
+.image-item video::-webkit-media-controls-panel,
+.modal-image-container video::-webkit-media-controls-panel {
+  background: transparent !important;
+}
+
+/* Modal video styles */
 .modal-image-container video {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   display: block;
   border-radius: 8px;
-}
-
-/* Ensure video controls are visible */
-.modal-image-container video::-webkit-media-controls {
-  background: transparent;
-}
-
-.modal-image-container video::-webkit-media-controls-panel {
-  background: transparent;
+  background-color: transparent;
+  filter: none;
+  opacity: 1;
 }
 
 /* Featured Gallery Styles */

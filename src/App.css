@@ -2732,6 +2732,38 @@ body {
 /* Remove the old .featured-gallery-title style if present */
 .featured-gallery-title { display: none !important; }
 
+.featured-videos-svg-title {
+  margin: 0 0 16px 0;
+  text-align: left;
+  line-height: 1.2;
+  display: block;
+  height: 40px;
+  width: 100%;
+  padding-left: 24px;
+}
+.featured-videos-svg-title svg {
+  display: block;
+  width: 300px;
+  height: 40px;
+}
+.featured-videos-svg-title svg text {
+  font-size: 30px;
+}
+@media (max-width: 768px) {
+  .featured-videos-svg-title {
+    margin: 0 0 20px 0;
+    height: 26px;
+    padding-left: 12px;
+  }
+  .featured-videos-svg-title svg {
+    width: 180px;
+    height: 26px;
+  }
+  .featured-videos-svg-title svg text {
+    font-size: 20px !important;
+  }
+}
+
 .gallery-svg-title {
   margin: 32px 0 24px 0;
   text-align: left;

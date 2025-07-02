@@ -443,7 +443,10 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                     opacity: 0,
                     transition: 'opacity 0.3s ease-in-out'
                   }}
-                  onLoadStart={(e) => {
+                  onLoadedData={(e) => {
+                    e.target.style.opacity = 1;
+                  }}
+                  onCanPlay={(e) => {
                     e.target.style.opacity = 1;
                   }}
                   muted

@@ -1019,11 +1019,11 @@
 
 /* Ensure video controls are visible */
 .modal-image-container video::-webkit-media-controls {
-  background: rgba(0, 0, 0, 0.5);
+  background: transparent;
 }
 
 .modal-image-container video::-webkit-media-controls-panel {
-  background: rgba(0, 0, 0, 0.5);
+  background: transparent;
 }
 
 /* Featured Gallery Styles */

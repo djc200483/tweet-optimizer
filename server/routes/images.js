@@ -19,7 +19,7 @@ const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
 });
 
-// Video generation rate limiting - 4 videos per day per user
+// Video generation rate limiting - 3 videos per day per user
 const videoGenerationCounts = new Map();
 
 // Reset video generation counts daily
@@ -33,7 +33,7 @@ function checkVideoGenerationLimit(userId) {
   const key = `${userId}-${today}`;
   const count = videoGenerationCounts.get(key) || 0;
   
-  if (count >= 4) {
+  if (count >= 3) {
     return false;
   }
   
@@ -46,7 +46,7 @@ function getRemainingVideoGenerations(userId) {
   const today = new Date().toISOString().slice(0, 10);
   const key = `${userId}-${today}`;
   const count = videoGenerationCounts.get(key) || 0;
-  return Math.max(0, 4 - count);
+  return Math.max(0, 3 - count);
 }
 
 // Get user's personal images
@@ -155,7 +155,7 @@ router.post('/generate-video', authMiddleware, async (req, res) => {
     // Check video generation limit
     if (!checkVideoGenerationLimit(req.user.id)) {
       return res.status(429).json({ 
-        error: 'Video generation limit reached. You can generate 4 videos per day.',
+        error: 'Video generation limit reached. You can generate 3 videos per day.',
         remaining: 0
       });
     }

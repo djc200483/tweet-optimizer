@@ -51,8 +51,19 @@ export default function ImageGenerator() {
   const [isVideoGenerationLoading, setIsVideoGenerationLoading] = useState(false);
   const [videoPredictionId, setVideoPredictionId] = useState(null);
   const [videoProgress, setVideoProgress] = useState(0);
-  const [videoRemaining, setVideoRemaining] = useState(4);
+  const [videoRemaining, setVideoRemaining] = useState(3);
   const [cameraFixed, setCameraFixed] = useState(false);
+  const [currentVideoStep, setCurrentVideoStep] = useState(0);
+  const [videoStepText, setVideoStepText] = useState('');
+
+  // Video generation steps with percentages
+  const videoSteps = [
+    { text: "Uploading image...", percentage: 10 },
+    { text: "Initializing video generation...", percentage: 25 },
+    { text: "Processing video (this may take 2-3 minutes)...", percentage: 75 },
+    { text: "Finalizing video...", percentage: 90 },
+    { text: "Complete!", percentage: 100 }
+  ];
 
   const allModels = [
     { value: 'black-forest-labs/flux-schnell', label: 'Flux Schnell', description: 'Lightning‑fast text-to-image generation—ideal for quick prototyping' },
@@ -282,8 +293,16 @@ export default function ImageGenerator() {
   const handleVideoGeneration = async () => {
     setIsVideoGenerationLoading(true);
     setError('');
+    setCurrentVideoStep(0);
+    setVideoProgress(0);
+    setVideoStepText(videoSteps[0].text);
 
     try {
+      // Step 1: Uploading image (0-10%)
+      setCurrentVideoStep(0);
+      setVideoProgress(5);
+      setVideoStepText(videoSteps[0].text);
+
       // Convert source image to base64
       const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -299,6 +318,12 @@ export default function ImageGenerator() {
       };
 
       const base64Image = await convertToBase64(sourceImage);
+      setVideoProgress(10);
+
+      // Step 2: Initializing video generation (10-25%)
+      setCurrentVideoStep(1);
+      setVideoProgress(15);
+      setVideoStepText(videoSteps[1].text);
 
       // Start video generation
       const response = await fetch(`${API_URL}/api/images/generate-video`, {
@@ -322,19 +347,33 @@ export default function ImageGenerator() {
       const data = await response.json();
       setVideoPredictionId(data.prediction_id);
       setVideoRemaining(data.remaining);
+      setVideoProgress(25);
 
-      // Start polling for status
+      // Step 3: Start polling for status (25-75%)
+      setCurrentVideoStep(2);
+      setVideoStepText(videoSteps[2].text);
       pollVideoStatus(data.prediction_id);
     } catch (err) {
       console.error('Video generation error:', err);
       setError(err.message || 'Failed to start video generation');
       setIsVideoGenerationLoading(false);
+      setCurrentVideoStep(0);
+      setVideoProgress(0);
+      setVideoStepText('');
     }
   };
 
   const pollVideoStatus = async (predictionId) => {
+    let pollCount = 0;
     const pollInterval = setInterval(async () => {
       try {
+        pollCount++;
+        
+        // Gradually increase progress from 25% to 75% during polling
+        const progressIncrement = 50 / 90; // 50% spread over ~90 polls (3 minutes at 2-second intervals)
+        const currentProgress = Math.min(25 + (pollCount * progressIncrement), 75);
+        setVideoProgress(currentProgress);
+
         const response = await fetch(`${API_URL}/api/images/video-status/${predictionId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -348,31 +387,50 @@ export default function ImageGenerator() {
         const data = await response.json();
 
         if (data.status === 'completed') {
-          clearInterval(pollInterval);
-          setIsVideoGenerationLoading(false);
-          setVideoPredictionId(null);
-          setVideoProgress(0);
-          setRefreshTrigger(prev => prev + 1);
-          // Show success message and clear it after 5 seconds
-          setError('Video generated successfully! Check your gallery.');
+          // Step 4: Finalizing (75-90%)
+          setCurrentVideoStep(3);
+          setVideoProgress(85);
+          setVideoStepText(videoSteps[3].text);
+          
+          // Step 5: Complete (90-100%)
           setTimeout(() => {
-            setError('');
-          }, 5000);
+            setCurrentVideoStep(4);
+            setVideoProgress(100);
+            setVideoStepText(videoSteps[4].text);
+            
+            // Clear everything after showing completion
+            setTimeout(() => {
+              clearInterval(pollInterval);
+              setIsVideoGenerationLoading(false);
+              setVideoPredictionId(null);
+              setVideoProgress(0);
+              setCurrentVideoStep(0);
+              setVideoStepText('');
+              setRefreshTrigger(prev => prev + 1);
+              // Show success message and clear it after 5 seconds
+              setError('Video generated successfully! Check your gallery.');
+              setTimeout(() => {
+                setError('');
+              }, 5000);
+            }, 1000);
+          }, 500);
         } else if (data.status === 'failed') {
           clearInterval(pollInterval);
           setIsVideoGenerationLoading(false);
           setVideoPredictionId(null);
           setVideoProgress(0);
+          setCurrentVideoStep(0);
+          setVideoStepText('');
           setError(data.error || 'Video generation failed');
-        } else {
-          // Still processing
-          setVideoProgress(data.progress || 0);
         }
+        // If still processing, continue with gradual progress increase
       } catch (err) {
         clearInterval(pollInterval);
         setIsVideoGenerationLoading(false);
         setVideoPredictionId(null);
         setVideoProgress(0);
+        setCurrentVideoStep(0);
+        setVideoStepText('');
         setError('Failed to check video status');
       }
     }, 2000); // Poll every 2 seconds
@@ -923,7 +981,7 @@ export default function ImageGenerator() {
               <div className="toolbar-section">
                 <div className="video-info">
                   <div className="video-remaining">
-                    Remaining videos today: {videoRemaining}/4
+                    Remaining videos today: {videoRemaining}/3
                   </div>
                   {videoPredictionId && (
                     <div className="video-progress">
@@ -934,7 +992,7 @@ export default function ImageGenerator() {
                         ></div>
                       </div>
                       <div className="progress-text">
-                        Generating video... {Math.round(videoProgress)}%
+                        {videoStepText} {Math.round(videoProgress)}%
                       </div>
                     </div>
                   )}

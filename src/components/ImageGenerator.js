@@ -72,8 +72,7 @@ export default function ImageGenerator() {
     { value: 'google/imagen-4', label: 'Imagen 4', description: 'Top-tier photorealism, sharp detail and typography.' },
     { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' },
     { value: 'recraft-ai/recraft-v3', label: 'Recraft V3', description: 'High-quality image generation with style control.' },
-    { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' },
-    { value: 'bytedance/seedance-1-lite', label: 'bytedance', description: 'Video generation model' }
+    { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' }
   ];
 
   const imageToImageModels = [

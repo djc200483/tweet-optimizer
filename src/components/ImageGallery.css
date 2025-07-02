@@ -1011,7 +1011,8 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  z-index: 10;
+  z-index: 20;
+  pointer-events: auto;
 }
 
 .featured-videos-arrow:hover {

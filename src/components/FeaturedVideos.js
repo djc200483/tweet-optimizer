@@ -156,7 +156,10 @@ export default function FeaturedVideos() {
         {showPrevArrow && (
           <button 
             className="featured-videos-arrow featured-videos-arrow-left"
-            onClick={handlePrevious}
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePrevious();
+            }}
             aria-label="Previous videos"
           >
             ‹
@@ -170,7 +173,10 @@ export default function FeaturedVideos() {
         {showNextArrow && (
           <button 
             className="featured-videos-arrow featured-videos-arrow-right"
-            onClick={handleNext}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNext();
+            }}
             aria-label="Next videos"
           >
             ›

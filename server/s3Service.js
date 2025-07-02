@@ -68,14 +68,14 @@ async function uploadImageToS3(imageUrl, key) {
 }
 
 // Upload image buffer to S3
-async function uploadImageBufferToS3(buffer, key) {
+async function uploadImageBufferToS3(buffer, key, contentType = 'image/png') {
     try {
         // Upload to S3
         const command = new PutObjectCommand({
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: key,
             Body: buffer,
-            ContentType: 'image/png',
+            ContentType: contentType,
             CacheControl: 'public, max-age=31536000'
         });
         await s3Client.send(command);

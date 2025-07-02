@@ -242,7 +242,7 @@ router.get('/video-status/:predictionId', authMiddleware, async (req, res) => {
       const videoBuffer = await videoResponse.arrayBuffer();
       
       // Use the same S3 service pattern as images
-      const s3Result = await uploadImageBufferToS3(Buffer.from(videoBuffer), videoKey);
+      const s3Result = await uploadImageBufferToS3(Buffer.from(videoBuffer), videoKey, 'video/mp4');
       if (!s3Result.success) {
         console.error('Failed to upload video to S3:', s3Result.error);
         return res.status(500).json({ error: 'Failed to upload video to S3' });

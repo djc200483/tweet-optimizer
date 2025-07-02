@@ -1015,15 +1015,7 @@
   pointer-events: auto;
 }
 
-.featured-videos-arrow:hover {
-  background: rgba(0, 194, 255, 0.2);
-  border-color: rgba(0, 194, 255, 0.4);
-  transform: scale(1.1);
-}
 
-.featured-videos-arrow:active {
-  transform: scale(0.95);
-}
 
 .featured-videos-arrow-left {
   left: 10px;

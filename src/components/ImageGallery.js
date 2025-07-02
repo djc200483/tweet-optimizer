@@ -440,14 +440,10 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                     width: '100%',
                     height: 'auto',
                     display: 'block',
-                    opacity: 0,
-                    transition: 'opacity 0.3s ease-in-out'
-                  }}
-                  onLoadedData={(e) => {
-                    e.target.style.opacity = 1;
-                  }}
-                  onCanPlay={(e) => {
-                    e.target.style.opacity = 1;
+                    opacity: 1,
+                    position: 'relative',
+                    zIndex: 1,
+                    backgroundColor: 'transparent'
                   }}
                   muted
                   loop

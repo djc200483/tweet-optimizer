@@ -1007,6 +1007,19 @@
   display: block;
   object-fit: cover;
   border-radius: 8px;
+  position: relative;
+  z-index: 1;
+  background-color: transparent;
+}
+
+/* Ensure videos are not affected by hover overlay */
+.image-item:has(video) .hover-overlay {
+  pointer-events: none;
+  background: none;
+}
+
+.image-item:has(video):hover .hover-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
 }
 
 .modal-image-container video {

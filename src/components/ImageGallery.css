@@ -126,6 +126,11 @@
   overflow: hidden;
 }
 
+/* Make background transparent for video items */
+.image-item:has(video) .image-placeholder {
+  background-color: transparent;
+}
+
 .image-placeholder img {
   display: block;
   width: 100%;

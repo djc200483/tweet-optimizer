@@ -1131,6 +1131,21 @@
     height: 35px;
     font-size: 20px;
   }
+
+  .featured-videos-container {
+    padding: 0 5px;
+    gap: 5px;
+  }
+  
+  .featured-videos-items {
+    gap: 5px;
+  }
+  
+  .featured-videos-arrow {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 480px) {

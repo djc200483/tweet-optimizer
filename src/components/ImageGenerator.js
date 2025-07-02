@@ -353,8 +353,11 @@ export default function ImageGenerator() {
           setVideoPredictionId(null);
           setVideoProgress(0);
           setRefreshTrigger(prev => prev + 1);
-          // Show success message or redirect to gallery
+          // Show success message and clear it after 5 seconds
           setError('Video generated successfully! Check your gallery.');
+          setTimeout(() => {
+            setError('');
+          }, 5000);
         } else if (data.status === 'failed') {
           clearInterval(pollInterval);
           setIsVideoGenerationLoading(false);

@@ -215,6 +215,22 @@ router.get('/video-status/:predictionId', authMiddleware, async (req, res) => {
     const prediction = await replicate.predictions.get(predictionId);
     
     if (prediction.status === 'succeeded' && prediction.output) {
+      // Check if this video has already been processed
+      const existingVideo = await db.query(
+        'SELECT id FROM generated_images WHERE user_id = $1 AND prompt = $2 AND video_url IS NOT NULL AND created_at > NOW() - INTERVAL \'5 minutes\'',
+        [req.user.id, prediction.input.prompt]
+      );
+      
+      if (existingVideo.rows.length > 0) {
+        // Video already exists, return existing data
+        res.json({
+          status: 'completed',
+          video_url: existingVideo.rows[0].video_url,
+          image: existingVideo.rows[0]
+        });
+        return;
+      }
+      
       // Video generation completed, save to database and S3
       const videoUrl = prediction.output;
       

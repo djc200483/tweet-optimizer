@@ -969,11 +969,11 @@
 }
 
 .featured-gallery-arrow-left {
-  left: 10px;
+  left: -10px;
 }
 
 .featured-gallery-arrow-right {
-  right: 10px;
+  right: -10px;
 }
 
 
@@ -1023,11 +1023,11 @@
 }
 
 .featured-videos-arrow-left {
-  left: 10px;
+  left: -10px;
 }
 
 .featured-videos-arrow-right {
-  right: 10px;
+  right: -10px;
 }
 
 .featured-videos-items {

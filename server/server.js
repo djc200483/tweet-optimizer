@@ -933,6 +933,26 @@ app.get('/api/featured-gallery', async (req, res) => {
   }
 });
 
+// Public featured videos endpoint (no auth required)
+app.get('/api/featured-videos', async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.video_url, gi.aspect_ratio, gi.created_at,
+             u.x_handle as creator_handle, fvi.position
+      FROM featured_videos_items fvi
+      JOIN generated_images gi ON fvi.image_id = gi.id
+      LEFT JOIN users u ON gi.user_id = u.id
+      WHERE fvi.gallery_id = 1 AND gi.video_url IS NOT NULL
+      ORDER BY fvi.position ASC
+    `);
+    
+    res.json({ videos: result.rows });
+  } catch (error) {
+    console.error('Error fetching featured videos:', error);
+    res.status(500).json({ error: 'Error fetching featured videos' });
+  }
+});
+
 // Enhance Image endpoint
 app.post('/enhance-image', authMiddleware, async (req, res) => {
   try {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import LoadingSpinner from '../LoadingSpinner';
 import FeaturedGalleryManager from './FeaturedGalleryManager';
+import FeaturedVideosManager from './FeaturedVideosManager';
 import './Admin.css';
 
 export default function Admin() {
@@ -12,6 +13,7 @@ export default function Admin() {
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [showFeaturedGalleryManager, setShowFeaturedGalleryManager] = useState(false);
+  const [showFeaturedVideosManager, setShowFeaturedVideosManager] = useState(false);
   const { token } = useAuth();
 
   useEffect(() => {
@@ -193,6 +195,12 @@ export default function Admin() {
     alert('Featured Gallery cache cleared! The next visit to the homepage will fetch fresh featured images.');
   };
 
+  const handleRefreshFeaturedVideosCache = () => {
+    localStorage.removeItem('featured_videos_cache');
+    localStorage.removeItem('featured_videos_cache_timestamp');
+    alert('Featured Videos cache cleared! The next visit to the homepage will fetch fresh featured videos.');
+  };
+
   const sortedUsers = useMemo(() => {
     const activeUsers = allowedUsers
       .filter(user => user.is_active)
@@ -244,10 +252,29 @@ export default function Admin() {
           fontSize: '1rem',
           cursor: 'pointer',
           marginBottom: '20px',
+          marginRight: '10px',
           boxShadow: '0 4px 15px rgba(0, 194, 255, 0.3)'
         }}
       >
         Refresh Featured Gallery Cache
+      </button>
+
+      <button
+        className="refresh-featured-videos-cache-button"
+        onClick={handleRefreshFeaturedVideosCache}
+        style={{
+          background: 'linear-gradient(135deg, #00c2ff, #a855f7)',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          borderRadius: '12px',
+          fontSize: '1rem',
+          cursor: 'pointer',
+          marginBottom: '20px',
+          boxShadow: '0 4px 15px rgba(0, 194, 255, 0.3)'
+        }}
+      >
+        Refresh Featured Videos Cache
       </button>
 
       <div className="admin-section">
@@ -265,10 +292,28 @@ export default function Admin() {
               fontSize: '1rem',
               cursor: 'pointer',
               marginBottom: '20px',
+              marginRight: '10px',
               boxShadow: '0 4px 15px rgba(0, 194, 255, 0.3)'
             }}
           >
             Manage Featured Images
+          </button>
+          <button 
+            className="manage-featured-videos-btn"
+            onClick={() => setShowFeaturedVideosManager(true)}
+            style={{
+              background: 'linear-gradient(135deg, #00c2ff, #a855f7)',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '12px',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              marginBottom: '20px',
+              boxShadow: '0 4px 15px rgba(0, 194, 255, 0.3)'
+            }}
+          >
+            Manage Featured Videos
           </button>
         </div>
       </div>
@@ -402,6 +447,10 @@ export default function Admin() {
           setShowFeaturedGalleryManager(false);
         }}
       />
+
+      {showFeaturedVideosManager && (
+        <FeaturedVideosManager />
+      )}
     </div>
   );
 } 

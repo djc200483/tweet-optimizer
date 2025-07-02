@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RandomGallery from './RandomGallery';
 import FeaturedGallery from './FeaturedGallery';
+import FeaturedVideos from './FeaturedVideos';
 import FloatingStars from './FloatingStars';
 
 export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
@@ -140,6 +141,18 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
               </svg>
             </div>
             <FeaturedGallery />
+            <div className="featured-videos-svg-title">
+              <svg width="auto" height="40" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                <defs>
+                  <linearGradient id="featuredVideosGradient" x1="0" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#00c2ff"/>
+                    <stop offset="1" stopColor="#a855f7"/>
+                  </linearGradient>
+                </defs>
+                <text x="0" y="30" font-family="inherit" font-weight="600" font-size="30" fill="url(#featuredVideosGradient)" alignment-baseline="middle">Featured Videos</text>
+              </svg>
+            </div>
+            <FeaturedVideos />
             <div className="gallery-svg-title">
               <svg width="auto" height="40" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
                 <defs>

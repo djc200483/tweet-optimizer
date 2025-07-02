@@ -250,4 +250,101 @@ router.post('/featured-gallery', async (req, res) => {
   }
 });
 
+// Featured Videos Management Endpoints
+
+// Get available videos from last 20 days for selection
+router.get('/available-videos', async (req, res) => {
+  try {
+    const { page = 1, limit = 50, search = '' } = req.query;
+    const offset = (page - 1) * limit;
+    
+    let query = `
+      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.video_url, gi.aspect_ratio, gi.created_at,
+             u.x_handle as creator_handle
+      FROM generated_images gi
+      LEFT JOIN users u ON gi.user_id = u.id
+      WHERE gi.created_at >= NOW() - INTERVAL '20 days'
+        AND gi.is_private = false
+        AND gi.video_url IS NOT NULL
+    `;
+    
+    const queryParams = [];
+    
+    if (search) {
+      query += ` AND gi.prompt ILIKE $${queryParams.length + 1}`;
+      queryParams.push(`%${search}%`);
+    }
+    
+    query += ` ORDER BY gi.created_at DESC LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+    queryParams.push(limit, offset);
+    
+    const result = await db.query(query, queryParams);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching available videos:', error);
+    res.status(500).json({ error: 'Error fetching available videos' });
+  }
+});
+
+// Get current featured videos
+router.get('/featured-videos', async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.video_url, gi.aspect_ratio, gi.created_at,
+             u.x_handle as creator_handle, fvi.position
+      FROM featured_videos_items fvi
+      JOIN generated_images gi ON fvi.image_id = gi.id
+      LEFT JOIN users u ON gi.user_id = u.id
+      WHERE fvi.gallery_id = 1 AND gi.video_url IS NOT NULL
+      ORDER BY fvi.position ASC
+    `);
+    
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching featured videos:', error);
+    res.status(500).json({ error: 'Error fetching featured videos' });
+  }
+});
+
+// Update featured videos
+router.post('/featured-videos', async (req, res) => {
+  try {
+    const { imageIds } = req.body; // Array of image IDs in order
+    
+    if (!Array.isArray(imageIds) || imageIds.length > 10) {
+      return res.status(400).json({ error: 'Invalid video selection. Maximum 10 videos allowed.' });
+    }
+    
+    // Start transaction
+    await db.query('BEGIN');
+    
+    try {
+      // Clear existing featured videos
+      await db.query('DELETE FROM featured_videos_items WHERE gallery_id = 1');
+      
+      // Insert new selections
+      for (let i = 0; i < imageIds.length; i++) {
+        await db.query(
+          'INSERT INTO featured_videos_items (gallery_id, image_id, position) VALUES (1, $1, $2)',
+          [imageIds[i], i + 1]
+        );
+      }
+      
+      // Update the gallery timestamp
+      await db.query(
+        'UPDATE featured_videos SET updated_at = NOW() WHERE id = 1'
+      );
+      
+      await db.query('COMMIT');
+      res.json({ message: 'Featured videos updated successfully' });
+    } catch (error) {
+      await db.query('ROLLBACK');
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error updating featured videos:', error);
+    res.status(500).json({ error: 'Error updating featured videos' });
+  }
+});
+
 module.exports = router; 

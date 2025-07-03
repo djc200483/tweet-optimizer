@@ -45,6 +45,9 @@ const setCacheData = (data) => {
   }
 };
 
+// Utility function to detect mobile devices
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
   const { token, user } = useAuth();
   const [images, setImages] = useState([]);
@@ -576,19 +579,75 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
       {selectedImage && (
         <div className="image-modal" onClick={handleCloseModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <div className="modal-image-container">
+            <div className="modal-image-container" style={{position: 'relative'}}>
               {selectedImage.video_url ? (
-                <video
-                  src={selectedImage.video_url}
-                  controls
-                  autoPlay
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    objectFit: 'contain',
-                    display: 'block'
-                  }}
-                />
+                <>
+                  {/* Mobile-only download/share button */}
+                  {isMobile && (
+                    <button
+                      className="download-video-btn"
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        if (
+                          navigator.canShare &&
+                          navigator.canShare({ files: [new File([], 'video.mp4')] })
+                        ) {
+                          try {
+                            const response = await fetch(selectedImage.video_url);
+                            const blob = await response.blob();
+                            const file = new File([blob], 'video.mp4', { type: blob.type });
+                            await navigator.share({
+                              files: [file],
+                              title: 'Share or Save Video',
+                              text: 'Check out this video!',
+                            });
+                          } catch (err) {
+                            alert('Sharing failed: ' + err.message);
+                          }
+                        } else {
+                          // Fallback: trigger download
+                          const link = document.createElement('a');
+                          link.href = selectedImage.video_url;
+                          link.download = 'video.mp4';
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        zIndex: 10,
+                        background: 'rgba(0,0,0,0.7)',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: 36,
+                        height: 36,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: 20
+                      }}
+                      title="Share or Save video"
+                    >
+                      ⬇️
+                    </button>
+                  )}
+                  <video
+                    src={selectedImage.video_url}
+                    controls
+                    autoPlay
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      objectFit: 'contain',
+                      display: 'block'
+                    }}
+                  />
+                </>
               ) : (
                 <img 
                   src={selectedImage.s3_url || selectedImage.image_url} 

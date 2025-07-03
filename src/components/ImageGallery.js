@@ -632,8 +632,8 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
               <div className="modal-header">
                 <div className="modal-title">{selectedImage.video_url ? 'Video Details' : 'Image Details'}</div>
                 <div className="modal-header-actions" style={{ display: 'flex', alignItems: 'center' }}>
-                  {/* Mobile-only download button to the left of copy and close */}
-                  {isMobile && selectedImage.video_url && (
+                  {/* Download button to the left of copy and close, shown on all platforms if video_url exists */}
+                  {selectedImage.video_url && (
                     <a
                       href={`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/images/download-video?key=${encodeURIComponent(selectedImage.video_url.replace('https://echosphere-images.s3.eu-north-1.amazonaws.com/', ''))}`}
                       style={{

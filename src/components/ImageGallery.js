@@ -582,38 +582,10 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
             <div className="modal-image-container" style={{position: 'relative'}}>
               {selectedImage.video_url ? (
                 <>
-                  {/* Mobile-only download/share button */}
+                  {/* Mobile-only direct download button using backend proxy */}
                   {isMobile && (
-                    <button
-                      className="download-video-btn"
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        if (
-                          navigator.canShare &&
-                          navigator.canShare({ files: [new File([], 'video.mp4')] })
-                        ) {
-                          try {
-                            const response = await fetch(selectedImage.video_url);
-                            const blob = await response.blob();
-                            const file = new File([blob], 'video.mp4', { type: blob.type });
-                            await navigator.share({
-                              files: [file],
-                              title: 'Share or Save Video',
-                              text: 'Check out this video!',
-                            });
-                          } catch (err) {
-                            alert('Sharing failed: ' + err.message);
-                          }
-                        } else {
-                          // Fallback: trigger download
-                          const link = document.createElement('a');
-                          link.href = selectedImage.video_url;
-                          link.download = 'video.mp4';
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }
-                      }}
+                    <a
+                      href={`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/download-video/${selectedImage.video_url.split('/').pop()}`}
                       style={{
                         position: 'absolute',
                         top: 16,
@@ -628,13 +600,13 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        cursor: 'pointer',
+                        textDecoration: 'none',
                         fontSize: 20
                       }}
-                      title="Share or Save video"
+                      download
                     >
                       ⬇️
-                    </button>
+                    </a>
                   )}
                   <video
                     src={selectedImage.video_url}

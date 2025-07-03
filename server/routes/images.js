@@ -427,4 +427,22 @@ router.get('/liked-today', async (req, res) => {
   }
 });
 
+// Proxy video download for mobile/desktop compatibility
+router.get('/download-video/:key', async (req, res) => {
+  const key = req.params.key;
+  const params = {
+    Bucket: 'echosphere-images', // update to your actual bucket name if different
+    Key: `videos/${key}`
+  };
+  try {
+    const s3 = new (require('aws-sdk')).S3();
+    const s3Stream = s3.getObject(params).createReadStream();
+    res.setHeader('Content-Type', 'video/mp4');
+    res.setHeader('Content-Disposition', `attachment; filename="${key}"`);
+    s3Stream.pipe(res);
+  } catch (err) {
+    res.status(500).send('Error downloading video');
+  }
+});
+
 module.exports = router; 

@@ -585,7 +585,7 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                   {/* Mobile-only direct download button using backend proxy */}
                   {isMobile && (
                     <a
-                      href={`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/download-video/${selectedImage.video_url.split('/').pop()}`}
+                      href={`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/download-video?key=${encodeURIComponent(selectedImage.video_url.replace('https://echosphere-images.s3.eu-north-1.amazonaws.com/', ''))}`}
                       style={{
                         position: 'absolute',
                         top: 16,

@@ -427,18 +427,21 @@ router.get('/liked-today', async (req, res) => {
   }
 });
 
-// Proxy video download for mobile/desktop compatibility
-router.get('/download-video/:key', async (req, res) => {
-  const key = req.params.key;
+// Proxy video download for mobile/desktop compatibility (accepts full S3 key as query param)
+router.get('/download-video', async (req, res) => {
+  const key = req.query.key; // e.g., videos/1751544438244-ouzuqs.mp4
+  if (!key) {
+    return res.status(400).send('Missing S3 key');
+  }
   const params = {
     Bucket: 'echosphere-images', // update to your actual bucket name if different
-    Key: `videos/${key}`
+    Key: key
   };
   try {
     const s3 = new (require('aws-sdk')).S3();
     const s3Stream = s3.getObject(params).createReadStream();
     res.setHeader('Content-Type', 'video/mp4');
-    res.setHeader('Content-Disposition', `attachment; filename="${key}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${key.split('/').pop()}"`);
     s3Stream.pipe(res);
   } catch (err) {
     res.status(500).send('Error downloading video');

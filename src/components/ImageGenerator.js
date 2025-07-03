@@ -243,7 +243,7 @@ export default function ImageGenerator() {
       let requestBody = {
         prompt: prompt.trim(),
         model: selectedModel,
-        aspect_ratio: selectedAspectRatio,
+        aspectRatio: selectedAspectRatio,
         style: selectedStyle
       };
 

@@ -631,7 +631,32 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
             <div className="modal-info">
               <div className="modal-header">
                 <div className="modal-title">{selectedImage.video_url ? 'Video Details' : 'Image Details'}</div>
-                <div className="modal-header-actions">
+                <div className="modal-header-actions" style={{ display: 'flex', alignItems: 'center' }}>
+                  {/* Mobile-only download button to the left of copy and close */}
+                  {isMobile && selectedImage.video_url && (
+                    <a
+                      href={`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/images/download-video?key=${encodeURIComponent(selectedImage.video_url.replace('https://echosphere-images.s3.eu-north-1.amazonaws.com/', ''))}`}
+                      style={{
+                        marginRight: 8,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        cursor: 'pointer',
+                        width: 32,
+                        height: 32
+                      }}
+                      download
+                      aria-label="Download Video"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 3V15M10 15L5 10M10 15L15 10" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <rect x="3" y="17" width="14" height="2" rx="1" fill="#fff"/>
+                      </svg>
+                    </a>
+                  )}
                   <button 
                     className={`copy-button ${isCopied ? 'copied' : ''}`}
                     onClick={() => handleCopyPrompt(selectedImage.prompt)}

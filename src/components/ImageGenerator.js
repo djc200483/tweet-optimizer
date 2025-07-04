@@ -185,6 +185,22 @@ export default function ImageGenerator() {
   const [isStyleDropdownOpen, setIsStyleDropdownOpen] = useState(false);
   const [isSourceImageDropdownOpen, setIsSourceImageDropdownOpen] = useState(false);
 
+  // Add state for Expand mode
+  const [isExpandMode, setIsExpandMode] = useState(false);
+
+  // Aspect ratios for Expand
+  const expandAspectRatios = [
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '3:2', label: 'Classic Photo (3:2)' },
+    { value: '2:3', label: 'Portrait Classic (2:3)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '4:5', label: 'Portrait (4:5)' },
+    { value: '5:4', label: 'Large Format (5:4)' }
+  ];
+
   // Clear prompt and aspect ratio if Portrait Series model is selected
   useEffect(() => {
     if (generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') {
@@ -232,6 +248,70 @@ export default function ImageGenerator() {
 
     if (generationType === 'image-to-video' && !sourceImage) {
       setError('Please upload a source image for video generation');
+      return;
+    }
+
+    if (generationType === 'image-to-image' && isExpandMode) {
+      setIsGenerateLoading(true);
+      setError('');
+      setGeneratedImages([]);
+      try {
+        // Upload image to S3 (reuse your existing upload logic)
+        const convertToBase64 = (file) => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+              const base64String = reader.result.split(',')[1];
+              resolve(base64String);
+            };
+            reader.onerror = (error) => reject(error);
+          });
+        };
+        const base64Image = await convertToBase64(sourceImage);
+        // Call your backend to upload to S3 and get the URL (reuse your existing endpoint)
+        const uploadResponse = await fetch(`${API_URL}/api/upload-image`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ imageBase64: base64Image })
+        });
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json();
+          throw new Error(errorData.error || 'Failed to upload image');
+        }
+        const { s3Url } = await uploadResponse.json();
+        // Call Replicate with bria/expand-image
+        const replicateResponse = await fetch(`${API_URL}/api/expand-image`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            model: 'bria/expand-image',
+            sync: true,
+            image: s3Url,
+            aspect_ratio: selectedAspectRatio,
+            preserve_alpha: true,
+            content_moderation: false
+          })
+        });
+        if (!replicateResponse.ok) {
+          const errorData = await replicateResponse.json();
+          throw new Error(errorData.error || 'Failed to expand image');
+        }
+        const data = await replicateResponse.json();
+        setGeneratedImages(data.images || [data]);
+        setRefreshTrigger(prev => prev + 1);
+      } catch (err) {
+        console.error('Expand error:', err);
+        setError(err.message || 'Failed to expand image');
+      } finally {
+        setIsGenerateLoading(false);
+      }
       return;
     }
 
@@ -893,15 +973,24 @@ export default function ImageGenerator() {
 
           {/* Enhance checkbox - only show when Image to Image is selected */}
           {generationType === 'image-to-image' && (
-            <div className="toolbar-section">
-              <label className="toolbar-label" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+            <div className="toolbar-section" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', marginRight: '12px' }}>
                 <input
                   type="checkbox"
                   checked={isEnhanceMode}
-                  onChange={(e) => setIsEnhanceMode(e.target.checked)}
+                  onChange={e => setIsEnhanceMode(e.target.checked)}
                   style={{ marginRight: 8 }}
                 />
                 Enhance
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', marginRight: '12px' }}>
+                <input
+                  type="checkbox"
+                  checked={isExpandMode}
+                  onChange={e => setIsExpandMode(e.target.checked)}
+                  style={{ marginRight: 8 }}
+                />
+                Expand
               </label>
             </div>
           )}

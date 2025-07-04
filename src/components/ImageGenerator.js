@@ -263,9 +263,9 @@ export default function ImageGenerator() {
               reader.onerror = (error) => reject(error);
             });
           };
-          requestBody.source_image = await convertToBase64(sourceImage);
+          requestBody.sourceImageBase64 = await convertToBase64(sourceImage);
         } else {
-          requestBody.source_image = null;
+          requestBody.sourceImageBase64 = null;
         }
         if (selectedModel === 'flux-kontext-apps/portrait-series') {
           requestBody.background_color = portraitBackground;

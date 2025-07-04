@@ -256,7 +256,7 @@ export default function ImageGenerator() {
       setError('');
       setGeneratedImages([]);
       try {
-        // Upload image to S3 (reuse your existing upload logic)
+        // Convert sourceImage to base64
         const convertToBase64 = (file) => {
           return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -268,42 +268,29 @@ export default function ImageGenerator() {
             reader.onerror = (error) => reject(error);
           });
         };
+        
         const base64Image = await convertToBase64(sourceImage);
-        // Call your backend to upload to S3 and get the URL (reuse your existing endpoint)
-        const uploadResponse = await fetch(`${API_URL}/api/upload-image`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ imageBase64: base64Image })
-        });
-        if (!uploadResponse.ok) {
-          const errorData = await uploadResponse.json();
-          throw new Error(errorData.error || 'Failed to upload image');
-        }
-        const { s3Url } = await uploadResponse.json();
-        // Call Replicate with bria/expand-image
-        const replicateResponse = await fetch(`${API_URL}/api/expand-image`, {
+        
+        // Use the same endpoint as regular image generation but with expand-specific parameters
+        const response = await fetch(`${API_URL}/generate-image`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
-            model: 'bria/expand-image',
-            sync: true,
-            image: s3Url,
-            aspect_ratio: selectedAspectRatio,
-            preserve_alpha: true,
-            content_moderation: false
+            generation_type: 'expand',
+            sourceImageBase64: base64Image,
+            aspectRatio: selectedAspectRatio
           })
         });
-        if (!replicateResponse.ok) {
-          const errorData = await replicateResponse.json();
+
+        if (!response.ok) {
+          const errorData = await response.json();
           throw new Error(errorData.error || 'Failed to expand image');
         }
-        const data = await replicateResponse.json();
+
+        const data = await response.json();
         setGeneratedImages(data.images || [data]);
         setRefreshTrigger(prev => prev + 1);
       } catch (err) {

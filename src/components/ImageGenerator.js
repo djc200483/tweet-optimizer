@@ -600,6 +600,10 @@ export default function ImageGenerator() {
     const newType = e.target.value;
     setGenerationType(newType);
     
+    // Reset enhance and expand modes when changing generation type
+    setIsEnhanceMode(false);
+    setIsExpandMode(false);
+    
     // If switching to image-to-image and current model isn't supported, switch to first supported model
     if (newType === 'image-to-image' && !imageToImageModels.some(model => model.value === selectedModel)) {
       setSelectedModel(imageToImageModels[0].value);
@@ -957,14 +961,15 @@ export default function ImageGenerator() {
               </div>
               {isGenerationTypeDropdownOpen && (
                 <div className="model-dropdown">
-                  <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Text to Image</div>
-                  <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); }}>Image to Image</div>
-                  <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); }}>Image to Prompt</div>
+                  <div className="model-option" onClick={() => { setGenerationType('text-to-image'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); setIsExpandMode(false); }}>Text to Image</div>
+                  <div className="model-option" onClick={() => { setGenerationType('image-to-image'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); setIsExpandMode(false); }}>Image to Image</div>
+                  <div className="model-option" onClick={() => { setGenerationType('image-to-prompt'); setIsGenerationTypeDropdownOpen(false); setIsEnhanceMode(false); setIsExpandMode(false); }}>Image to Prompt</div>
                   <div className="model-option" onClick={() => { 
                     setGenerationType('image-to-video'); 
                     setSelectedModel('bytedance/seedance-1-lite');
                     setIsGenerationTypeDropdownOpen(false); 
                     setIsEnhanceMode(false); 
+                    setIsExpandMode(false);
                   }}>Image to Video</div>
                 </div>
               )}
@@ -1032,8 +1037,8 @@ export default function ImageGenerator() {
             </div>
           )}
 
-          {/* Show prompt only when not in enhance mode */}
-          {generationType !== 'image-to-prompt' && !isEnhanceMode && (
+          {/* Show prompt only when not in enhance mode or expand mode */}
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && (
             <div className="toolbar-section">
               <h3>Prompt</h3>
               <div className="prompt-input-wrapper">
@@ -1106,8 +1111,8 @@ export default function ImageGenerator() {
             </>
           )}
 
-          {/* Show model selection only when not in enhance mode and not video generation */}
-          {generationType !== 'image-to-prompt' && !isEnhanceMode && generationType !== 'image-to-video' && (
+          {/* Show model selection only when not in enhance mode, expand mode, and not video generation */}
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && generationType !== 'image-to-video' && (
             <div className="toolbar-section">
               <label className="toolbar-label">Model</label>
               <div className="model-select-container">
@@ -1209,6 +1214,42 @@ export default function ImageGenerator() {
             </>
           )}
 
+          {/* Show expand-specific controls when in expand mode */}
+          {isExpandMode && (
+            <>
+              <div className="toolbar-section">
+                <label className="toolbar-label" style={{ display: 'block', textAlign: 'center', width: '100%' }}>Model</label>
+                <div className="model-select-header" style={{ background: '#23242b', color: '#aaa', cursor: 'not-allowed' }}>
+                  bria
+                </div>
+              </div>
+              <div className="toolbar-section">
+                <label className="toolbar-label">Aspect Ratio</label>
+                <div className="model-select-container">
+                  <div
+                    className="model-select-header"
+                    onClick={() => setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen)}
+                  >
+                    {expandAspectRatios.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
+                  </div>
+                  {isAspectRatioDropdownOpen && (
+                    <div className="model-dropdown">
+                      {expandAspectRatios.map(ratio => (
+                        <div
+                          key={ratio.value}
+                          className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
+                          onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
+                        >
+                          {ratio.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
           {generationType === 'image-to-prompt' && (
             <div className="toolbar-section">
               <h3>Source Image</h3>
@@ -1270,8 +1311,8 @@ export default function ImageGenerator() {
             </div>
           )}
 
-          {/* Show aspect ratio only when not in enhance mode and not video generation */}
-          {generationType !== 'image-to-prompt' && !isEnhanceMode && generationType !== 'image-to-video' && (
+          {/* Show aspect ratio only when not in enhance mode, expand mode, and not video generation */}
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && generationType !== 'image-to-video' && (
             <div className="toolbar-section">
               <label className="toolbar-label">Aspect Ratio</label>
               <div className="model-select-container">
@@ -1393,6 +1434,8 @@ export default function ImageGenerator() {
               <LoadingSpinner size="inline" />
             ) : isEnhanceMode ? (
               'Enhance'
+            ) : isExpandMode ? (
+              'Expand'
             ) : generationType === 'image-to-video' ? (
               'Generate Video'
             ) : (

@@ -675,9 +675,10 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       throw new Error('Replicate API Token is not configured');
     }
 
-    // Only require prompt for models that need it
+    // Only require prompt for models that need it, or for expand generation type
     const modelNeedsPrompt = !['flux-kontext-apps/portrait-series'].includes(model);
-    if (modelNeedsPrompt && !prompt) {
+    const isExpandGeneration = req.body.generation_type === 'expand';
+    if (modelNeedsPrompt && !prompt && !isExpandGeneration) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
@@ -760,8 +761,18 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       delete replicateInput.prompt;
     }
 
+    // Handle expand generation type
+    if (isExpandGeneration) {
+      replicateInput = {
+        image: imageS3Url,
+        aspect_ratio: aspectRatio,
+        preserve_alpha: true,
+        content_moderation: false
+      };
+    }
+
     const predictionInput = {
-      version: model || 'black-forest-labs/flux-schnell',
+      version: isExpandGeneration ? 'bria/expand-image' : (model || 'black-forest-labs/flux-schnell'),
       input: replicateInput
     };
 

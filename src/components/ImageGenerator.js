@@ -966,21 +966,21 @@ export default function ImageGenerator() {
           {/* Enhance checkbox - only show when Image to Image is selected */}
           {generationType === 'image-to-image' && (
             <div className="toolbar-section" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', marginRight: '12px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', marginRight: '12px', fontSize: '13px' }}>
                 <input
                   type="checkbox"
                   checked={isEnhanceMode}
                   onChange={e => setIsEnhanceMode(e.target.checked)}
-                  style={{ marginRight: 8 }}
+                  style={{ marginRight: 6, transform: 'scale(0.9)' }}
                 />
                 Enhance
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', marginRight: '12px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', marginRight: '12px', fontSize: '13px' }}>
                 <input
                   type="checkbox"
                   checked={isExpandMode}
                   onChange={e => setIsExpandMode(e.target.checked)}
-                  style={{ marginRight: 8 }}
+                  style={{ marginRight: 6, transform: 'scale(0.9)' }}
                 />
                 Expand
               </label>

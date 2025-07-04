@@ -249,7 +249,24 @@ export default function ImageGenerator() {
 
       if (generationType === 'image-to-image') {
         requestBody.generation_type = 'image-to-image';
-        requestBody.source_image = sourceImage;
+        // Convert sourceImage to base64 if present
+        if (sourceImage) {
+          const convertToBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => {
+                // Remove the data:image/jpeg;base64, prefix
+                const base64String = reader.result.split(',')[1];
+                resolve(base64String);
+              };
+              reader.onerror = (error) => reject(error);
+            });
+          };
+          requestBody.source_image = await convertToBase64(sourceImage);
+        } else {
+          requestBody.source_image = null;
+        }
         if (selectedModel === 'flux-kontext-apps/portrait-series') {
           requestBody.background_color = portraitBackground;
         }

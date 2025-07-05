@@ -342,8 +342,38 @@ export default function ImageGenerator() {
           requestBody.background_color = portraitBackground;
         }
       } else if (generationType === 'image-to-prompt') {
-        requestBody.generation_type = 'image-to-prompt';
-        requestBody.source_image = sourceImage;
+        // Handle image-to-prompt separately - it goes to OpenAI, not Replicate
+        const convertToBase64 = (file) => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+              const base64String = reader.result.split(',')[1];
+              resolve(base64String);
+            };
+            reader.onerror = (error) => reject(error);
+          });
+        };
+        
+        const base64Image = await convertToBase64(sourceImage);
+        
+        const analyzeResponse = await fetch(`${API_URL}/analyze-image`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ imageBase64: base64Image })
+        });
+
+        if (!analyzeResponse.ok) {
+          const errorData = await analyzeResponse.json();
+          throw new Error(errorData.error || 'Failed to analyze image');
+        }
+
+        const analyzeData = await analyzeResponse.json();
+        setGeneratedPrompt(analyzeData.prompt);
+        return; // Exit early, don't continue to Replicate
       } else if (generationType === 'image-to-video') {
         // Handle video generation
         await handleVideoGeneration();

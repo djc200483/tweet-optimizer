@@ -308,11 +308,15 @@ export default function ImageGenerator() {
 
     try {
       let requestBody = {
-        prompt: prompt.trim(),
         model: selectedModel,
         aspectRatio: selectedAspectRatio,
         style: selectedStyle
       };
+
+      // Only add prompt for non-image-to-prompt generation types
+      if (generationType !== 'image-to-prompt') {
+        requestBody.prompt = prompt.trim();
+      }
 
       if (generationType === 'image-to-image') {
         requestBody.generation_type = 'image-to-image';

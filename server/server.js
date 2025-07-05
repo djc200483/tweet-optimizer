@@ -675,10 +675,12 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       throw new Error('Replicate API Token is not configured');
     }
 
-    // Only require prompt for models that need it, or for expand generation type
+    // Only require prompt for models that need it, or for expand/image-to-prompt/enhance generation types
     const modelNeedsPrompt = !['flux-kontext-apps/portrait-series'].includes(model);
     const isExpandGeneration = req.body.generation_type === 'expand';
-    if (modelNeedsPrompt && !prompt && !isExpandGeneration) {
+    const isImageToPromptGeneration = req.body.generation_type === 'image-to-prompt';
+    const isEnhanceGeneration = req.body.generation_type === 'enhance';
+    if (modelNeedsPrompt && !prompt && !isExpandGeneration && !isImageToPromptGeneration && !isEnhanceGeneration) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 

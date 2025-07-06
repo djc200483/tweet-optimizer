@@ -72,7 +72,8 @@ export default function ImageGenerator() {
     { value: 'google/imagen-4', label: 'Imagen 4', description: 'Top-tier photorealism, sharp detail and typography.' },
     { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' },
     { value: 'recraft-ai/recraft-v3', label: 'Recraft V3', description: 'High-quality image generation with style control.' },
-    { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' }
+    { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' },
+    { value: 'bytedance/seedream-3', label: 'bytedance 2K', description: '2K image generation' }
   ];
 
   const imageToImageModels = [
@@ -165,7 +166,17 @@ export default function ImageGenerator() {
     'google/imagen-4': imagen4AspectRatios,
     'minimax/image-01': minimaxAspectRatios,
     'recraft-ai/recraft-v3': recraftAspectRatios,
-    'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe': [{ value: '1:1', label: 'Square (1:1)' }]
+    'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe': [{ value: '1:1', label: 'Square (1:1)' }],
+    'bytedance/seedream-3': [
+      { value: '1:1', label: 'Square (1:1)' },
+      { value: '3:4', label: 'Portrait (3:4)' },
+      { value: '4:3', label: 'Standard (4:3)' },
+      { value: '16:9', label: 'Widescreen (16:9)' },
+      { value: '9:16', label: 'Vertical Video (9:16)' },
+      { value: '2:3', label: 'Portrait Classic (2:3)' },
+      { value: '3:2', label: 'Classic Photo (3:2)' },
+      { value: '21:9', label: 'Ultrawide (21:9)' }
+    ]
   };
 
   const defaultModel = 'black-forest-labs/flux-schnell';

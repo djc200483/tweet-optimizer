@@ -17,8 +17,8 @@ export default function FloatingStars() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Star class
-    class Star {
+    // EchoWave class (replaces Star)
+    class EchoWave {
       constructor() {
         this.reset();
       }
@@ -26,78 +26,58 @@ export default function FloatingStars() {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 0.85 + 0.25;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-        this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.18 + 0.5;
-        this.twinkleSpeed = Math.random() * 0.002 + 0.001;
-        this.twinkleOffset = Math.random() * Math.PI * 2;
+        this.baseRadius = Math.random() * 8 + 8; // starting radius
+        this.maxRadius = Math.random() * 40 + 60; // how far the wave expands
+        this.radius = this.baseRadius;
+        this.speed = Math.random() * 0.4 + 0.2; // how fast the wave expands
+        this.opacity = Math.random() * 0.2 + 0.25;
+        this.color = 'rgba(120,180,255,1)';
+        this.waveWidth = Math.random() * 2.5 + 1.5;
+        this.delay = Math.random() * 2000; // ms delay before starting
+        this.startTime = Date.now() + this.delay;
       }
 
       update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        
-        // Very subtle twinkle effect
-        this.opacity = 0.5 + 0.12 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset);
-
-        // Wrap around edges
-        if (this.x < -10) this.x = canvas.width + 10;
-        if (this.x > canvas.width + 10) this.x = -10;
-        if (this.y < -10) this.y = canvas.height + 10;
-        if (this.y > canvas.height + 10) this.y = -10;
+        const now = Date.now();
+        if (now < this.startTime) return; // wait for delay
+        this.radius += this.speed;
+        if (this.radius > this.maxRadius) {
+          this.reset();
+        }
       }
 
       draw() {
+        const now = Date.now();
+        if (now < this.startTime) return;
         ctx.save();
-        ctx.globalAlpha = this.opacity;
-        
-        // Create gradient for star glow - balanced
-        const gradient = ctx.createRadialGradient(
-          this.x, this.y, 0,
-          this.x, this.y, this.size * 1.9
-        );
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
-        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.4)');
-        gradient.addColorStop(0.7, 'rgba(100, 150, 255, 0.08)');
-        gradient.addColorStop(1, 'rgba(100, 150, 255, 0)');
-        
-        ctx.fillStyle = gradient;
+        // Fade out as it grows
+        const fade = Math.max(0, 1 - (this.radius - this.baseRadius) / (this.maxRadius - this.baseRadius));
+        ctx.globalAlpha = this.opacity * fade;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * 1.9, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Bright center - balanced
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.lineWidth = this.waveWidth;
+        ctx.strokeStyle = 'rgba(120,180,255,0.7)';
+        ctx.shadowColor = 'rgba(120,180,255,0.4)';
+        ctx.shadowBlur = 8;
+        ctx.stroke();
         ctx.restore();
       }
     }
 
-    // Create stars
-    const stars = [];
-    const numStars = Math.min(80, Math.floor((canvas.width * canvas.height) / 30000));
-    
-    console.log('Creating FloatingStars with', numStars, 'stars');
-    
-    for (let i = 0; i < numStars; i++) {
-      stars.push(new Star());
+    // Create echo waves (same logic as stars)
+    const waves = [];
+    const numWaves = Math.min(80, Math.floor((canvas.width * canvas.height) / 30000));
+    for (let i = 0; i < numWaves; i++) {
+      waves.push(new EchoWave());
     }
 
     // Animation loop
     const animate = () => {
-      // Clear canvas completely to make it transparent
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Update and draw stars
-      stars.forEach(star => {
-        star.update();
-        star.draw();
+      waves.forEach(wave => {
+        wave.update();
+        wave.draw();
       });
-      
       animationRef.current = requestAnimationFrame(animate);
     };
 

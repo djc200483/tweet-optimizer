@@ -102,7 +102,7 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
       <FloatingStars />
       <div className="home-description">
         <h2 style={{ fontSize: '2.8rem' }}>Welcome to EchoSphere</h2>
-        <p>An all-in-one AI platform for creating eye-catching images, engaging videos, and impactful written content</p>
+        <p>Your creative superpower. One AI platform to craft stunning visuals, scroll-stopping videos, and words that actually move people</p>
       </div>
       
       <div className="tab-content">

@@ -14,7 +14,7 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
 
   // Preload the video for better performance
   useEffect(() => {
-    const videoUrl = "https://echosphere-images.s3.eu-north-1.amazonaws.com/0711+(1).mp4";
+    const videoUrl = "https://echosphere-images.s3.eu-north-1.amazonaws.com/0711+(2).mp4";
     
     // Check if video is already cached
     const cachedVideo = sessionStorage.getItem('homeVideoCache');

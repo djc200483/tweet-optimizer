@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RandomGallery from './RandomGallery';
 import FeaturedGallery from './FeaturedGallery';
@@ -9,7 +9,41 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
   const [activeTab, setActiveTab] = useState(initialTab || 'imagery');
   const [expandedCard, setExpandedCard] = useState(null);
   const [hasLoggedOutUserClicked, setHasLoggedOutUserClicked] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const navigate = useNavigate();
+
+  // Preload the video for better performance
+  useEffect(() => {
+    const videoUrl = "https://echosphere-images.s3.eu-north-1.amazonaws.com/0711+(1).mp4";
+    
+    // Check if video is already cached
+    const cachedVideo = sessionStorage.getItem('homeVideoCache');
+    if (cachedVideo === videoUrl) {
+      setVideoLoaded(true);
+      return;
+    }
+
+    // Preload video
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.src = videoUrl;
+    
+    video.onloadedmetadata = () => {
+      setVideoLoaded(true);
+      // Cache the video URL in session storage
+      sessionStorage.setItem('homeVideoCache', videoUrl);
+    };
+
+    video.onerror = () => {
+      console.log('Video preload failed, will load normally');
+      setVideoLoaded(true);
+    };
+
+    return () => {
+      video.onloadedmetadata = null;
+      video.onerror = null;
+    };
+  }, []);
 
   const writtenFeatures = [
     {
@@ -142,13 +176,24 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
               marginLeft: 'auto',
               marginRight: 'auto'
             }}>
+              {!videoLoaded && (
+                <div style={{ 
+                  padding: '40px', 
+                  color: '#a0a0b0',
+                  fontSize: '1rem'
+                }}>
+                  Loading video...
+                </div>
+              )}
               <video
                 src="https://echosphere-images.s3.eu-north-1.amazonaws.com/0711+(1).mp4"
                 controls
+                preload="metadata"
                 style={{
                   width: '100%',
                   borderRadius: '12px',
-                  maxWidth: '100%'
+                  maxWidth: '100%',
+                  display: videoLoaded ? 'block' : 'none'
                 }}
               >
                 Your browser does not support the video tag.

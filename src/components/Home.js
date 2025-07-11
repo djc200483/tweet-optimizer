@@ -186,7 +186,7 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
                 </div>
               )}
               <video
-                src="https://echosphere-images.s3.eu-north-1.amazonaws.com/0711+(1).mp4"
+                src="https://echosphere-images.s3.eu-north-1.amazonaws.com/0711+(2).mp4"
                 controls
                 preload="metadata"
                 autoPlay

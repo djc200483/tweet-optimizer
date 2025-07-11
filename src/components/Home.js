@@ -129,6 +129,32 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
             <div className="visual-tools-flex">
               {renderFeatureCards(imageryFeatures, true)}
             </div>
+            
+            {/* Example Video */}
+            <div style={{ 
+              margin: '40px 0', 
+              textAlign: 'center',
+              background: 'rgba(30, 32, 40, 0.95)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '16px',
+              padding: '20px',
+              maxWidth: '800px',
+              marginLeft: 'auto',
+              marginRight: 'auto'
+            }}>
+              <video
+                src="https://echosphere-images.s3.eu-north-1.amazonaws.com/0711+(1).mp4"
+                controls
+                style={{
+                  width: '100%',
+                  borderRadius: '12px',
+                  maxWidth: '100%'
+                }}
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            
             <div className="featured-gallery-svg-title">
               <svg width="auto" height="40" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
                 <defs>

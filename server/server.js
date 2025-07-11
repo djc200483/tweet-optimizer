@@ -698,6 +698,62 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       imageS3Url = s3Result.s3Url;
     }
 
+    // Handle DALL-E 3 model specifically
+    if (model === 'openai/dall-e-3') {
+      // Size mapping function for DALL-E 3
+      const getDallE3Size = (aspectRatio) => {
+        switch(aspectRatio) {
+          case '1:1': return '1024x1024';
+          case '16:9': return '1792x1024';
+          case '9:16': return '1024x1792';
+          default: return '1024x1024';
+        }
+      };
+
+      // Use OpenAI API for DALL-E 3
+      const openaiResponse = await openai.images.generate({
+        model: "dall-e-3",
+        prompt: prompt,
+        n: 1, // DALL-E 3 only generates 1 image
+        size: getDallE3Size(aspectRatio),
+        quality: "hd", // Always HD as requested
+        style: req.body.style || "vivid" // Default to vivid, allow toggle
+      });
+      
+      // Process single image response
+      const imageUrl = openaiResponse.data[0].url;
+      
+      // Continue with existing S3 upload and database save workflow
+      const timestamp = new Date().getTime();
+      const key = `images/${userId}/${timestamp}-0.png`;
+      const s3Result = await uploadImageToS3(imageUrl, key);
+      if (!s3Result.success) {
+        console.error('Failed to upload to S3:', s3Result.error);
+        return res.status(500).json({ error: 'Failed to upload image to S3', details: s3Result.error });
+      }
+      
+      try {
+        const result = await db.query(
+          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+          [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio || '1:1']
+        );
+        
+        const processedImage = {
+          originalUrl: imageUrl,
+          s3Url: s3Result.s3Url,
+          id: result.rows[0].id
+        };
+        
+        console.log('=== DALL-E 3 image processing complete ===');
+        console.log('Processed image:', processedImage);
+        res.json({ images: [processedImage] });
+        return;
+      } catch (dbError) {
+        console.error('Database error:', dbError);
+        return res.status(500).json({ error: 'Failed to save to database' });
+      }
+    }
+
     // Build Replicate input
     let replicateInput = {};
     

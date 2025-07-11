@@ -73,7 +73,8 @@ export default function ImageGenerator() {
     { value: 'minimax/image-01', label: 'MiniMax 01', description: 'High Quality Text-to-image model' },
     { value: 'recraft-ai/recraft-v3', label: 'Recraft V3', description: 'High-quality image generation with style control.' },
     { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' },
-    { value: 'bytedance/seedream-3', label: 'bytedance 2K', description: '2K image generation' }
+    { value: 'bytedance/seedream-3', label: 'bytedance 2K', description: '2K image generation' },
+    { value: 'openai/dall-e-3', label: 'DALL-E 3', description: 'OpenAI\'s flagship image generator' }
   ];
 
   const imageToImageModels = [
@@ -176,6 +177,11 @@ export default function ImageGenerator() {
       { value: '2:3', label: 'Portrait Classic (2:3)' },
       { value: '3:2', label: 'Classic Photo (3:2)' },
       { value: '21:9', label: 'Ultrawide (21:9)' }
+    ],
+    'openai/dall-e-3': [
+      { value: '1:1', label: 'Square (1:1)' },
+      { value: '16:9', label: 'Widescreen (16:9)' },
+      { value: '9:16', label: 'Vertical Video (9:16)' }
     ]
   };
 
@@ -195,6 +201,9 @@ export default function ImageGenerator() {
   const [selectedStyle, setSelectedStyle] = useState('realistic_image');
   const [isStyleDropdownOpen, setIsStyleDropdownOpen] = useState(false);
   const [isSourceImageDropdownOpen, setIsSourceImageDropdownOpen] = useState(false);
+
+  // Add state for DALL-E 3 style
+  const [dallE3Style, setDallE3Style] = useState('vivid');
 
   // Add state for Expand mode
   const [isExpandMode, setIsExpandMode] = useState(false);
@@ -323,6 +332,11 @@ export default function ImageGenerator() {
         aspectRatio: selectedAspectRatio,
         style: selectedStyle
       };
+
+      // Add DALL-E 3 style parameter if DALL-E 3 is selected
+      if (selectedModel === 'openai/dall-e-3') {
+        requestBody.style = dallE3Style;
+      }
 
       // Only add prompt for non-image-to-prompt generation types
       if (generationType !== 'image-to-prompt') {
@@ -1444,6 +1458,47 @@ export default function ImageGenerator() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Show style toggle only for DALL-E 3 in text-to-image */}
+          {generationType === 'text-to-image' && selectedModel === 'openai/dall-e-3' && (
+            <div className="toolbar-section">
+              <h3>Style</h3>
+              <div className="style-toggle-container" style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  className={`style-toggle-button ${dallE3Style === 'vivid' ? 'active' : ''}`}
+                  onClick={() => setDallE3Style('vivid')}
+                  style={{
+                    padding: '8px 16px',
+                    border: '1px solid #444',
+                    borderRadius: '6px',
+                    background: dallE3Style === 'vivid' ? '#007bff' : '#2a2a2a',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Vivid
+                </button>
+                <button
+                  className={`style-toggle-button ${dallE3Style === 'natural' ? 'active' : ''}`}
+                  onClick={() => setDallE3Style('natural')}
+                  style={{
+                    padding: '8px 16px',
+                    border: '1px solid #444',
+                    borderRadius: '6px',
+                    background: dallE3Style === 'natural' ? '#007bff' : '#2a2a2a',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Natural
+                </button>
               </div>
             </div>
           )}

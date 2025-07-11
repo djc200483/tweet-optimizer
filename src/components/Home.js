@@ -189,6 +189,8 @@ export default function Home({ onSelectFeature, isLoggedIn, initialTab }) {
                 src="https://echosphere-images.s3.eu-north-1.amazonaws.com/0711+(1).mp4"
                 controls
                 preload="metadata"
+                autoPlay
+                muted
                 style={{
                   width: '100%',
                   borderRadius: '12px',

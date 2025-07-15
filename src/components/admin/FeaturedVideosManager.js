@@ -161,28 +161,20 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
   };
 
   const toggleVideoPlay = (videoId, index) => {
-    console.log('Toggle video play:', videoId, index);
     const videoElement = videoRefs.current[index];
-    console.log('Video element:', videoElement);
     
-    if (!videoElement) {
-      console.log('No video element found');
-      return;
-    }
+    if (!videoElement) return;
 
-    if (playingVideos.has(videoId)) {
-      console.log('Pausing video:', videoId);
-      videoElement.pause();
-      setPlayingVideos(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(videoId);
-        return newSet;
-      });
-    } else {
-      console.log('Playing video:', videoId);
-      videoElement.play();
-      setPlayingVideos(prev => new Set(prev).add(videoId));
-    }
+    videoElement.play();
+    setPlayingVideos(prev => new Set(prev).add(videoId));
+  };
+
+  const handleVideoEnded = (videoId) => {
+    setPlayingVideos(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(videoId);
+      return newSet;
+    });
   };
 
   if (!isOpen) return null;
@@ -294,37 +286,39 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
                     <video
                       ref={el => {
                         videoRefs.current[index] = el;
-                        console.log('Video ref set for index:', index, 'video:', video.id, 'element:', el);
                       }}
                       src={video.video_url}
                       muted
                       loop
+                      onEnded={() => handleVideoEnded(video.id)}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
-                    <button 
-                      className="video-play-button"
-                      onClick={() => toggleVideoPlay(video.id, index)}
-                      style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        background: 'rgba(0, 0, 0, 0.7)',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '40px',
-                        height: '40px',
-                        color: 'white',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 10
-                      }}
-                    >
-                      {playingVideos.has(video.id) ? '⏸️' : '▶️'}
-                    </button>
+                    {!playingVideos.has(video.id) && (
+                      <button 
+                        className="video-play-button"
+                        onClick={() => toggleVideoPlay(video.id, index)}
+                        style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          background: 'rgba(0, 0, 0, 0.4)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '40px',
+                          height: '40px',
+                          color: 'white',
+                          fontSize: '16px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          zIndex: 10
+                        }}
+                      >
+                        ▶️
+                      </button>
+                    )}
                   </div>
                   <div className="available-item-info">
                     <div className="available-item-prompt">{video.prompt}</div>

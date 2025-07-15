@@ -15,7 +15,7 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
   const [totalPages, setTotalPages] = useState(1);
   const [message, setMessage] = useState('');
   const [playingVideos, setPlayingVideos] = useState(new Set());
-  const videoRefs = useRef({});
+  const videoRefs = useRef([]);
 
   const fetchAvailableVideos = async (page = 1, search = '') => {
     try {
@@ -160,8 +160,8 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
     setMessage('Cache cleared successfully');
   };
 
-  const toggleVideoPlay = (videoId) => {
-    const videoElement = videoRefs.current[videoId];
+  const toggleVideoPlay = (videoId, index) => {
+    const videoElement = videoRefs.current[index];
     if (!videoElement) return;
 
     if (playingVideos.has(videoId)) {
@@ -279,12 +279,12 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
           </form>
 
           <div className="available-list">
-            {availableVideos.map(video => (
+            {availableVideos.map((video, index) => (
               <div key={video.id} className="available-item">
                 <div className="available-item-content">
                   <div className="available-item-preview">
                     <video
-                      ref={el => videoRefs.current[video.id] = el}
+                      ref={el => videoRefs.current[index] = el}
                       src={video.video_url}
                       muted
                       loop
@@ -292,7 +292,7 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
                     />
                     <button 
                       className="video-play-button"
-                      onClick={() => toggleVideoPlay(video.id)}
+                      onClick={() => toggleVideoPlay(video.id, index)}
                       style={{
                         position: 'absolute',
                         top: '50%',

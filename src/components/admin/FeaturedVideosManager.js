@@ -161,10 +161,17 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
   };
 
   const toggleVideoPlay = (videoId, index) => {
+    console.log('Toggle video play:', videoId, index);
     const videoElement = videoRefs.current[index];
-    if (!videoElement) return;
+    console.log('Video element:', videoElement);
+    
+    if (!videoElement) {
+      console.log('No video element found');
+      return;
+    }
 
     if (playingVideos.has(videoId)) {
+      console.log('Pausing video:', videoId);
       videoElement.pause();
       setPlayingVideos(prev => {
         const newSet = new Set(prev);
@@ -172,6 +179,7 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
         return newSet;
       });
     } else {
+      console.log('Playing video:', videoId);
       videoElement.play();
       setPlayingVideos(prev => new Set(prev).add(videoId));
     }
@@ -282,9 +290,12 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
             {availableVideos.map((video, index) => (
               <div key={video.id} className="available-item">
                 <div className="available-item-content">
-                  <div className="available-item-preview">
+                  <div className="available-item-preview" style={{ position: 'relative' }}>
                     <video
-                      ref={el => videoRefs.current[index] = el}
+                      ref={el => {
+                        videoRefs.current[index] = el;
+                        console.log('Video ref set for index:', index, 'video:', video.id, 'element:', el);
+                      }}
                       src={video.video_url}
                       muted
                       loop

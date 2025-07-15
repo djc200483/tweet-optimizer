@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import './Admin.css';
 
@@ -14,6 +14,8 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [message, setMessage] = useState('');
+  const [playingVideos, setPlayingVideos] = useState(new Set());
+  const videoRefs = useRef({});
 
   const fetchAvailableVideos = async (page = 1, search = '') => {
     try {
@@ -158,6 +160,23 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
     setMessage('Cache cleared successfully');
   };
 
+  const toggleVideoPlay = (videoId) => {
+    const videoElement = videoRefs.current[videoId];
+    if (!videoElement) return;
+
+    if (playingVideos.has(videoId)) {
+      videoElement.pause();
+      setPlayingVideos(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(videoId);
+        return newSet;
+      });
+    } else {
+      videoElement.play();
+      setPlayingVideos(prev => new Set(prev).add(videoId));
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -265,11 +284,36 @@ export default function FeaturedVideosManager({ isOpen, onClose, onSave }) {
                 <div className="available-item-content">
                   <div className="available-item-preview">
                     <video
+                      ref={el => videoRefs.current[video.id] = el}
                       src={video.video_url}
                       muted
                       loop
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
+                    <button 
+                      className="video-play-button"
+                      onClick={() => toggleVideoPlay(video.id)}
+                      style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        background: 'rgba(0, 0, 0, 0.7)',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '40px',
+                        height: '40px',
+                        color: 'white',
+                        fontSize: '16px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 10
+                      }}
+                    >
+                      {playingVideos.has(video.id) ? '⏸️' : '▶️'}
+                    </button>
                   </div>
                   <div className="available-item-info">
                     <div className="available-item-prompt">{video.prompt}</div>

@@ -359,7 +359,7 @@
   flex-direction: column;
   height: calc(100vh - 48px);
   box-sizing: border-box;
-  width: 300px;
+  width: 380px;
   padding: 0 16px 0 0;
 }
 
@@ -466,6 +466,7 @@
   overflow-x: hidden;
   box-sizing: border-box;
   position: relative;
+  padding-left: 20px;
   
   /* Custom scrollbar styling */
   scrollbar-width: none; /* Firefox */

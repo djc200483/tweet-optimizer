@@ -359,7 +359,7 @@
   flex-direction: column;
   height: calc(100vh - 48px);
   box-sizing: border-box;
-  width: 380px;
+  width: 300px;
   padding: 0 16px 0 0;
 }
 

@@ -256,7 +256,7 @@ export default function ImageGenerator() {
   }, []);
 
   const handleGenerateWithFlux = async () => {
-    if (!prompt.trim() && generationType !== 'image-to-prompt' && !isExpandMode) {
+    if (!prompt.trim() && generationType !== 'image-to-prompt' && !isExpandMode && !isEnhanceMode) {
       setError('Please enter a prompt');
       return;
     }

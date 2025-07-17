@@ -322,6 +322,65 @@ export default function ImageGenerator() {
       return;
     }
 
+    if (generationType === 'image-to-image' && isEnhanceMode) {
+      setIsGenerateLoading(true);
+      setError('');
+      setEnhancedImage(null);
+      setOriginalS3(null);
+      setEnhancedS3(null);
+      setImagesLoaded(false);
+      try {
+        // Convert sourceImage to base64
+        const convertToBase64 = (file) => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+              const base64String = reader.result.split(',')[1];
+              resolve(base64String);
+            };
+            reader.onerror = (error) => reject(error);
+          });
+        };
+        
+        const base64Image = await convertToBase64(sourceImage);
+        
+        // Call the enhance-image endpoint
+        const response = await fetch(`${API_URL}/enhance-image`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            imageBase64: base64Image,
+            scale,
+            face_enhance: faceEnhance
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to enhance image');
+        }
+
+        const data = await response.json();
+        setOriginalS3(data.original);
+        setEnhancedS3(data.enhanced);
+        setEnhancedImage(data.enhanced);
+      } catch (err) {
+        console.error('Enhance error:', err);
+        let msg = err.message || 'Failed to enhance image.';
+        if (msg.includes('has a total number of pixels') && msg.includes('Resize input image and try again')) {
+          msg = 'Image must have Square Dimensions';
+        }
+        setError(msg);
+      } finally {
+        setIsGenerateLoading(false);
+      }
+      return;
+    }
+
     setIsGenerateLoading(true);
     setError('');
     setGeneratedImages([]);

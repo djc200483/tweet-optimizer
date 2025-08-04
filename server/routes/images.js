@@ -262,11 +262,11 @@ router.get('/video-status/:predictionId', authMiddleware, async (req, res) => {
       
       const s3VideoUrl = s3Result.s3Url;
       
-      // Save to database
-      const result = await db.query(
-        'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-        [req.user.id, prediction.input.prompt, prediction.input.image, prediction.input.image, '16:9', s3VideoUrl, false]
-      );
+             // Save to database
+       const result = await db.query(
+         'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+         [req.user.id, prediction.input.prompt, prediction.input.image || null, prediction.input.image || null, '16:9', s3VideoUrl, false]
+       );
       
       res.json({
         status: 'completed',

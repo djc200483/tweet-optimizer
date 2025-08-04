@@ -147,7 +147,7 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 });
 
-// Generate video from image
+// Generate video from image or text
 router.post('/generate-video', authMiddleware, async (req, res) => {
   try {
     const { imageUrl, prompt, cameraFixed = false } = req.body;
@@ -160,9 +160,14 @@ router.post('/generate-video', authMiddleware, async (req, res) => {
       });
     }
     
-    // Validate required fields
-    if (!imageUrl || !prompt) {
-      return res.status(400).json({ error: 'Image URL and prompt are required' });
+    // Validate required fields - for text-to-video, only prompt is required
+    if (!prompt) {
+      return res.status(400).json({ error: 'Prompt is required' });
+    }
+    
+    // For image-to-video, imageUrl is required
+    if (imageUrl && !prompt) {
+      return res.status(400).json({ error: 'Prompt is required' });
     }
     
     // Handle image upload if it's a base64 string (File object from frontend)
@@ -182,16 +187,23 @@ router.post('/generate-video', authMiddleware, async (req, res) => {
     // Start video generation
     console.log(`Starting video generation for user ${req.user.id}`);
     
+    // Prepare input for Replicate API
+    const replicateInput = {
+      fps: 24,
+      prompt: prompt,
+      duration: 5,
+      resolution: "720p",
+      camera_fixed: cameraFixed
+    };
+    
+    // Add image only if provided (for image-to-video)
+    if (processedImageUrl) {
+      replicateInput.image = processedImageUrl;
+    }
+    
     const prediction = await replicate.predictions.create({
       version: "bytedance/seedance-1-lite",
-      input: {
-        fps: 24,
-        image: processedImageUrl,
-        prompt: prompt,
-        duration: 5,
-        resolution: "720p",
-        camera_fixed: cameraFixed
-      },
+      input: replicateInput,
     });
     
     // Return prediction ID for polling

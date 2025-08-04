@@ -136,8 +136,8 @@ router.post('/', authMiddleware, async (req, res) => {
     const { prompt, imageUrl, s3Key, isPrivate = false, videoUrl = null } = req.body;
     
     const result = await db.query(
-      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [req.user.id, prompt, imageUrl, s3Key, videoUrl, isPrivate]
+      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, video_url, is_private, model) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [req.user.id, prompt, imageUrl, s3Key, videoUrl, isPrivate, req.body.model || null]
     );
     
     res.status(201).json(result.rows[0]);
@@ -272,8 +272,8 @@ router.get('/video-status/:predictionId', authMiddleware, async (req, res) => {
        const aspectRatio = prediction.input.aspect_ratio || '16:9';
        
        const result = await db.query(
-          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-          [req.user.id, prediction.input.prompt, imageUrl, s3Url, aspectRatio, s3VideoUrl, false]
+          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, video_url, is_private, model) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+          [req.user.id, prediction.input.prompt, imageUrl, s3Url, aspectRatio, s3VideoUrl, false, 'bytedance/seedance-1-lite']
         );
       
       res.json({

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
@@ -133,4 +134,13 @@ async function migrate(direction = 'up') {
 }
 
 // Export the migrate function
-module.exports = migrate; 
+module.exports = migrate;
+
+// Execute migration if this script is run directly
+if (require.main === module) {
+  const direction = process.argv[2] || 'up';
+  migrate(direction).catch(error => {
+    console.error('Migration failed:', error);
+    process.exit(1);
+  });
+} 

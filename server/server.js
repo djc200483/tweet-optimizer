@@ -734,8 +734,8 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       
       try {
         const result = await db.query(
-          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-          [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio || '1:1']
+          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, model) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+          [userId, prompt, imageUrl, s3Result.s3Url, aspectRatio || '1:1', model]
         );
         
         const processedImage = {
@@ -909,9 +909,9 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       }
       try {
         const result = await db.query(
-          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, model) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
           [userId, prompt || 'Image to Image generation', imageUrl, s3Result.s3Url, 
-           model === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe' ? '1:1' : (aspectRatio || '3:4')]
+           model === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe' ? '1:1' : (aspectRatio || '3:4'), model]
         );
         return {
           originalUrl: imageUrl,
@@ -958,7 +958,7 @@ app.get('/api/images', authMiddleware, async (req, res) => {
 
     // Build the query based on privacy setting
     let query = `
-      SELECT id, prompt, image_url, s3_url, aspect_ratio, created_at, is_private
+      SELECT id, prompt, image_url, s3_url, aspect_ratio, created_at, is_private, model
       FROM generated_images
       WHERE user_id = $1
     `;
@@ -986,7 +986,7 @@ app.get('/api/images', authMiddleware, async (req, res) => {
 app.get('/api/featured-gallery', async (req, res) => {
   try {
     const result = await db.query(`
-      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.aspect_ratio, gi.created_at,
+      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.aspect_ratio, gi.created_at, gi.model,
              u.x_handle as creator_handle, fgi.position
       FROM featured_gallery_images fgi
       JOIN generated_images gi ON fgi.image_id = gi.id
@@ -1006,7 +1006,7 @@ app.get('/api/featured-gallery', async (req, res) => {
 app.get('/api/featured-videos', async (req, res) => {
   try {
     const result = await db.query(`
-      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.video_url, gi.aspect_ratio, gi.created_at,
+      SELECT gi.id, gi.prompt, gi.image_url, gi.s3_url, gi.video_url, gi.aspect_ratio, gi.created_at, gi.model,
              u.x_handle as creator_handle, fvi.position
       FROM featured_videos_items fvi
       JOIN generated_images gi ON fvi.image_id = gi.id
@@ -1088,8 +1088,8 @@ app.post('/enhance-image', authMiddleware, async (req, res) => {
     }
     // Save to database (like other generated images)
     const dbResult = await db.query(
-      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [userId, '[ENHANCE]', enhancedUrl, enhS3Result.s3Url, 'original']
+      'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, model) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [userId, '[ENHANCE]', enhancedUrl, enhS3Result.s3Url, 'original', 'nightmareai/real-esrgan']
     );
     res.json({
       original: origS3Result.s3Url,

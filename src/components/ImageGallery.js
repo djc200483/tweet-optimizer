@@ -694,6 +694,12 @@ export default function ImageGallery({ userId, onUsePrompt, refreshTrigger }) {
                   <span className="metadata-label">Aspect Ratio</span>
                   <span className="metadata-value">{selectedImage.aspect_ratio}</span>
                 </div>
+                {selectedImage.model && (
+                  <div className="metadata-item">
+                    <span className="metadata-label">Model</span>
+                    <span className="metadata-value">{selectedImage.model}</span>
+                  </div>
+                )}
                 {selectedImage.video_url && (
                   <div className="metadata-item">
                     <span className="metadata-label">Type</span>

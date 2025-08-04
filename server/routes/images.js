@@ -268,7 +268,10 @@ router.get('/video-status/:predictionId', authMiddleware, async (req, res) => {
        const imageUrl = prediction.input.image || 'text-to-video-generation';
        const s3Url = prediction.input.image || 'text-to-video-generation';
        
-               const result = await db.query(
+       // Get aspect ratio from prediction input (default to '16:9' if not present)
+       const aspectRatio = prediction.input.aspect_ratio || '16:9';
+       
+       const result = await db.query(
           'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
           [req.user.id, prediction.input.prompt, imageUrl, s3Url, aspectRatio, s3VideoUrl, false]
         );

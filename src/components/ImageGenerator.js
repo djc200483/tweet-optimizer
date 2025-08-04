@@ -271,6 +271,11 @@ export default function ImageGenerator() {
       return;
     }
 
+    if (generationType === 'text-to-video' && !prompt.trim()) {
+      setError('Please enter a prompt for video generation');
+      return;
+    }
+
     if (generationType === 'image-to-image' && isExpandMode) {
       setIsGenerateLoading(true);
       setError('');
@@ -462,6 +467,10 @@ export default function ImageGenerator() {
         // Handle video generation
         await handleVideoGeneration();
         return;
+      } else if (generationType === 'text-to-video') {
+        // Handle text-to-video generation
+        await handleTextToVideoGeneration();
+        return;
       } else {
         requestBody.generation_type = 'text-to-image';
       }
@@ -564,6 +573,55 @@ export default function ImageGenerator() {
     }
   };
 
+  const handleTextToVideoGeneration = async () => {
+    setIsVideoGenerationLoading(true);
+    setError('');
+    setCurrentVideoStep(0);
+    setVideoProgress(0);
+    setVideoStepText(videoSteps[0].text);
+
+    try {
+      // Step 1: Initializing video generation (0-25%)
+      setCurrentVideoStep(1);
+      setVideoProgress(15);
+      setVideoStepText(videoSteps[1].text);
+
+      // Start text-to-video generation
+      const response = await fetch(`${API_URL}/api/images/generate-video`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          prompt: prompt.trim()
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to start video generation');
+      }
+
+      const data = await response.json();
+      setVideoPredictionId(data.prediction_id);
+      setVideoRemaining(data.remaining);
+      setVideoProgress(25);
+
+      // Step 2: Start polling for status (25-75%)
+      setCurrentVideoStep(2);
+      setVideoStepText(videoSteps[2].text);
+      pollVideoStatus(data.prediction_id);
+    } catch (err) {
+      console.error('Text-to-video generation error:', err);
+      setError(err.message || 'Failed to start video generation');
+      setIsVideoGenerationLoading(false);
+      setCurrentVideoStep(0);
+      setVideoProgress(0);
+      setVideoStepText('');
+    }
+  };
+
   const pollVideoStatus = async (predictionId) => {
     let pollCount = 0;
     const pollInterval = setInterval(async () => {
@@ -656,7 +714,7 @@ export default function ImageGenerator() {
 
   // Load remaining video generations on component mount
   useEffect(() => {
-    if (token && generationType === 'image-to-video') {
+    if (token && (generationType === 'image-to-video' || generationType === 'text-to-video')) {
       getRemainingVideoGenerations();
     }
   }, [token, generationType]);
@@ -1062,7 +1120,7 @@ export default function ImageGenerator() {
                 className="model-select-header"
                 onClick={() => setIsGenerationTypeDropdownOpen(!isGenerationTypeDropdownOpen)}
               >
-                {generationType === 'text-to-image' ? 'Text to Image' : generationType === 'image-to-image' ? 'Image to Image' : generationType === 'image-to-prompt' ? 'Image to Prompt' : 'Image to Video'}
+                {generationType === 'text-to-image' ? 'Text to Image' : generationType === 'image-to-image' ? 'Image to Image' : generationType === 'image-to-prompt' ? 'Image to Prompt' : generationType === 'image-to-video' ? 'Image to Video' : 'Text to Video'}
               </div>
               {isGenerationTypeDropdownOpen && (
                 <div className="model-dropdown">
@@ -1076,6 +1134,13 @@ export default function ImageGenerator() {
                     setIsEnhanceMode(false); 
                     setIsExpandMode(false);
                   }}>Image to Video</div>
+                  <div className="model-option" onClick={() => { 
+                    setGenerationType('text-to-video'); 
+                    setSelectedModel('bytedance/seedance-1-lite');
+                    setIsGenerationTypeDropdownOpen(false); 
+                    setIsEnhanceMode(false); 
+                    setIsExpandMode(false);
+                  }}>Text to Video</div>
                 </div>
               )}
             </div>
@@ -1216,8 +1281,32 @@ export default function ImageGenerator() {
             </>
           )}
 
+          {/* Text-to-Video controls */}
+          {generationType === 'text-to-video' && (
+            <div className="toolbar-section">
+              <div className="video-info">
+                <div className="video-remaining">
+                  Remaining videos today: {videoRemaining}/3
+                </div>
+                {videoPredictionId && (
+                  <div className="video-progress">
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill" 
+                        style={{ width: `${videoProgress}%` }}
+                      ></div>
+                    </div>
+                    <div className="progress-text">
+                      {videoStepText} {Math.round(videoProgress)}%
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Show model selection only when not in enhance mode, expand mode, and not video generation */}
-          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && generationType !== 'image-to-video' && (
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && generationType !== 'image-to-video' && generationType !== 'text-to-video' && (
             <div className="toolbar-section">
               <label className="toolbar-label">Model</label>
               <div className="model-select-container">
@@ -1275,7 +1364,7 @@ export default function ImageGenerator() {
           )}
 
           {/* Show locked model for video generation */}
-          {generationType === 'image-to-video' && (
+          {(generationType === 'image-to-video' || generationType === 'text-to-video') && (
             <div className="toolbar-section">
               <label className="toolbar-label">Model</label>
               <div className="model-select-header" style={{ background: '#23242b', color: '#aaa', cursor: 'not-allowed' }}>
@@ -1417,7 +1506,7 @@ export default function ImageGenerator() {
           )}
 
           {/* Show aspect ratio only when not in enhance mode, expand mode, and not video generation */}
-          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && generationType !== 'image-to-video' && (
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && generationType !== 'image-to-video' && generationType !== 'text-to-video' && (
             <div className="toolbar-section">
               <label className="toolbar-label">Aspect Ratio</label>
               <div className="model-select-container">
@@ -1572,7 +1661,9 @@ export default function ImageGenerator() {
               (isEnhanceMode && !sourceImage) ||
               (generationType === 'image-to-video' && !sourceImage) ||
               (generationType === 'image-to-video' && !prompt.trim()) ||
-              (generationType === 'image-to-video' && videoRemaining === 0)
+              (generationType === 'image-to-video' && videoRemaining === 0) ||
+              (generationType === 'text-to-video' && !prompt.trim()) ||
+              (generationType === 'text-to-video' && videoRemaining === 0)
             }
             className="generate-flux-button"
           >
@@ -1582,7 +1673,7 @@ export default function ImageGenerator() {
               'Enhance'
             ) : isExpandMode ? (
               'Expand'
-            ) : generationType === 'image-to-video' ? (
+            ) : (generationType === 'image-to-video' || generationType === 'text-to-video') ? (
               'Generate Video'
             ) : (
               'Generate'

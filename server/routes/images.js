@@ -150,7 +150,7 @@ router.post('/', authMiddleware, async (req, res) => {
 // Generate video from image or text
 router.post('/generate-video', authMiddleware, async (req, res) => {
   try {
-    const { imageUrl, prompt, cameraFixed = false } = req.body;
+    const { imageUrl, prompt, cameraFixed = false, aspectRatio = '16:9' } = req.body;
     
     // Check video generation limit
     if (!checkVideoGenerationLimit(req.user.id)) {
@@ -193,7 +193,8 @@ router.post('/generate-video', authMiddleware, async (req, res) => {
       prompt: prompt,
       duration: 5,
       resolution: "720p",
-      camera_fixed: cameraFixed
+      camera_fixed: cameraFixed,
+      aspect_ratio: aspectRatio
     };
     
     // Add image only if provided (for image-to-video)
@@ -267,10 +268,10 @@ router.get('/video-status/:predictionId', authMiddleware, async (req, res) => {
        const imageUrl = prediction.input.image || 'text-to-video-generation';
        const s3Url = prediction.input.image || 'text-to-video-generation';
        
-       const result = await db.query(
-         'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-         [req.user.id, prediction.input.prompt, imageUrl, s3Url, '16:9', s3VideoUrl, false]
-       );
+               const result = await db.query(
+          'INSERT INTO generated_images (user_id, prompt, image_url, s3_url, aspect_ratio, video_url, is_private) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+          [req.user.id, prediction.input.prompt, imageUrl, s3Url, aspectRatio, s3VideoUrl, false]
+        );
       
       res.json({
         status: 'completed',

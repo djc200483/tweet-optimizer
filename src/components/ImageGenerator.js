@@ -160,6 +160,17 @@ export default function ImageGenerator() {
     { value: '5:3', label: '5:3' }
   ];
 
+  // Aspect ratios specifically for bytedance/seedance-1-lite video model
+  const bytedanceVideoAspectRatios = [
+    { value: '16:9', label: 'Widescreen (16:9)' },
+    { value: '4:3', label: 'Standard (4:3)' },
+    { value: '1:1', label: 'Square (1:1)' },
+    { value: '3:4', label: 'Portrait (3:4)' },
+    { value: '9:16', label: 'Vertical Video (9:16)' },
+    { value: '21:9', label: 'Ultrawide (21:9)' },
+    { value: '9:21', label: 'Ultra Tall (9:21)' }
+  ];
+
   const aspectRatios = {
     'black-forest-labs/flux-schnell': naturalAspectRatios,
     'black-forest-labs/flux-1.1-pro': flux11ProAspectRatios,
@@ -594,7 +605,8 @@ export default function ImageGenerator() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          prompt: prompt.trim()
+          prompt: prompt.trim(),
+          aspectRatio: selectedAspectRatio
         })
       });
 
@@ -718,6 +730,13 @@ export default function ImageGenerator() {
       getRemainingVideoGenerations();
     }
   }, [token, generationType]);
+
+  // Set default aspect ratio for text-to-video when selected
+  useEffect(() => {
+    if (generationType === 'text-to-video') {
+      setSelectedAspectRatio(bytedanceVideoAspectRatios[0].value); // Default to first option for bytedance video
+    }
+  }, [generationType]);
 
   const handleKeyDown = (e) => {
     // Prevent page scroll when using arrow keys in textarea
@@ -1283,26 +1302,53 @@ export default function ImageGenerator() {
 
           {/* Text-to-Video controls */}
           {generationType === 'text-to-video' && (
-            <div className="toolbar-section">
-              <div className="video-info">
-                <div className="video-remaining">
-                  Remaining videos today: {videoRemaining}/3
-                </div>
-                {videoPredictionId && (
-                  <div className="video-progress">
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill" 
-                        style={{ width: `${videoProgress}%` }}
-                      ></div>
-                    </div>
-                    <div className="progress-text">
-                      {videoStepText} {Math.round(videoProgress)}%
-                    </div>
+            <>
+              {/* Aspect ratio selection for text-to-video */}
+              <div className="toolbar-section">
+                <label className="toolbar-label">Aspect Ratio</label>
+                <div 
+                  className="model-dropdown"
+                  onClick={() => setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen)}
+                >
+                  <div className="model-select">
+                    {bytedanceVideoAspectRatios.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
                   </div>
-                )}
+                  {isAspectRatioDropdownOpen && (
+                    <div className="model-dropdown-content">
+                      {bytedanceVideoAspectRatios.map(ratio => (
+                        <div
+                          key={ratio.value}
+                          className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
+                          onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
+                        >
+                          {ratio.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+              <div className="toolbar-section">
+                <div className="video-info">
+                  <div className="video-remaining">
+                    Remaining videos today: {videoRemaining}/3
+                  </div>
+                  {videoPredictionId && (
+                    <div className="video-progress">
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ width: `${videoProgress}%` }}
+                        ></div>
+                      </div>
+                      <div className="progress-text">
+                        {videoStepText} {Math.round(videoProgress)}%
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
           )}
 
           {/* Show model selection only when not in enhance mode, expand mode, and not video generation */}

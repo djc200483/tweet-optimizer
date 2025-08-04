@@ -1306,19 +1306,19 @@ export default function ImageGenerator() {
               {/* Aspect ratio selection for text-to-video */}
               <div className="toolbar-section">
                 <label className="toolbar-label">Aspect Ratio</label>
-                <div 
-                  className="model-dropdown"
-                  onClick={() => setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen)}
-                >
-                  <div className="model-select">
+                <div className="model-select-container">
+                  <div
+                    className="model-select-header"
+                    onClick={() => setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen)}
+                  >
                     {bytedanceVideoAspectRatios.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
                   </div>
                   {isAspectRatioDropdownOpen && (
-                    <div className="model-dropdown-content">
+                    <div className="model-dropdown">
                       {bytedanceVideoAspectRatios.map(ratio => (
                         <div
                           key={ratio.value}
-                          className={`model-option${selectedAspectRatio === ratio.value ? ' selected' : ''}`}
+                          className={`model-option ${selectedAspectRatio === ratio.value ? 'selected' : ''}`}
                           onClick={() => { setSelectedAspectRatio(ratio.value); setIsAspectRatioDropdownOpen(false); }}
                         >
                           {ratio.label}

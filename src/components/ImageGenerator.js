@@ -194,7 +194,8 @@ export default function ImageGenerator() {
       { value: '1:1', label: 'Square (1:1)' },
       { value: '16:9', label: 'Widescreen (16:9)' },
       { value: '9:16', label: 'Vertical Video (9:16)' }
-    ]
+    ],
+    'aisha-ai-official/unholy-desire-il-v3:d68751c091edb3339493b8bc026ceb37c4e0c7cf8e105218bc35177d4a22a952': naturalAspectRatios
   };
 
   const defaultModel = 'black-forest-labs/flux-schnell';
@@ -1553,7 +1554,8 @@ export default function ImageGenerator() {
           )}
 
           {/* Show aspect ratio only when not in enhance mode, expand mode, and not video generation */}
-          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && generationType !== 'image-to-video' && generationType !== 'text-to-video' && (
+          {generationType !== 'image-to-prompt' && !isEnhanceMode && !isExpandMode && generationType !== 'image-to-video' && generationType !== 'text-to-video' && 
+           selectedModel !== 'aisha-ai-official/unholy-desire-il-v3:d68751c091edb3339493b8bc026ceb37c4e0c7cf8e105218bc35177d4a22a952' && (
             <div className="toolbar-section">
               <label className="toolbar-label">Aspect Ratio</label>
               <div className="model-select-container">
@@ -1561,19 +1563,22 @@ export default function ImageGenerator() {
                   className="model-select-header"
                   onClick={() => {
                     if (!(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
-                        !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe')) {
+                        !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') &&
+                        !(selectedModel === 'aisha-ai-official/unholy-desire-il-v3:d68751c091edb3339493b8bc026ceb37c4e0c7cf8e105218bc35177d4a22a952')) {
                       setIsAspectRatioDropdownOpen(!isAspectRatioDropdownOpen);
                     }
                   }}
                   style={(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') || 
-                         (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') ? 
+                         (selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') ||
+                         (selectedModel === 'aisha-ai-official/unholy-desire-il-v3:d68751c091edb3339493b8bc026ceb37c4e0c7cf8e105218bc35177d4a22a952') ? 
                          { background: '#23242b', color: '#888', cursor: 'not-allowed' } : {}}
                 >
                   {aspectRatios[selectedModel]?.find(r => r.value === selectedAspectRatio)?.label || 'Select Aspect Ratio'}
                 </div>
                 {isAspectRatioDropdownOpen && 
                  !(generationType === 'image-to-image' && selectedModel === 'flux-kontext-apps/portrait-series') && 
-                 !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') && (
+                 !(selectedModel === 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe') &&
+                 !(selectedModel === 'aisha-ai-official/unholy-desire-il-v3:d68751c091edb3339493b8bc026ceb37c4e0c7cf8e105218bc35177d4a22a952') && (
                   <div className="model-dropdown">
                     {aspectRatios[selectedModel]?.map(ratio => (
                       <div

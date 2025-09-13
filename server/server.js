@@ -819,6 +819,40 @@ app.post('/generate-image', authMiddleware, async (req, res) => {
       delete replicateInput.prompt;
     }
 
+    // Unholy Desire model specifics
+    if (model === 'aisha-ai-official/unholy-desire-il-v3:d68751c091edb3339493b8bc026ceb37c4e0c7cf8e105218bc35177d4a22a952') {
+      // Set default parameters for Unholy Desire
+      replicateInput = {
+        vae: "Liquid111",
+        seed: -1,
+        model: "Unholy-Desire-IL-v3",
+        steps: 30,
+        width: 1080,
+        height: 2160, // Default height as specified
+        prompt: prompt,
+        refiner: false,
+        upscale: "x2", // Default upscale as specified
+        cfg_scale: 5,
+        clip_skip: 2,
+        pag_scale: 0,
+        scheduler: "Euler a",
+        adetailer_face: false,
+        adetailer_hand: false,
+        refiner_prompt: "",
+        negative_prompt: "", // Default empty as specified
+        adetailer_person: false,
+        guidance_rescale: 1,
+        refiner_strength: 0.4,
+        prepend_preprompt: true,
+        adetailer_face_prompt: "",
+        adetailer_hand_prompt: "",
+        adetailer_person_prompt: "",
+        adetailer_face_negative_prompt: "",
+        adetailer_hand_negative_prompt: "",
+        adetailer_person_negative_prompt: ""
+      };
+    }
+
     // Handle expand generation type
     if (isExpandGeneration) {
       replicateInput = {

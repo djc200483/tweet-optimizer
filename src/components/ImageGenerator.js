@@ -74,7 +74,8 @@ export default function ImageGenerator() {
     { value: 'recraft-ai/recraft-v3', label: 'Recraft V3', description: 'High-quality image generation with style control.' },
     { value: 'bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe', label: 'bytedance', description: 'Lightning Fast image generation' },
     { value: 'bytedance/seedream-3', label: 'bytedance 2K', description: '2K image generation' },
-    { value: 'openai/dall-e-3', label: 'DALL-E 3', description: 'OpenAI\'s flagship image generator' }
+    { value: 'openai/dall-e-3', label: 'DALL-E 3', description: 'OpenAI\'s flagship image generator' },
+    { value: 'aisha-ai-official/unholy-desire-il-v3:d68751c091edb3339493b8bc026ceb37c4e0c7cf8e105218bc35177d4a22a952', label: 'Unholy Desire', description: 'Generate Waifus - potentially NSFW' }
   ];
 
   const imageToImageModels = [
